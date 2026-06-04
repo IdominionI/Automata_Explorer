@@ -1,0 +1,225 @@
+#pragma once
+
+#include <fstream>
+#include <string>
+#include <vector>
+
+#include <Framework/AFW/Tools/afw_string_tools.h>
+#include <Framework/AFW/Tools/afw_file_tools.h>
+#include <Framework/AFW/Tools/afw_dialogs.h>// Seems cannot have or use this in a .h file. Get already has a body compile errors
+
+#include "hex_grid.h"
+
+#define OVER_WRITE_HEX_GRID_FILE    100
+#define READ_HEX_GRID_FILE          101
+
+#define BEGIN_HEADER_BLOCK  "["
+#define END_HEADER_BLOCK	"]"
+#define BEGIN_HEX_GRID_DATA_BLOCK  "{"
+#define END_HEX_GRID_DATA_BLOCK    "}"
+
+
+#define DATA_TYPE_BOOLEAN   0
+#define DATA_TYPE_FLOAT     1
+#define DATA_TYPE_INTEGER   2
+#define DATA_TYPE_DOUBLE    3
+
+template <typename T>
+class hex_grid_class;
+
+template <class T>
+class hex_surface_import_export_class {
+public:
+	std::fstream stream;
+	std::string input_line;
+
+	int line_number = 0;
+
+	bool export_hex_surface_automata_grid(std::string file_pathname, hex_grid_class<T> *hex_grid) {
+		if (!hex_grid) {
+			vwDialogs::display_error_message("Export hex grid", "ERROR ::\n Hex automata grid to export is undefined\nExport Hex surface grid aborted.\n");
+			return false;
+		}
+
+		if (hex_grid->hex_grid_value_data_type == hex_grid_value_data_type_enum::nan) {
+			vwDialogs::display_error_message("Export hex grid", "ERROR ::\n Hex automata grid to export data type is undefined\nExport Hex surface grid aborted.\n");
+			return false;
+		}
+
+		if (file_pathname.size() == 0) {
+			vwDialogs::display_error_message("Export hex grid", "ERROR ::\n No file name defined to export data to\nExport Hex surface grid aborted.\n");
+			return false;
+		}
+
+		if (!open_file_stream(file_pathname, OVER_WRITE_HEX_GRID_FILE)) {
+			std::string error_message = "ERROR :: Unable to open file\n" + file_pathname + "\n to export hex surface grid data to.\n";
+			vwDialogs::display_error_message("Export hex surface grid",error_message);
+			return false;
+		}
+
+		write_header_block(hex_grid);
+		write_hex_grid_data(hex_grid);
+
+		close_file_stream();
+
+		return true;
+	}
+
+	bool import_hex_surface_automata_grid(std::string file_pathname, hex_grid_class<T>* hex_grid) {
+		if (!hex_grid) {
+			vwDialogs::display_error_message("Import hex grid", "ERROR ::\n Hex automata grid to import into is undefined\nExport Hex surface grid aborted.\n");
+			return false;
+		}
+
+		if (file_pathname.size() == 0) {
+			vwDialogs::display_error_message("Import hex grid", "ERROR ::\nNo file name defined to import data from \n Import hex surface grid aborted\n");
+			return false;
+		}
+
+		std::fstream working_model_file(file_pathname, std::ios::in);
+
+		if (!working_model_file) {
+			std::string error_message = "ERROR : \n Could not find/open hex file \n" + file_pathname + " to import data from.\n";
+			vwDialogs::display_error_message("Import hex automata grid", error_message);
+			return false;
+		}
+
+		std::string working_model_string = FW::filetools::read_all(working_model_file);
+
+		std::vector<std::string> lines = FW::stringtools::split(working_model_string, '\n');
+		int line_number = 0;
+
+		if (!import_hex_grid_data(lines, line_number, hex_grid)) {
+			stream.close();
+
+			std::string error_message = "ERROR :: Import hex grid data failed.\n Corrupted or out of sequence data at line\n";
+			error_message += std::to_string(line_number) + "\n with entry  \n" + lines[line_number] + "\n";
+			vwDialogs::display_error_message("Import hex grid data", error_message);
+
+			return false;
+		}
+
+		stream.close();
+		return true;
+	}
+
+private:
+	bool  open_file_stream(std::string filename, int write_mode) {
+		if (write_mode == OVER_WRITE_HEX_GRID_FILE) {
+			stream.open(filename, std::ios::out | std::ios::out);
+
+			if (!stream) return false;// Must have QIODevice::Text or std::endl newline not written !!
+		} else{
+			if (!stream.is_open()) { return false; }
+		}
+
+		return true;
+	}
+
+	void close_file_stream() {
+		stream.close();
+	}
+
+	void write_header_block(hex_grid_class<T>* hex_grid) {
+		stream << BEGIN_HEADER_BLOCK << std::endl;
+
+		stream << hex_grid->grid_dimension.x << std::endl;
+		stream << hex_grid->grid_dimension.y << std::endl;
+		switch (hex_grid->hex_grid_value_data_type) {
+			case hex_grid_value_data_type_enum::Boolean : {stream << DATA_TYPE_BOOLEAN << std::endl; break; }
+			case hex_grid_value_data_type_enum::Float   : {stream << DATA_TYPE_FLOAT   << std::endl; break; }
+			case hex_grid_value_data_type_enum::Integer : {stream << DATA_TYPE_INTEGER << std::endl; break; }
+			case hex_grid_value_data_type_enum::Double  : {stream << DATA_TYPE_DOUBLE  << std::endl; break; }
+		}
+
+		stream << END_HEADER_BLOCK << std::endl;
+	}
+
+	void write_hex_grid_data(hex_grid_class<T>* hex_grid) {
+		stream << BEGIN_HEX_GRID_DATA_BLOCK << std::endl;
+
+		for (size_t i = 0; i < hex_grid->hex_grid.size(); i++) {
+			stream << hex_grid->hex_grid[i] << std::endl;
+		}
+
+		stream << END_HEX_GRID_DATA_BLOCK << std::endl;
+	}
+
+	bool import_hex_grid_data(std::vector<std::string> lines, int &line_number, hex_grid_class<T>* hex_grid) {
+		std::string line;
+
+		// First line read must be a START_HEADER_FLAG
+		line = lines[line_number]; line = FW::stringtools::truncate(line, line.size());
+//std::cout << "import_export_byte_automata_rules_class::read_automata_byte_rules_into_byte_rules_parameters 1111 : " << line_number << ":" << lines[line_number] << ":" << std::endl;
+		if (!FW::stringtools::contains(lines[line_number], BEGIN_HEADER_BLOCK)) { // There must ba a BEGIN_HEADER_BLOCK flag at the start to begin the hex grid data importation
+//std::cout <<"Import Automata byte rules", "File read Error : Read error at line " + std::string::number(line_number) + " of file \n" + file_pathname + "\nMissing START_HEADER_FLAG", //QMessageBox::Ok);
+			vwDialogs::display_error_message("Import hex grid data", "ERROR : \n Could not find grid data header start block flag\n");
+			return false;
+		}
+
+		//next 3 lines must have hex grid x dimension , y dimension and data type in this order
+		line_number++;
+		line = lines[line_number]; line = FW::stringtools::truncate(line, line.size());
+//std::cout << "import_export_hex_surface_automata_rules_class::read_automata_byte_rule BBBBB : " << line_number << ":" << lines[line_number] << std::endl;
+		hex_grid->grid_dimension.x = stoi(line);
+
+		line_number++;
+		line = lines[line_number]; line = FW::stringtools::truncate(line, line.size());
+//std::cout << "import_export_hex_surface_automata_rules_class::read_automata_byte_rule BBBBB : " << line_number << ":" << lines[line_number] << std::endl;
+		hex_grid->grid_dimension.y = stoi(line);
+
+		line_number++;
+		line = lines[line_number]; line = FW::stringtools::truncate(line, line.size());
+//std::cout << "import_export_hex_surface_automata_rules_class::read_automata_byte_rule BBBBB : " << line_number << ":" << lines[line_number] << std::endl;
+		int data_type_id = stoi(line);
+
+		switch (data_type_id) {
+			case DATA_TYPE_BOOLEAN : {hex_grid->hex_grid_value_data_type = hex_grid_value_data_type_enum::Boolean; break;}
+			case DATA_TYPE_FLOAT   : {hex_grid->hex_grid_value_data_type = hex_grid_value_data_type_enum::Float  ; break;}
+			case DATA_TYPE_INTEGER : {hex_grid->hex_grid_value_data_type = hex_grid_value_data_type_enum::Integer; break;}
+			case DATA_TYPE_DOUBLE  : {hex_grid->hex_grid_value_data_type = hex_grid_value_data_type_enum::Double ; break;}
+		}
+
+		line_number++;
+		// next line read must be a END_HEADER_FLAG
+		line = lines[line_number]; line = FW::stringtools::truncate(line, line.size());
+//std::cout << "import_export_byte_automata_rules_class::read_automata_byte_rules_into_byte_rules_parameters 1111 : " << line_number << ":" << lines[line_number] << ":" << std::endl;
+		if (!FW::stringtools::contains(lines[line_number], END_HEADER_BLOCK)) { // There must ba a END_HEADER_FLAG flag at the start to begin the hex grid data importation
+//std::cout <<"Import Automata byte rules", "File read Error : Read error at line " + std::string::number(line_number) + " of file \n" + file_pathname + "\nMissing START_HEADER_FLAG", //QMessageBox::Ok);
+			vwDialogs::display_error_message("Import hex grid data", "ERROR : \n Could not find grid data header end block flag\n");
+			return false;
+		}
+
+		line_number++;
+		// next line read must be a BEGIN_HEX_GRID_DATA_BLOCK
+		line = lines[line_number]; line = FW::stringtools::truncate(line, line.size());
+//std::cout << "import_export_byte_automata_rules_class::read_automata_byte_rules_into_byte_rules_parameters 1111 : " << line_number << ":" << lines[line_number] << ":" << std::endl;
+		if (!FW::stringtools::contains(lines[line_number], BEGIN_HEX_GRID_DATA_BLOCK)) { // There must ba a BEGIN_HEADER_BLOCK flag at the start to begin the hex grid data importation
+//std::cout <<"Import Automata byte rules", "File read Error : Read error at line " + std::string::number(line_number) + " of file \n" + file_pathname + "\nMissing START_HEADER_FLAG", //QMessageBox::Ok);
+			vwDialogs::display_error_message("Import hex grid data", "ERROR : \n Could not find grid data block start flag\n");
+			return false;
+		}
+
+		line_number++;
+		while (!FW::stringtools::contains(lines[line_number], END_HEX_GRID_DATA_BLOCK)) {
+			line = lines[line_number]; line = FW::stringtools::truncate(line, line.size());
+			switch (data_type_id) {
+				case DATA_TYPE_BOOLEAN : { int value    = stoi(line); hex_grid->hex_grid.push_back(value); break;}
+				case DATA_TYPE_FLOAT   : { float value  = stof(line); hex_grid->hex_grid.push_back(value); break;}
+				case DATA_TYPE_INTEGER : { int value    = stoi(line); hex_grid->hex_grid.push_back(value); break;}
+				case DATA_TYPE_DOUBLE  : { double value = stod(line); hex_grid->hex_grid.push_back(value); break;}
+			}
+			line_number++;
+		}
+
+		//last line must contain END_HEX_GRID_DATA_BLOCK
+		if (!FW::stringtools::contains(lines[line_number], END_HEX_GRID_DATA_BLOCK)) { // There must ba a BEGIN_HEADER_BLOCK flag at the start to begin the hex grid data importation
+//std::cout <<"Import Automata byte rules", "File read Error : Read error at line " + std::string::number(line_number) + " of file \n" + file_pathname + "\nMissing START_HEADER_FLAG", //QMessageBox::Ok);
+			vwDialogs::display_error_message("Import hex grid data", "ERROR : \n Could not find grid data block start flag\n");
+			return false;
+		}
+ 
+		return true;
+	}
+
+};
