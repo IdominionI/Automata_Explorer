@@ -13,6 +13,8 @@
 #include "Source/Application/random_engine.h"
 #include "Source/Hex_grids/hex_grid_brush.h"
 
+#include "hex_surface_import_export.h"// ++++
+
 template <class T>
 class hex_grid_class : public hex_grid_base_class<T> , public hex_sub_grid_manager_class{
 	using HGBC = hex_grid_base_class<T>;
@@ -366,6 +368,72 @@ protected:
             if (ImGui::DragFloat("##hgmxy", &plot_max_y, 1.0f, -1.0f, 1000.0f, "%3.1f")) {
                 plot_axis_limit_changed = IMGUI_WINDOW_BORDER_RIGHT;
             }
+
+            // ++++
+            ImGui::Separator();
+
+            // ################# Hex Grid Value Display Gradient #####################
+
+            //++++++++++
+            ImGui::Text("         Grid Value display Gradient limits");
+            ImGui::Text("           Min                       Max");
+            ImGui::SetNextItemWidth(200);
+            ImGui::InputInt("##hgmngv", &state.min_grad_value);
+            ImGui::SameLine();
+            ImGui::SetNextItemWidth(200);
+            ImGui::InputInt("##hgmxgv", &state.max_grad_value);// Had a crash from this point after pressing return !!!!!!
+
+            ImGui::Text("Inquired Gradient Value : %4.3f ", state.current_gradient_value);
+            ImGui::Text("Inquired Gradient color : %4.2f | %4.2f | %4.2f | %4.2f  ", state.current_gradient_color[0], state.current_gradient_color[1], state.current_gradient_color[2], state.current_gradient_color[3]);
+
+            ImGradientHDR(stateID, state, tempState, isMarkerShown);
+
+            if (tempState.selectedMarkerType == ImGradientHDRMarkerType::Color)
+            {
+                selectedColorMarker = state.GetColorMarker(tempState.selectedIndex);
+                if (selectedColorMarker != nullptr) {
+                    cm = selectedColorMarker;
+                }
+            }
+
+            if (cm != nullptr) {
+                ImGui::ColorEdit3("Color", (float*)cm->Color.data(), ImGuiColorEditFlags_Float);
+                ImGui::DragFloat("Intensity", &cm->Intensity, 0.1f, 0.0f, 100.0f, "%f", 1.0f);
+            }
+
+            if (tempState.selectedMarkerType != ImGradientHDRMarkerType::Unknown) {
+                if (ImGui::Button("Delete Gradient Marker")) {
+                    if (tempState.selectedMarkerType == ImGradientHDRMarkerType::Color) {
+                        state.RemoveColorMarker(tempState.selectedIndex);
+                        tempState = ImGradientHDRTemporaryState{};
+                    }
+                    else {
+                        if (tempState.selectedMarkerType == ImGradientHDRMarkerType::Alpha) {
+                            state.RemoveAlphaMarker(tempState.selectedIndex);
+                            tempState = ImGradientHDRTemporaryState{};
+                        }
+                    }
+                }
+            }
+
+            ImGui::SetCursorPosX(100);
+            if (ImGui::Button("Save Gradient")) {
+                save_gradienthdr_data();
+            }
+
+            ImGui::SameLine();
+            ImGui::SetCursorPosX(250);
+            if (ImGui::Button("Load Gradient")) {
+                load_gradienthdr();
+            }
+
+            ImGui::SetCursorPosX(140);
+            if (ImGui::Button("Update Hex Grid Colors")) {
+                update_hex_grid_colors();
+            }
+            // ++++
+
+
             ImGui::Separator();
             ImGui::Text("Edit Hex grid: ");
             ImGui::SameLine();
@@ -516,65 +584,67 @@ protected:
             if (ImGui::Button("Add Hex Grid Border")) {
                 add_hex_grid_border();
             }
-            ImGui::Separator();
-            // ################# Hex Grid Value Display Gradient #####################
 
-            //++++++++++
-            ImGui::Text("         Grid Value display Gradient limits");
-            ImGui::Text("           Min                       Max");
-            ImGui::SetNextItemWidth(200);
-            ImGui::InputInt("##hgmngv", &state.min_grad_value);
-            ImGui::SameLine();
-            ImGui::SetNextItemWidth(200);
-            ImGui::InputInt("##hgmxgv", &state.max_grad_value);// Had a crash from this point after pressing return !!!!!!
+            //ImGui::Separator();
 
-            ImGui::Text("Inquired Gradient Value : %4.3f ", state.current_gradient_value);
-            ImGui::Text("Inquired Gradient color : %4.2f | %4.2f | %4.2f | %4.2f  ", state.current_gradient_color[0], state.current_gradient_color[1], state.current_gradient_color[2], state.current_gradient_color[3]);
+            //// ################# Hex Grid Value Display Gradient #####################
 
-            ImGradientHDR(stateID, state, tempState, isMarkerShown);
-                
-            if (tempState.selectedMarkerType == ImGradientHDRMarkerType::Color)
-            {
-                selectedColorMarker = state.GetColorMarker(tempState.selectedIndex);
-                if (selectedColorMarker != nullptr ) {
-                    cm = selectedColorMarker;
-                }
-            }
+            ////++++++++++
+            //ImGui::Text("         Grid Value display Gradient limits");
+            //ImGui::Text("           Min                       Max");
+            //ImGui::SetNextItemWidth(200);
+            //ImGui::InputInt("##hgmngv", &state.min_grad_value);
+            //ImGui::SameLine();
+            //ImGui::SetNextItemWidth(200);
+            //ImGui::InputInt("##hgmxgv", &state.max_grad_value);// Had a crash from this point after pressing return !!!!!!
 
-            if (cm != nullptr){
-                ImGui::ColorEdit3("Color", (float*)cm->Color.data(), ImGuiColorEditFlags_Float);
-                ImGui::DragFloat("Intensity", &cm->Intensity, 0.1f, 0.0f, 100.0f, "%f", 1.0f);
-            }
+            //ImGui::Text("Inquired Gradient Value : %4.3f ", state.current_gradient_value);
+            //ImGui::Text("Inquired Gradient color : %4.2f | %4.2f | %4.2f | %4.2f  ", state.current_gradient_color[0], state.current_gradient_color[1], state.current_gradient_color[2], state.current_gradient_color[3]);
 
-            if (tempState.selectedMarkerType != ImGradientHDRMarkerType::Unknown){
-                if (ImGui::Button("Delete Gradient Marker")){
-                    if (tempState.selectedMarkerType == ImGradientHDRMarkerType::Color){
-                        state.RemoveColorMarker(tempState.selectedIndex);
-                        tempState = ImGradientHDRTemporaryState{};
-                    } else {
-                        if (tempState.selectedMarkerType == ImGradientHDRMarkerType::Alpha){
-                            state.RemoveAlphaMarker(tempState.selectedIndex);
-                            tempState = ImGradientHDRTemporaryState{};
-                        }
-                    }
-                }
-            }
+            //ImGradientHDR(stateID, state, tempState, isMarkerShown);
+            //    
+            //if (tempState.selectedMarkerType == ImGradientHDRMarkerType::Color)
+            //{
+            //    selectedColorMarker = state.GetColorMarker(tempState.selectedIndex);
+            //    if (selectedColorMarker != nullptr ) {
+            //        cm = selectedColorMarker;
+            //    }
+            //}
 
-            ImGui::SetCursorPosX(100);
-            if (ImGui::Button("Save Gradient")) {
-                save_gradienthdr_data();
-            }
+            //if (cm != nullptr){
+            //    ImGui::ColorEdit3("Color", (float*)cm->Color.data(), ImGuiColorEditFlags_Float);
+            //    ImGui::DragFloat("Intensity", &cm->Intensity, 0.1f, 0.0f, 100.0f, "%f", 1.0f);
+            //}
 
-            ImGui::SameLine();
-            ImGui::SetCursorPosX(250);
-            if (ImGui::Button("Load Gradient")) {
-                load_gradienthdr();
-            }
+            //if (tempState.selectedMarkerType != ImGradientHDRMarkerType::Unknown){
+            //    if (ImGui::Button("Delete Gradient Marker")){
+            //        if (tempState.selectedMarkerType == ImGradientHDRMarkerType::Color){
+            //            state.RemoveColorMarker(tempState.selectedIndex);
+            //            tempState = ImGradientHDRTemporaryState{};
+            //        } else {
+            //            if (tempState.selectedMarkerType == ImGradientHDRMarkerType::Alpha){
+            //                state.RemoveAlphaMarker(tempState.selectedIndex);
+            //                tempState = ImGradientHDRTemporaryState{};
+            //            }
+            //        }
+            //    }
+            //}
 
-            ImGui::SetCursorPosX(140);
-            if (ImGui::Button("Update Hex Grid Colors")){
-                update_hex_grid_colors();
-            }
+            //ImGui::SetCursorPosX(100);
+            //if (ImGui::Button("Save Gradient")) {
+            //    save_gradienthdr_data();
+            //}
+
+            //ImGui::SameLine();
+            //ImGui::SetCursorPosX(250);
+            //if (ImGui::Button("Load Gradient")) {
+            //    load_gradienthdr();
+            //}
+
+            //ImGui::SetCursorPosX(140);
+            //if (ImGui::Button("Update Hex Grid Colors")){
+            //    update_hex_grid_colors();
+            //}
 
         }
         ImGui::End();
@@ -1024,7 +1094,8 @@ if(HGBC::hex_centers_x.empty()){
         plot_axis_limit_changed = IMGUI_WINDOW_BORDER_NONE;
 
         ImGui::End();
-}
+    }
+
 
 private:
     ImGuiWindow* plot_window = nullptr;
@@ -1165,5 +1236,4 @@ private:
             default: hex_grid_display_shape = ImPlotMarker_::ImPlotMarker_Circle;
         }
     }
-
 };

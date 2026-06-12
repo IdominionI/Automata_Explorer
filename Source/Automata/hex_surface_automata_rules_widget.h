@@ -244,7 +244,9 @@ public:
 
 
 			if (hex_surface_automata_rules[i].display_sub_rules) {
-//printf("hex_surface_automata_rules_widget_class :: display_hex_automata_rules:: AAAAA \n");
+//if(i==0){
+//printf("hex_surface_automata_rules_widget_class :: display_hex_automata_rules:: AAAAA :"); printf("%i\n", hex_surface_automata_rules[i].display_sub_rules);
+//}
 
 				display_hex_automata_sub_rules_widget(hex_surface_automata_rules[i]);
 			}
@@ -280,8 +282,10 @@ public:
 			ImGui::SetNextItemWidth(100);
 
 			if (ImGui::Button(sr_id_string.c_str(), { 80,20 })) {
-				hex_surface_automata_rule.display_sub_rules = true;
 //printf("hex_surface_automata_rules_widget_class :: display_hex_automata_rule:: BBBB \n");
+
+				hex_surface_automata_rule.display_sub_rules = true;
+//printf("hex_surface_automata_rules_widget_class :: display_hex_automata_rule:: BBBB1111::"); printf("%i\n", hex_surface_automata_rule.display_sub_rules);
 
 			}
 		}

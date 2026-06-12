@@ -1,5 +1,7 @@
 ## Hex Grid Automata (HGA)
 
+A PDF version of this readme exists in the Documentation directory of this project with the filename readme.pdf.
+
 ## Introduction
 Hex grid automata (HGA) that is under the current visual studio project name VW_Automata is an application to perform defined cellular automata rules in a 2D hexagonal grid environment.
 This can be considered as a complete and functional first step application that can perform some basic neighbor driven cellular automata and be expanded or forked for possible more complex automata rules and conditions.
@@ -16,17 +18,17 @@ In future the name of this application will be changed when a suitable name is d
 
 A user manual and code documentation are not yet provided, but will be included in a future update.
 
-A PDF version of this readme exists in the Documentation directory of this project. 
-
 ## Installation:
 
 This project is a Visual Studio 2022 SDK 10 ISO C++ 20 Standard project set up for windows. 
 
 1 : Download the files within the VS_Automata repository into a desired directory location.
 
-2 : Open visual studio and open the visual studio project VS_Automata.sln file.
+2 : Open visual studio 2022 and open the visual studio project VS_Automata.sln file.
 
-3 : Compile and run the code. 
+3 : Compile and run the code.
+
+4 : An existing binary file should be present in the project directory Bin/x64/Release. If the user does not wish to build the project, this directory can be copied in its entirety to a location of choice and the executable run from there.
 
 ## Quick Demonstation
 
