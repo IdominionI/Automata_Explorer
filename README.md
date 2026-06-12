@@ -16,8 +16,6 @@ All these files are included to insure no breaking of the application code will 
 
 In future the name of this application will be changed when a suitable name is decided upon.
 
-A user manual and code documentation are not yet provided, but will be included in a future update.
-
 ## Installation:
 
 This project is a Visual Studio 2022 SDK 10 ISO C++ 20 Standard project set up for windows. 
