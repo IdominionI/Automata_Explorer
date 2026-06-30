@@ -11,6 +11,8 @@
 
 #include <glm/glm.hpp>
 
+// Main application class to setup, run and manage the application
+// using the FrameWork application base class
 class app_main_class : public afw_app_base_class {
 public:
     app_main_class() {}
@@ -26,10 +28,12 @@ public:
         return glfw_window;
     }
 
+    // Define and set application logger to save debug and other logging messages to
     void  define_logger() {
         logger = new afw_Logger_class("logger.txt");
         afw_globalc::set_current_logger(logger);
     }
+
 
     void setup() override {
         define_logger();
@@ -77,8 +81,7 @@ public:
         // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
     }
 
-
-
+    // application run loop
     void run_loop() override {
         while (!glfwWindowShouldClose(glfw_window->get_window_ptr()))
         {
@@ -142,13 +145,19 @@ public:
             //    printf("run loop window_maximized %i\n",glfw_window->glfw_window_event->window_maximized);
             //}
 //printf("before02\n");
+            // Perform Imgui pre render routines to set up UmGui to 
+            // render to opengl window for a new frame of display 
             oglfw_ImGui.ImGui_pre_render();
 //printf("After02\n");
+            // Draw the UI for the current opengl window frame
             draw_UI();// This must be placed before glfwSwapBuffers
-//printf("After03\n");        
+//printf("After03\n");
+            // Perform Imgui post render routines of the current render frame 
             oglfw_ImGui.ImGui_post_render(glfw_window);
 //printf("After04\n");
-            glfwSwapBuffers(glfw_window->get_window_ptr());// THis must be presentc
+
+            // Display current glfw window frame display buffer 
+            glfwSwapBuffers(glfw_window->get_window_ptr());// This must be presentc
         }
     }
 
@@ -156,12 +165,11 @@ public:
         // Define interface style parameters each render pass so as
         // to be able to change interface style or style components
         //tron_style();
+        ImGui::DockSpaceOverViewport(0, ImGui::GetMainViewport());// Required to have the main glfw window viewport as the main docking node
 
-        ImGui::DockSpaceOverViewport(0, ImGui::GetMainViewport());// To have the main glfw window viewport as the main docking node
-
-        ahex_application.display_ahex_main_gui_panel(glfw_window);
+        ahex_application.display_ahex_main_gui_panel(glfw_window);// Display main application GUI
  
-        // Following uncommented when investigating ImGui widget examples
+        // Uncommented following uwhen investigating ImGui widget examples
         ImGui::Begin;
         bool show_demo_window = true;
         bool show_plot_demo_window = true;
@@ -169,8 +177,9 @@ public:
         //ImPlot::ShowDemoWindow(&show_plot_demo_window);
         ImGui::End;
 
-     /*
-        srand(0);
+    
+        // Following testing only : delete/comment out when no longer needed
+/*      srand(0);
         static float xs1[100], ys1[100];
         for (int i = 0; i < 100; ++i) {
             xs1[i] = i * 0.01f;
@@ -197,8 +206,9 @@ public:
 */
 
         // ----------------------------------
-        ImGui::Render();
 
+
+        ImGui::Render();// Render ImGui GUI
     }
 
     void close() override {
@@ -214,18 +224,25 @@ public:
     glm::vec4 background_color = { 0.0f,0.0f,0.0f,1.0f };
 
 private:
-    glfw_openGL_window_class* glfw_window = nullptr;
+    // FrameWork glfw openGl window class that handles and manages openGL glfw windows
+    glfw_openGL_window_class *glfw_window = nullptr;
 
+    // FrameWork glfw openGl ImGui class that handles and manages ImGui glfw openGL implementation
     oglFW_ImGui_GLFW_class oglfw_ImGui;
     
+    // FrameWork Logger class that handles application logging messages
     afw_Logger_class* logger = nullptr;
 
     // UI components
     //log_panel_class* log_panel = nullptr;
 
+    // Hexagaonal automata application class that handles and manages application GUI, execution and exit
+    // Currently set to handle hexagaonal automata grid of type integer. 
+    // Future enhancement to handle float and boolean datatypes to be done
     ahex_application_class<int> ahex_application;
 };
 
+// Application entry point
 int main() {
     app_main_class* app = new app_main_class;
 

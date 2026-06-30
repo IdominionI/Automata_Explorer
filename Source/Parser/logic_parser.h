@@ -1,13 +1,30 @@
 #pragma once
 
-//#include "parser_definitions.h"
-
 #include "functions.h"
 
+/*
+    Parser class to create and manage a parser tree from a
+    user defined string of text that is a conditional statement
+    used to construct a cellular automata model. The conditional
+    statement can have as part of it, assign values, perform
+    basic mathematical operations and logical comparisons 
+    that evaluate the conditional statement to be true or false.
+
+    This parser class is not designed for complex mathematical
+    calculations or to perform programable routines.
+
+    Not sure what type of parser this is as it was created with 
+    no knowledge of how to write a paser and only used a basic
+    example that was heavily modified and expanded upon without
+    any research.
+    Thus may be replaced in future if find a parser library
+    suitable for the purpose it serves.
+*/
 
 template <class T>
 class logic_parser_class {
 public:
+    // Initialise or define the parser categories of tokens
     logic_parser_class() {
         define_white_space();
         define_braces();
@@ -21,10 +38,21 @@ public:
     ~logic_parser_class() {}
 
     // for testing only Delete or comment out when not in use or needed
-    hex_grid_base_class<T> *hex_test_grid = nullptr;
+    //hex_grid_base_class<T> *hex_test_grid = nullptr;
 
-    hex_grid_value_data_type_enum hex_grid_data_type = hex_grid_value_data_type_enum::Integer;
+    //hex_grid_value_data_type_enum hex_grid_data_type = hex_grid_value_data_type_enum::Integer;
 
+    // Create Parse tree by creating a vector list of tokens that
+    // represents the conditional statement of a string of text,
+    // and then submit that list of tokens to a parser function
+    // that creates a binary tree of parser nodes that when read
+    // and evaluated in post order traversal will evaluate the
+    // value of the conditional statement as being true or false.
+    // Tests are performed to check if the submitted text creates
+    // a valid parser tree or not and returns where any context
+    // errors were found.
+
+    // text : string of text that defines a C/C++ like conditional statement
     parser_base_node *create_logic_parse_tree(std::string& text) {
 //printf("logic_parser_class :: Parse::  000 %s\n",text.c_str());
         if (text.empty()) {
@@ -33,58 +61,64 @@ public:
         }
 
         // Create automata sub rule token list
-        std::vector<std::string> tokens = {};
-        std::stringstream sb;
+        std::vector<std::string> tokens = {};// container to store the list of tokens
+        std::stringstream sb;                // string buffer to store string of characters to create parser tokens
 
-        sb.str("");
+        sb.str("");// initialise sting buffer 
         sb.clear();
 //printf("logic_parser_class :: Parse::  111 \n");
+        // Read string of text one character at a time to add tokens to token list as tokens are found
         for(int i=0;i<text.size();i++){
             char c = text[i];
 //printf("logic_parser_class :: Parse::  AAA %s\n",&c);
+            //ignore what is defines as a white space
             if (have_white_space_character(c)) {
 //printf("logic_parser_class :: Parse::  BBB %s\n",&c);
                 if (sb.str().empty()) {
-                    continue;
+                    continue; // get next character and continue loop from the top
                 }
                 //sb << c;
-                continue;
+                continue;// get next character and continue loop from the top
             }
 printf("logic_parser_class :: Parse::  CCC :"); printf("%c:\n",c);
 
+            // If have = character
             if (have_equal_character(c)) {
 printf("logic_parser_class :: Parse::  CCC111 :"); printf("%c:\n",c);
                 if (!sb.str().empty()) {
-                    char prev = sb.str().back();
+                    char prev = sb.str().back(); //go back to previous character
 printf("logic_parser_class :: Parse::  CCC222 :"); printf("%c:\n",prev);
-                    if (have_comparison_operator_characters(prev)) {
+                    if (have_comparison_operator_characters(prev)) {// if previous character is a comparison operator character
 printf("logic_parser_class :: Parse::  CCC233:"); printf("%c:\n",prev);
-                        sb.str(sb.str().substr(0, sb.str().size() - 1));
+                        sb.str(sb.str().substr(0, sb.str().size() - 1)); // read all left of prev character into sb as a string 
 printf("logic_parser_class :: Parse::  CCC244:"); printf("%s:\n",sb.str());
-                        tokens.push_back(sb.str());
-                        sb.str("");
+                        tokens.push_back(sb.str()); // add sb string of characters left of  prev to list of parser tokens
+                        sb.str(""); // reinitialise sb string to be empty
                         sb.clear();
 
-                        std::string token_string = std::string(1, prev) + c;
+                        std::string token_string = std::string(1, prev) + c;// create complete parser = comparison token as a string
 
-                        tokens.push_back(token_string);
-                        continue;
+                        tokens.push_back(token_string);// add = comparison token to list of tokens
+                        continue;// get next character and continue loop from the top
                     }
-                    // else error message
+                    // else cannot have lone = character assignment statement : Need to rectify this ???
                 }
-                sb << c;
-                continue;
+                sb << c; // add = character to sb
+                continue;// get next character and continue loop from the top
             }
 
+            // If have one of (){}[] characters : NOTE Should only use ()
             if (have_open_close_brace(c)) {
-printf("logic_parser_class :: Parse::  DDD"); printf(" %s\n",&c);
-                if (!sb.str().empty()) {
-                    tokens.push_back(sb.str());
-                    sb.str("");
+printf("logic_parser_class :: Parse::  DDD0000"); printf(" %c\n",c);
+                if (!sb.str().empty()) { //
+printf("logic_parser_class :: Parse::  DDD1111"); printf(" %s\n", sb.str());
+                    tokens.push_back(sb.str()); // add string token before brace to token list
+                    sb.str("");// reinitialise sb string to be empty
                     sb.clear();
                 }
-                tokens.push_back(std::string(1, c));
-                continue;
+printf("logic_parser_class :: Parse::  DDD222"); printf(" %c\n",c);
+                tokens.push_back(std::string(1, c));// add brace token to token list
+                continue;// get next character and continue loop from the top
             }
 
             std::string op = sb.str() + std::string(1, c);
@@ -94,27 +128,28 @@ printf("logic_parser_class :: Parse::  EEE (op, sb1)"); printf(" %s\n", op.c_str
 printf("logic_parser_class :: Parse::  FFF have_binary_operator(op, sb1)"); printf(" %s:#%s:\n", sb1.c_str(), op.c_str());
                 if(i<text.size()-1){
                     char next = text[i + 1];
-                    if (!have_equal_character(next))
+                    if (!have_equal_character(next))// Do not have comparison binary operator eg += which is not permited
                     {
-                        tokens.push_back(sb1);
-                        tokens.push_back(op);
-                        sb.str("");
+                        tokens.push_back(sb1);// add string before binary operator to list of tokens
+                        tokens.push_back(op);// add binary operator character to list of tokens
+                        sb.str("");// reinitialise sb string to be empty
                         sb.clear();
-                        continue;
+                        continue;// get next character and continue loop from the top
                     }
                 }
             }
 //printf("logic_parser_class :: Parse::  GGG %s\n",&c);
-            sb << c;
+            sb << c;// add character to sb
         }
 
+        // Add final token string to tokens list
         if (!sb.str().empty()) {
             tokens.push_back(sb.str());
         }
 
 // Need to create a parse filter function
-        //#################
 printf("logic_parser_class :: Parse before filter spaces:"); printf(" %i \n", tokens.size());
+       // Filter out spaces in tokens and remove any epmty tokens from the list
        for (int i = tokens.size()-1; i > -1 ; i--) {
             std::string token = tokens[i];
 printf("logic_parser_class :: Parse %s:\n", token.c_str());
@@ -128,7 +163,6 @@ printf("logic_parser_class :: Parse have_empty_token ::"); printf("%s:\n", token
                 tokens.erase(tokens.begin() + i);
             }
         }
-       //#################
 
 //For testing : Delete or comment out when not in use or needed
 printf("logic_parser_class :: Parse after filter spaces:"); printf(" %i\n", tokens.size());
@@ -136,7 +170,8 @@ printf("logic_parser_class :: Parse after filter spaces:"); printf(" %i\n", toke
 printf("logic_parser_class :: Parse "); printf("%s|\n", token.c_str());      
        }
 
-        parser_base_node *t_node = Parse(tokens);
+       // create parser tree with t_node being the top root node of that parser tree
+       parser_base_node *t_node = Parse(tokens);
 
 //------For testing : Delete or comment out when not in use or needed -----
 if (t_node == nullptr) {
@@ -186,7 +221,7 @@ printf("logic_parser_class :: Parse Tree Result :: %i \n", t_node->value.second.
 // ---------------------------------------------------------------------
         
         // uncomment when ready to implement
-         return t_node;
+         return t_node; 
     }
 
     // post-order tree traversal
@@ -327,41 +362,63 @@ printf("logic_parser_class :: evaluate_parse_tree tt_node == null\n");
         }
     }
 
-   parser_base_node* Parse(const std::vector<std::string>& tokens) {
+    // Create pasrer tree representing a C/C++ like conditional statement
+    // expression and return pointer to top root node of the parser tree
+    parser_base_node* Parse(const std::vector<std::string>& tokens) {
         size_t index = 0;
         return ParseExp(tokens, index);
     }
 
 private:
-    int number_left_braces = 0;
-    int number_right_braces = 0;
+    int number_left_braces  = 0;// Number of left braces not balanced with a right brace
+    int number_right_braces = 0;// Number of right braces not balanced with a left brace
     
+    // Create pasrer tree representing a C/C++ like conditional statement
+    // expression and return pointer to top root node of the parser tree
+    // Read each node token one at a time and based upon the type of token
+    // encountered, build a binary tree that when traveresed post order will
+    // perform an evaluation of a C/C++ like conditional statement.
+    // This is a recursive function that is very sensitive to the order tokens
+    // in the token list being read left to right.
+    
+    // Tokens and index must be referenced or value cahages will be lost and creation of
+    // parser tree will fail.
+
+    // Braces do not form part of the parser tree but are used in the token list to define
+    // parser tree sub branches and the top or root nodes of the sub branches that form
+    // the child node of the parser tree node that is their parent. 
     parser_base_node *ParseExp(const std::vector<std::string>& tokens, size_t& index) {
+        // create a left sub expresion parser node tree and have the top node as the left
+        // expression node of this binary parser node. If only a left expression paser tree
+        // is created, then the top parser node of that left expression tree is the top
+        // root node of the exression. 
         auto leftExp = ParseSubExp(tokens, index);
 
         if (index >= tokens.size()) {
-            return leftExp;
+            return leftExp;// return the leftExp node to where the ParseExp was called 
         }
 
         const std::string& token = tokens[index];
 
-        if (token == std::string(1, BRACE_RIGHT)) {
+        if (token == std::string(1, BRACE_RIGHT)) {// Encountered a right brace token
             number_right_braces++;
-            if (number_left_braces < number_right_braces) {
+            if (number_left_braces < number_right_braces) { // have invalid brace encapsulation
                 // error message
 //printf("logic_parser_class :: ParseExp ERROR :Expected ')'\n", tokens[index].c_str());
-                return nullptr;
+                return nullptr;// return a nullptr to where the ParseExp was called 
             }
 
+            // Update left right brace balance
             number_left_braces--;
             number_right_braces--;
-            return leftExp;
+            return leftExp;// return the leftExp node of this closed brace to where the ParseExp was called 
         }
 
+        // Binary operators have a left and right expression that are child parser nodes
         if (have_binary_operator(token)) {
 //printf("logic_parser_class :: ParseExp have_binary_operator 000:%s\n", token.c_str());
             index++;
-            auto rightExp = ParseExp(tokens, index);
+            auto rightExp = ParseExp(tokens, index);// create a right expresion parser node tree and have the top node as the right expression node of this binary parser node
 
             if (!rightExp) {
                 afw_globalc::get_current_logger()->log(LogLevel::ERROR, "logic_parser_class :: ParseExp ERROR : No right expression defined for binary operator " + token + "\n");
@@ -370,29 +427,45 @@ private:
                 return nullptr;
             }
 //printf("logic_parser_class :: ParseExp binary operator right exp 2222 :%s\n", rightExp->function_token_definition.second.c_str());
-            binary_node *b_node = new binary_node(std::move(leftExp), std::move(rightExp));
+            binary_node *b_node = new binary_node(std::move(leftExp), std::move(rightExp));// Create a binary parser node with the curent left and right root parser nodes as its child parser nodes
             b_node->function_token_definition.first = function_type_enum::binary;
             b_node->function_token_definition.second = token;
 //printf("logic_parser_class :: ParseExp have_binary_operator 3333 :%s\n", b_node->function_token_definition.second.c_str());
-            return b_node;
+            return b_node; // return the binary node to where the ParseExp was called 
         }
         else {
 //printf("logic_parser_class :: ParseExp Expected '&&' or '||' or '^' or EOF :: %s\n", token.c_str());
-            return nullptr;
+            return nullptr;// return a nullptr to where the ParseExp was called 
         }
     }
 
+    // Create a pasrer tree left branch of a main parser tree representing 
+    // a C/C++ like conditional statement expression and return pointer to
+    // the top root node of this left branch parser tree.
+    // Read each node token one at a time and based upon the type of token
+    // encountered, build a binary tree that when traveresed post order will
+    // perform an evaluation of a C/C++ like conditional statement.
+    // 
+    // This is a recursive function that is very sensitive to the order tokens
+    // in the token list being read left to right.
+
+    // tokens and index must be referenced or value cahages will be lost and creation of
+    // parser tree will fail.
+
+    // Braces do not form part of the parser tree but are used in the token list to define
+    // parser tree sub branches and the top or root nodes of the sub branches that form
+    // the child node of the parser tree node that is their parent. 
     parser_base_node *ParseSubExp(const std::vector<std::string>& tokens, size_t& index) {
         const std::string& token = tokens[index];
 
         if (token.empty()) { return nullptr; }
 
-        if (token == std::string(1, BRACE_LEFT)) {
+        if (token == std::string(1, BRACE_LEFT)) {// Encountered a left brace token
             index++;
-            number_left_braces++;
+            number_left_braces++;// Add to the number of unbalanced token braces
 
 //printf("logic_parser_class :: ParseSubExp 000 %s\n", token.c_str());
-            parser_base_node *node = ParseExp(tokens, index);
+            parser_base_node *node = ParseExp(tokens, index);// recursivly create a parser sub tree branch with the top node returned
 
 //if(node) printf("logic_parser_class :: ParseSubExp 111 %s : %s\n", node->function_token_definition.second.c_str(), tokens[index].c_str());
 
@@ -401,42 +474,41 @@ private:
                 return nullptr;
             }
 
-            index++; // Skip ')'
+            index++; // next parser token index
             return node;
         }
 
-        if (token == std::string(1, BRACE_RIGHT)) {// This does not seem to work
+        if (token == std::string(1, BRACE_RIGHT)) {// This does not seem to work ????
             index++;
             number_right_braces++;
 
-            if (number_left_braces < number_right_braces) {// Could have incomplete left brace
+            if (number_left_braces < number_right_braces) {// Could have incomplete left brace ????
                 return nullptr;
             }
         }
 
-        if (have_unary_operator(token)) {
-            index++;
-            parser_base_node* node = ParseExp(tokens, index);
-            unary_node* u_node = new unary_node(node);
+        if (have_unary_operator(token)) {// unary operator parser tree branch nodes created in this function only
+            index++;// next parser token index
+            parser_base_node* node = ParseExp(tokens, index);// recursivly create a parser sub tree branch with the top node returned
+            unary_node* u_node = new unary_node(node);// create a parser tree unary node 
             u_node->function_token_definition.first = function_type_enum::unary;
             u_node->function_token_definition.second = token;
 //printf("logic_parser_class :: ParseSubExp unary_node 2222 %s\n", u_node->function_token_definition.second.c_str());
-            return u_node;
+            return u_node; // return pointer to uniary node 
         }
 
-        if (have_hex_grid_neighbour(token)) {
-            index++;
-
-            literal_node* l_node = new literal_node(token);
+        if (have_hex_grid_neighbour(token)) {// get hex grid cell data value and assign to the value of a paser literal node 
+            index++;// next parser token index
+            literal_node* l_node = new literal_node(token);// create a parser tree unary node 
             l_node->function_token_definition.first = function_type_enum::data;
             l_node->function_token_definition.second = token;
 //printf("logic_parser_class :: ParseSubExp 3333 literal_node %s\n", l_node->function_token_definition.second.c_str());
             return l_node;
         }
 
-        index++;
-
-        literal_node *l_node = new literal_node(token);
+        // Only token type left to construct a tree node is a literal node that stores a constant value
+        index++;// next parser token index
+        literal_node *l_node = new literal_node(token);// create a parser tree literal node that stores a numerical value
         l_node->function_token_definition.first = function_type_enum::value;
         l_node->function_token_definition.second = token;
 //printf("logic_parser_class :: ParseSubExp 4444 literal_node #%s#|\n", l_node->function_token_definition.second.c_str());
@@ -448,7 +520,7 @@ private:
 protected:
 
 private:
-    functions_class functions;// ++++++++++
+    functions_class functions;
 
     std::vector<char> white_space_characters;
     std::vector<char> brace_charecters;
@@ -459,6 +531,10 @@ private:
     std::vector<std::string> set_operators;
     
     std::vector<std::string> hex_grid_neighbours;
+
+    // Functions to initiate and define the categories of tokens
+    // to be used to query what type of token is encountered while
+    // creating the parser node expression tree
 
     void define_white_space() {
         white_space_characters.push_back(' ');
@@ -509,8 +585,8 @@ private:
     }
 
     void define_set_operator_tokens() {
-        set_operators.push_back(MATH_SET_OPERATOR_SUM);
-        set_operators.push_back(MATH_SET_OPERATOR_AVERAGE);
+        //set_operators.push_back(MATH_SET_OPERATOR_SUM);
+        //set_operators.push_back(MATH_SET_OPERATOR_AVERAGE);
     }
 
     void define_hex_grid_neighbour_tokens() {
@@ -522,6 +598,9 @@ private:
         hex_grid_neighbours.push_back(HEX_GRID_NEIGHBOUR_H5);
         hex_grid_neighbours.push_back(HEX_GRID_NEIGHBOUR_H6);
     }
+
+    // Functions to test is a character or string of characters belongs
+    // to a certain token category.
 
     bool have_white_space_character(char c) {
         for (char white_space_character : white_space_characters) {
@@ -589,7 +668,6 @@ private:
         return false;
     }
 
-    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     bool have_unary_operator(std::string token) {
         for (std::string unary_operator : unary_operators) {
             if (token == unary_operator) { return true; }
@@ -634,7 +712,4 @@ private:
         }
         return false;
     }
-
-    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
 };

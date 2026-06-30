@@ -22,6 +22,8 @@
 //    return a || b;
 //}
 
+// ###### HEXAGONAL GRID CELL PARSER TOKEN DEFINITIONS ######
+
 #define HEX_GRID_NEIGHBOUR_H0  "H0"
 #define HEX_GRID_NEIGHBOUR_H1  "H1"
 #define HEX_GRID_NEIGHBOUR_H2  "H2"
@@ -30,8 +32,24 @@
 #define HEX_GRID_NEIGHBOUR_H5  "H5"
 #define HEX_GRID_NEIGHBOUR_H6  "H6"
 
+// Function class to perform all parser function operations and assign
+// a value of the result to the parser value storage container.
+
+// General method of function is to test which operator token is present
+// for the type of operator that is being evaluated and perform the operation
+// on the relevant data values for that operator.
+
 class functions_class {
 public:
+
+    // Perform binary operatoe evaluation of two values of a paser tree node
+    // and assign the result to the parser tree node value storage container.
+
+    // General method of function is to get the left and right values of the binary
+    // operator and test if either is not a number (nan) or not. If both are nan
+    // assign the result as nan. If one is nan then perform a nan operation for that
+    // particular operator. Otherwise perform the binary operation on the left and right
+    // data values and assign the result  to the parser value storage container.
 
     bool perform_binary_operator_function(binary_node* bn) {
         std::string binary_function_token = bn->function_token_definition.second;
@@ -594,6 +612,42 @@ public:
         return false;
     }
 
+    // Function to assign a literal value defined as a string of text as a number of a 
+    // defined numeric datatype to a paser tree literal node storage container.
+
+    bool assign_node_value(literal_node* ln, parse_value_data_type_enum literal_data_type) {
+        std::string literal_token = ln->function_token_definition.second;
+
+        //printf("functions :: assign_node_value AAAA %s:\n", literal_token.c_str());
+        double* dvalue_ptr = new double;
+        if (!dvalue_ptr) { return false; }
+
+        int error_code = 0;
+        //printf("functions :: assign_node_value BBBBB %s:\n", literal_token.c_str());
+        bool valid_number = FW::stringtools::string_to_double(literal_token, dvalue_ptr, error_code);
+        //printf("functions :: assign_node_value CCCCC %s:\n", literal_token.c_str());
+        if (!valid_number) {
+            printf("functions :: assign_node_value ERROR :: Invalid literal value to assign : %s:\n", literal_token);
+            return false;
+        }
+
+        ln->value.first = literal_data_type;
+
+        int int_value = stoi(literal_token);
+
+        switch (literal_data_type) {
+        case parse_value_data_type_enum::Boolean: if (stoi(literal_token) == 0) { ln->value.second.bvalue = true; }
+                                                else { ln->value.second.bvalue = false; break; }
+        case parse_value_data_type_enum::Integer: ln->value.second.ivalue = stoi(literal_token); break;
+        case parse_value_data_type_enum::Float: ln->value.second.fvalue = stof(literal_token); break;
+        case parse_value_data_type_enum::Double: ln->value.second.dvalue = stod(literal_token); break;
+        }
+
+        return true;
+    }
+
+    // ################ FUNCTIONS TO RETRIEVE HEXAGONAL GRID CELL VALUES ###############
+
     template <class T>
     bool get_hex_grid_value(literal_node* dn, hex_grid_base_class<T>* hex_grid, hex_surface_index_data_type hex_index) {
         if (hex_index < 0 || hex_index >= hex_grid->hex_grid.size()) return false; //hex_index is invalid
@@ -690,37 +744,6 @@ public:
 
         return hex_neighbour_index;
     }
-
-    bool assign_node_value(literal_node* ln, parse_value_data_type_enum literal_data_type) {
-        std::string literal_token = ln->function_token_definition.second;
-
-        //printf("functions :: assign_node_value AAAA %s:\n", literal_token.c_str());
-        double* dvalue_ptr = new double;
-        if (!dvalue_ptr) { return false; }
-
-        int error_code = 0;
-        //printf("functions :: assign_node_value BBBBB %s:\n", literal_token.c_str());
-        bool valid_number = FW::stringtools::string_to_double(literal_token, dvalue_ptr, error_code);
-        //printf("functions :: assign_node_value CCCCC %s:\n", literal_token.c_str());
-        if (!valid_number) {
-            printf("functions :: assign_node_value ERROR :: Invalid literal value to assign : %s:\n", literal_token);
-            return false;
-        }
-
-        ln->value.first = literal_data_type;
-
-        int int_value = stoi(literal_token);
-
-        switch (literal_data_type) {
-            case parse_value_data_type_enum::Boolean: if (stoi(literal_token) == 0) {ln->value.second.bvalue = true;} else {ln->value.second.bvalue = false; break;}
-            case parse_value_data_type_enum::Integer: ln->value.second.ivalue = stoi(literal_token); break;
-            case parse_value_data_type_enum::Float: ln->value.second.fvalue = stof(literal_token); break;
-            case parse_value_data_type_enum::Double: ln->value.second.dvalue = stod(literal_token); break;
-        }
-
-        return true;
-    }
-
 //private:
 
 };

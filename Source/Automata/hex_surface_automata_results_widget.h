@@ -4,6 +4,20 @@
 
 #include "hex_surface_automata_rules_widget.h"
 
+/*
+			Hexagonal cellula automata rule results widget class
+
+	This class widget defines an ImGui widget that is used to define
+	a set of cellula automata rule results that the hexagonal 2D surface
+	grid model cells are to be assigned to based upon one or more 
+	cellula automata rules. 
+
+	This class also handles the management of the list and display of the
+	cellula automata rule results that are to be performed for every
+	iteration process.
+
+*/
+
 template <class T>
 class hex_surface_automata_results_widget_class {
 public:
@@ -11,14 +25,18 @@ public:
 	~hex_surface_automata_results_widget_class() {}
 
 	int current_selected_rule_result_id = -1;
-	bool automata_rules_verified		= false;
+	bool automata_rules_verified		= false;// Idicate if all cellular automata rules have been verified or not
 
-	std::vector<hex_surface_automata_rule_result_struct_type> hex_surface_automata_rule_results;
+	std::vector<hex_surface_automata_rule_result_struct_type> hex_surface_automata_rule_results; // List of hexagonal cellula automata rule results
 
+	// Class that defines the display, management of available hexagonal cellula automata rules 
+	// that can be used to defeine a hexagonal cellula automata rule result
 	hex_surface_automata_rules_widget_class<T> hex_surface_automata_rules_widget;
 
+		// !!!!!!!!!!!!! Functions to perfom the management of hexagonal cellula automata rule results !!!!!!!!!!!!!!!!!!!!
+
 	void reset_rule_results_hex_grid_cell_data_id() {// This is required when clearing or importing a hex surface grid
-		for (hex_surface_automata_rule_result_struct_type &rule_result : hex_surface_automata_rule_results) {
+		for (hex_surface_automata_rule_result_struct_type& rule_result : hex_surface_automata_rule_results) {
 			rule_result.hex_grid_cell_data_id = -1;
 		}
 	}
@@ -35,7 +53,7 @@ public:
 		hex_surface_automata_rule_result_struct_type rule_result;
 		add_rule_result(rule_result);
 	}
-	// +++++++++++++
+
 	void define_and_clear_hex_surface_automata_rules_and_results() {
 		rule_result_id = -1;
 		delete_all_automata_rules();
@@ -52,7 +70,7 @@ public:
 		hex_surface_automata_rules_widget.hex_surface_automata_rules.clear();
 		hex_surface_automata_rules_widget.hex_surface_automata_rules.shrink_to_fit();
 	}
-	// +++++++++++++
+
 	bool delete_rule_result(int rule_result_index) {
 		if (rule_result_index < 0 || rule_result_index > hex_surface_automata_rule_results.size() - 1) { return false; }
 
@@ -92,9 +110,14 @@ public:
 		return false;
 	}
 
+
+	// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+	// Display the main hexagonal automata rule results editor and manager section
 	void hex_automata_rule_results_editor(hex_grid_base_class<T>* hex_surface_object_to_execute,ImVec2 editor_display_window_size) {
 		ImGui::BeginChild("Automata Rule Results", editor_display_window_size, true);
 
+		// ImGui popup menu to manage individual callula automata rule results as a floating menu
 		if (ImGui::BeginPopupContextWindow(0, 1)) {
 			ImVec2 click_pos = ImGui::GetMousePosOnOpeningCurrentPopup();
 
@@ -103,7 +126,7 @@ public:
 					add_new_rule_result();
 				}
 
-				if (selected_rule_result_index > -1) {
+				if (selected_rule_result_index > -1) {// Index of selected rule results to perform management tasks upon is not none
 
 					if (ImGui::MenuItem("Delete Rule Result")) {
 						delete_rule_result(selected_rule_result_index);
@@ -136,7 +159,7 @@ public:
 			ImGui::EndPopup();
 		}
 
-		if (ImGui::IsMouseClicked(ImGuiMouseButton_Right)) {
+		if (ImGui::IsMouseClicked(ImGuiMouseButton_Right)) {// Selected rule results to perform management tasks upon to none
 //printf("hex_surface_automata_rules_widget_class :: hex_automata_rules_editor:: LEFT\n");
 			selected_rule_result_index = -1;
 		}
@@ -146,6 +169,7 @@ public:
 		ImGui::EndChild();
 	}
 
+	// Function to display hexagaonal cellular automata rule results as a sequence of rows of ImGui widgets
 	void display_hex_automata_rule_results(hex_grid_base_class<T> *hex_surface_object_to_execute) {
 		float x_pos = 5.0f, y_pos = 5.0f;
 
@@ -158,10 +182,14 @@ public:
 		}
 	}
 
+	// Function to display each individual rule result as a row of ImGui widgets which the user can interact with to define the rule result and display as an 
+	// overlay in the main hexagonal ImPlot automata grid display window widget. hex_surface_automata_rule_result needs to be referenced or changes will be lost.
 	void display_hex_automata_rule_result(hex_grid_base_class<T> *hex_surface_object_to_execute,glm::vec2 window_loc, hex_surface_automata_rule_result_struct_type& hex_surface_automata_rule_result,int result_index) {
 		ImGui::SetCursorPosX(window_loc.x);
 		ImGui::SetCursorPosY(window_loc.y);
 
+		// Define individual ImGui identifiers for each Imgui widget so as to avoid
+		// identifier clashes and be able to display multiple like widgets 
 		std::string w_id = "##hrrcb" + std::to_string(hex_surface_automata_rule_result.rule_result_id);
 		std::string rn_id = "##hrrrn" + std::to_string(hex_surface_automata_rule_result.rule_result_id);
 		std::string ss_id_string = "##hrrss" + std::to_string(hex_surface_automata_rule_result.rule_result_id);
@@ -175,22 +203,22 @@ public:
 
 		ImGui::BeginGroup();
 		{
-			ImGui::Checkbox(w_id.c_str(), &hex_surface_automata_rule_result.active_result);
+			ImGui::Checkbox(w_id.c_str(), &hex_surface_automata_rule_result.active_result);// Set rule result to be used in cellula automata iteration process
 			ImGui::SameLine();
 			ImGui::SetNextItemWidth(120);
-			ImGui::InputText(rn_id.c_str(), &hex_surface_automata_rule_result.result_name, ImGuiInputTextFlags_CallbackCharFilter, Input_Filters::name);
+			ImGui::InputText(rn_id.c_str(), &hex_surface_automata_rule_result.result_name, ImGuiInputTextFlags_CallbackCharFilter, Input_Filters::name); // Rule result name label
 			ImGui::SameLine();
 			ImGui::SetNextItemWidth(50);
-			ImGui::InputInt(ss_id_string.c_str(), &hex_surface_automata_rule_result.rule_start_step, 0);
+			ImGui::InputInt(ss_id_string.c_str(), &hex_surface_automata_rule_result.rule_start_step, 0); // Iteration start step that rule result will start from
 			ImGui::SameLine();
 			ImGui::SetNextItemWidth(50);
-			ImGui::InputInt(es_id_string.c_str(), &hex_surface_automata_rule_result.rule_end_step, 0);
+			ImGui::InputInt(es_id_string.c_str(), &hex_surface_automata_rule_result.rule_end_step, 0); // Iteration end step that rule result will end
 			ImGui::SameLine();
 			ImGui::SetNextItemWidth(75);
-			ImGui::InputText(sr_id_string.c_str(), &hex_surface_automata_rule_result.hex_result_definition, ImGuiInputTextFlags_CallbackCharFilter, rules_input);
+			ImGui::InputText(sr_id_string.c_str(), &hex_surface_automata_rule_result.hex_result_definition, ImGuiInputTextFlags_CallbackCharFilter, rules_input);// defined cellular automata rules that need to be met
 			ImGui::SameLine();
 			ImGui::SetNextItemWidth(50);
-			ImGui::InputText(rv_id_string.c_str(), &hex_surface_automata_rule_result.hex_result_value, ImGuiInputTextFlags_CallbackCharFilter, Input_Filters::number);
+			ImGui::InputText(rv_id_string.c_str(), &hex_surface_automata_rule_result.hex_result_value, ImGuiInputTextFlags_CallbackCharFilter, Input_Filters::number);// Result value that is assigned to hex grid cell if all automata rules are met
 			ImGui::SameLine();
 			ImGui::SetNextItemWidth(50);
 			// interactively change result display color
@@ -256,6 +284,47 @@ if(!hex_surface_object_to_execute) printf("hex_surface_automata_results_widget_c
 
 	}
 
+	// !!!!!!!!!!! Begin Verify rule results !!!!!!!!!!!!!!!
+// Function to verify that all rule sub rules are valid and assigned a parser tree to perform
+// cellular automata iteration steps
+	bool verify_result_rules(hex_grid_base_class<T>* hex_surface_object_to_execute) {
+		printf("hex_surface_automata_results_widget_class :: verify_result_rules 000");
+		for (hex_surface_automata_rule_result_struct_type rule_result : hex_surface_automata_rule_results) {
+			if (!verify_result_rule(hex_surface_object_to_execute, rule_result)) { return false; }
+		}
+
+		for (hex_surface_automata_rule_struct_type& rule : hex_surface_automata_rules_widget.hex_surface_automata_rules) {
+			printf("hex_surface_automata_results_widget_class :: verify_result_rules 111");
+			printf(": rule :: %s\n", rule.rule_name.c_str());
+			//if (!verify_rule(rule)){ return false;}
+
+			for (hex_automata_sub_rule_struct_type& sub_rule : rule.sub_rules) {
+				printf("hex_surface_automata_results_widget_class :: verify_result_rules 222");
+				printf(": rule "); printf("%s sub rule %s !! \n", rule.rule_name.c_str(), sub_rule.sub_rule_name.c_str());
+				parser_base_node* logic_parser_tree = hex_surface_automata_rules_widget.valid_sub_rule_definition(sub_rule.sub_rule_definition); // For testing
+
+				if (!logic_parser_tree) {// Sub rule code is invalid and a parser tree could not be constructed : define sub rule parameters for a null parser tree
+					//logic_parser.display_parse_tree(logic_parser_tree); // For testing only
+					afw_globalc::get_current_logger()->log(LogLevel::ERROR, "Have invalid sub rule " + sub_rule.sub_rule_name + " of rule " + rule.rule_name);
+					hex_surface_automata_rules_widget.logic_parser_tree_defined = false;
+					sub_rule.root_parser_node = nullptr;
+					return false;
+				}
+
+				//have valid parser_tree : define sub rule parameters for valid parser tree 
+				sub_rule.edit_sub_rule = false;
+				sub_rule.edit_sub_rule_text = false;
+				sub_rule.root_parser_node = logic_parser_tree;
+				hex_surface_automata_rules_widget.logic_parser_tree_defined = true;
+				printf("hex_surface_automata_results_widget_class::verify_result_rules: Have valid automata sub rule definition accepted for  !!!!\n");
+				afw_globalc::get_current_logger()->log(LogLevel::INFO, "hex_surface_automata_results_widget_class::verify_result_rules: Have valid automata sub rule definition accepted for " + sub_rule.sub_rule_name + "!!!!\n");
+			}
+		}
+
+		return true;
+	}
+
+	// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 	int get_min_rule_start() {
 		int min_rule_start = 0;
@@ -285,208 +354,10 @@ if(!hex_surface_object_to_execute) printf("hex_surface_automata_results_widget_c
 		return max_rule_end;
 	}
 
-	// !!!!!!!!!!! Begin Verify rule results !!!!!!!!!!!!!!!
-	bool verify_result_rules(hex_grid_base_class<T> *hex_surface_object_to_execute) {
-printf("hex_surface_automata_results_widget_class :: verify_result_rules 000");
-		for (hex_surface_automata_rule_result_struct_type rule_result : hex_surface_automata_rule_results) {
-			if (!verify_result_rule(hex_surface_object_to_execute,rule_result)) { return false; }
-		}
-	
-		for (hex_surface_automata_rule_struct_type &rule : hex_surface_automata_rules_widget.hex_surface_automata_rules) {
-printf("hex_surface_automata_results_widget_class :: verify_result_rules 111");
-printf(": rule :: %s\n",rule.rule_name.c_str());
-			//if (!verify_rule(rule)){ return false;}
+	// !!!!!!!!!!! PROCESS RULE RESULTS FUNCTIONS !!!!!!!!!!!!!!!
 
-			for (hex_automata_sub_rule_struct_type &sub_rule : rule.sub_rules) {
-printf("hex_surface_automata_results_widget_class :: verify_result_rules 222");
-printf(": rule "); printf("%s sub rule %s !! \n", rule.rule_name.c_str(), sub_rule.sub_rule_name.c_str());
-				parser_base_node *logic_parser_tree = hex_surface_automata_rules_widget.valid_sub_rule_definition(sub_rule.sub_rule_definition); // For testing
-
-				if (!logic_parser_tree) {// Sub rule code is invalid and a parser tree could not be constructed : define sub rule parameters for a null parser tree
-//logic_parser.display_parse_tree(logic_parser_tree); // For testing only
-					afw_globalc::get_current_logger()->log(LogLevel::ERROR, "Have invalid sub rule " + sub_rule.sub_rule_name + " of rule " + rule.rule_name);
-					hex_surface_automata_rules_widget.logic_parser_tree_defined = false;
-					sub_rule.root_parser_node = nullptr;
-					return false;
-				}
-
-				//have valid parser_tree : define sub rule parameters for valid parser tree 
-				sub_rule.edit_sub_rule      = false;
-				sub_rule.edit_sub_rule_text = false;
-				sub_rule.root_parser_node   = logic_parser_tree;
-				hex_surface_automata_rules_widget.logic_parser_tree_defined   = true;
-				printf("hex_surface_automata_results_widget_class::verify_result_rules: Have valid automata sub rule definition accepted for  !!!!\n");
-				afw_globalc::get_current_logger()->log(LogLevel::INFO, "hex_surface_automata_results_widget_class::verify_result_rules: Have valid automata sub rule definition accepted for " + sub_rule.sub_rule_name + "!!!!\n");
-			}
-		}
-
-		return true;
-	}
-
-	//bool verify_rule(hex_surface_automata_rule_struct_type rule) {
-	//	if (!valid_start_step(rule.rule_start_step, rule.rule_end_step)) {
-	//		//vwDialogs::display_error_message("Hex Rule Result", "ERROR : \nHave invalid start step value for rule " + ahex_tools::get_propper_string(rule.rule_name) + " that is < 0 or above the end step value\n");
-	//		vwDialogs::display_error_message("Hex Rule Result", "ERROR : \nHave invalid start step value for rule " + rule.rule_name + " that is < 0 or above the end step value\n");
-	//		return false;
-	//	}
-
-	//	if (!valid_end_step(rule.rule_start_step, rule.rule_end_step)) {
-	//		//vwDialogs::display_error_message("Hex Rule Result", "ERROR : \nHave invalid end step value for rule " + ahex_tools::get_propper_string(rule.rule_name) + " that is < 0 below the end step value\n");
-	//		vwDialogs::display_error_message("Hex Rule Result", "ERROR : \nHave invalid end step value for rule " + rule.rule_name + " that is < 0 below the end step value\n");
-	//		return false;
-	//	}
-
-	//	return true;
-	//}
-
-	
-	bool verify_result_rule(hex_grid_base_class<T> *hex_surface_object_to_execute,hex_surface_automata_rule_result_struct_type rule_result) {
-		if (!valid_start_step(rule_result.rule_start_step, rule_result.rule_end_step)) {
-			vwDialogs::display_error_message("Hex Rule Result", "ERROR : \nHave invalid start step value that is < 0 or above the end step value for rule result : " + rule_result.result_name + "\n");
-			return false;
-		}
-
-		if (!valid_end_step(rule_result.rule_start_step, rule_result.rule_end_step)) {
-			vwDialogs::display_error_message("Hex Rule Result", "ERROR : \nHave invalid end step value that is < 0 or above the end step value for rule result : " + rule_result.result_name + "\n");
-			return false;
-		}
-
-		if (!valid_rules(rule_result)) {
-			return false;
-		}
-
-		if (!valid_result(hex_surface_object_to_execute,rule_result.hex_result_value)) {
-			vwDialogs::display_error_message("Hex Rule Result", "ERROR : \nHave invalid rule result value that is incompatibe for hex grid data type for rule result : " + rule_result.result_name + "\n");
-			return false;
-		}
-
-		return true;
-	}
-
-	bool valid_start_step(int start_step, int end_step) {
-		if (start_step < 0 || start_step > end_step) {
-			return false;
-		} else {
-			return true;
-		}
-	}
-
-	bool valid_end_step(int start_step, int end_step) {
-		if (end_step < 0 || end_step < start_step){
-			return false;
-		} else {
-			return true;}
-	}
-
-	bool valid_rules(hex_surface_automata_rule_result_struct_type rule_result) {
-		std::string rule_definitions = rule_result.hex_result_definition;
-
-//printf("hex_surface_automata_results_widget_class : valid_rules 0000 |%s| %i\n", rule_definitions.c_str(), rule_definitions.size());
-		if (rule_definitions == "\0" || rule_definitions == "\n" || rule_definitions == "") { return true; }// Want to use all rules to define result value
-//printf("hex_surface_automata_results_widget_class : valid_rules 1111\n");
-
-		std::vector<std::string> rule_ids = FW::stringtools::split(rule_definitions, ":");
-//printf("hex_surface_automata_results_widget_class : valid_rules 2222 |%s|\n",rule_definitions.c_str());
-//printf("hex_surface_automata_results_widget_class : valid_rules %i\n", rule_ids.size());
-
-		// Will have at least one rule id defined by split function of rule_definitions
-		// If no rule id specified then all rules are to be applied so return true
-		//if (rule_ids.size() == 1  && (rule_ids[0] == "\n" || rule_ids[0] == "\0" || rule_ids[0].size() == 0)) return true; // This and variations does not work !!!!! Have no idea
-//printf("hex_surface_automata_results_widget_class : valid_rules 3333 %i\n", rule_ids.size());
-
-		for (std::string rule_id : rule_ids) {
-//printf("hex_surface_automata_results_widget_class : result rule |%s|\n", rule_id.c_str());
-
-			int rule_idi;
-			try { rule_idi = stoi(rule_id); }
-			catch (std::invalid_argument const& ex)
-			{
-				// Will have at least one rule id defined by split function of rule_definitions
-				// If no rule id specified then all rules are to be applied so return true
-				// Need this because cannot return true for a null entry of rule_definitions to specify to use all automata rules
-				if (rule_ids.size() == 1) { return true; }
-				//vwDialogs::display_error_message("Hex Rule", "ERROR : \nHave invalid argument for rule id " + ahex_tools::get_propper_string(rule_id) + " for rule result " + ahex_tools::get_propper_string(rule_result.result_name) + " that is not defined in the list of rules\n");
-				vwDialogs::display_error_message("Hex Rule", "ERROR : \nHave invalid argument for rule id " + rule_id + " for rule result " + rule_result.result_name + " that is not defined in the list of rules\n");
-				return false;
-			}
-			catch (std::out_of_range const& ex)
-			{
-				// Will have at least one rule id defined by split function of rule_definitions
-				// If no rule id specified then all rules are to be applied so return true
-				// Need this because cannot return true for a null entry of rule_definitions to specify to use all automata rules
-				if (rule_ids.size() == 1) { return true; }
-				//afw_globalc::get_current_logger()->log(LogLevel::ERROR, "Have rule id out of range for rule id" + ahex_tools::get_propper_string(rule_id) + " for rule result " + ahex_tools::get_propper_string(rule_result.result_name) + " that is not defined in the list of rules !!!!\n");
-				//vwDialogs::display_error_message("Hex Rule", "ERROR : \nHave rule id out of range for rule id" + ahex_tools::get_propper_string(rule_id) + " for rule result " + ahex_tools::get_propper_string(rule_result.result_name) + " that is not defined in the list of rules\n");
-				afw_globalc::get_current_logger()->log(LogLevel::ERROR, "Have rule id out of range for rule id" + rule_id + " for rule result " +rule_result.result_name + " that is not defined in the list of rules !!!!\n");
-				vwDialogs::display_error_message("Hex Rule", "ERROR : \nHave rule id out of range for rule id" + rule_id + " for rule result " + rule_result.result_name + " that is not defined in the list of rules\n");
-				return false;
-			}
-
-			if (!valid_rule(rule_idi)) {
-				//vwDialogs::display_error_message("Hex Rule", "ERROR : \nHave rule of id : " + ahex_tools::get_propper_string(rule_id) + " for rule result : " + ahex_tools::get_propper_string(rule_result.result_name) + " that is not defined in the list of rules\n");
-				vwDialogs::display_error_message("Hex Rule", "ERROR : \nHave rule of id : " + rule_id + " for rule result : " + rule_result.result_name + " that is not defined in the list of rules\n");
-				return false;
-			}
-		}
-
-		return true;
-	}
-
-	bool valid_rule(int rule_id) {
-		if (rule_id >= 0 and rule_id < hex_surface_automata_rules_widget.hex_surface_automata_rules.size()) {
-			return true;
-		} else{
-			return false;
-		}
-	}
-
-	bool valid_result(hex_grid_base_class<T> *hex_surface_object_to_execute,std::string hex_result_value) {
-
-		switch (hex_surface_object_to_execute->hex_grid_value_data_type) {
-			case hex_grid_value_data_type_enum::Boolean:
-			case hex_grid_value_data_type_enum::Integer: {
-				if (FW::stringtools::contains(hex_result_value,"e") || FW::stringtools::contains(hex_result_value,".") || FW::stringtools::contains(hex_result_value,"^")) {
-					//afw_globalc::get_current_logger()->log(LogLevel::ERROR, "Have invalid rule result value that is incompatibe for hex grid integer data type !!!!\n");
-					vwDialogs::display_error_message("Hex Rule", "ERROR : \nHave invalid rule result value that is incompatibe for hex grid integer data type\n");
-					return false;
-				}
-
-				try { stoi(hex_result_value);}
-				catch (std::invalid_argument const& ex)	{
-					return false;
-				}
-				catch (std::out_of_range const& ex) {
-					return false;
-				}
-				break;
-			}
-			case hex_grid_value_data_type_enum::Float: {
-				try { stof(hex_result_value); }
-				catch (std::invalid_argument const& ex) {
-					return false;
-				}
-				catch (std::out_of_range const& ex) {
-					return false;
-				}
-				break;
-			}
-			case hex_grid_value_data_type_enum::Double: {
-				try { stod(hex_result_value); }
-				catch (std::invalid_argument const& ex) {
-					return false;
-				}
-				catch (std::out_of_range const& ex) {
-					return false;
-				}
-				break;
-			}
-		}
-
-		return true;
-	}
-	// !!!!!!!!!!! End Verify rule results !!!!!!!!!!!!!!!
-
-	// !!!!!!!!!!! Begin process rule results !!!!!!!!!!!!!!!
+	// Perform a hexagonal cellula automata generation step
+	// hex_grid_copy must be a reference to retain changes
 	bool perform_hex_surface_automata_generation(int step,bool ignore_individual_step_intervals, hex_grid_class<T> *hex_surface_object_to_execute, std::vector<T> &hex_grid_copy) {
 //printf("hex_surface_automata_results_widget_class :: perform_hex_surface_automata_generation 0000: %i\n" , step);
 		if (!hex_surface_object_to_execute) {
@@ -505,11 +376,11 @@ printf(": rule "); printf("%s sub rule %s !! \n", rule.rule_name.c_str(), sub_ru
 		}
 
 //printf("hex_surface_automata_results_widget_class :: perform_hex_surface_automata_generation 1111:"); printf(" %i : %i : %i\n" , step, hex_surface_object_to_execute->hex_grid.size(), hex_grid_copy.size());
-		// Clear or create hex cell data list of all index and hex coordinate data that is to be displayed on screen for active result 
+		// Clear or create rule result hex cell data list of all index and hex coordinate data that is to be displayed on screen for active result 
 		for (int i = 0; i < hex_surface_automata_rule_results.size();i++) {
 			hex_surface_automata_rule_result_struct_type &rule_result = hex_surface_automata_rule_results[i];
 //printf("hex_surface_automata_results_widget_class :: perform_hex_surface_automata_generation 2222:");printf("%i : %s\n" , step, rule_result.result_name.c_str());
-				if (rule_result.hex_grid_cell_data_id < 0) {// Result Hex grid call data list not defined
+				if (rule_result.hex_grid_cell_data_id < 0) {// Rule result Hex grid cell data list not defined
 //printf("hex_surface_automata_results_widget_class :: perform_hex_surface_automata_generation 3333:");printf("%i : %i\n" , step, rule_result.hex_grid_cell_data_id);
 					rule_result.hex_grid_cell_data_id = hex_surface_object_to_execute->define_new_hex_grid_cell_data();
 //printf("hex_surface_automata_results_widget_class :: perform_hex_surface_automata_generation 4444:");printf("%i : %i\n" , step, rule_result.hex_grid_cell_data_id);
@@ -524,50 +395,59 @@ printf("hex_surface_automata_results_widget_class::perform_hex_surface_automata_
 
 //printf("hex_surface_automata_results_widget_class :: perform_hex_surface_automata_generation 4444BBBB:"); printf("% i : %i : %i\n", step, rule_result.hex_grid_cell_data_id, rule_result.display_shape_id);
 
+					// Define hex grid cell display data
 					hex_surface_object_to_execute->hex_grid_cells_data_list[i].hex_grid_cells_display_color = rule_result.result_display_color;
 					hex_surface_object_to_execute->hex_grid_cells_data_list[i].hex_grid_cells_display_shape = rule_result.result_display_shape;
 					hex_surface_object_to_execute->hex_grid_cells_data_list[i].display_data = rule_result.display_result;
 				}
 				else {
 //printf("hex_surface_automata_results_widget_class :: perform_hex_surface_automata_generation 5555:");printf("% i : % i\n" , step, rule_result.hex_grid_cell_data_id);
+					// Have hex automata rule result hex grid data defined : clear of existing data to be reused.
 					hex_surface_object_to_execute->clear_hex_grid_cell_data(rule_result.hex_grid_cell_data_id);
 				}
 //printf("hex_surface_automata_results_widget_class :: perform_hex_surface_automata_generation 7777:"); printf(" %i : %i\n" , step, rule_result.hex_grid_cell_data_id);
 		}
 
 //printf("hex_surface_automata_results_widget_class :: perform_hex_surface_automata_generation 8888:"); printf(" %i : %i : %i\n" , step, hex_surface_object_to_execute->hex_grid.size(), hex_grid_copy.size());
-		for (hex_surface_index_data_type hex_index=0; hex_index < hex_surface_object_to_execute->hex_grid.size(); hex_index++) {
+
+		// Iterate through each main hexagonal automata grid cell and process through the list of rule results to find a valid rule result that
+		// the hexagonal automata grid cell is to be assigned to, and if found assign the hex grid cell value to that of the rule result value
+		for (hex_surface_index_data_type hex_index=0; hex_index < hex_surface_object_to_execute->hex_grid.size(); hex_index++) { // Iterate through each hex grid cell
 			// !!!!!!!!!!!!!! NOTE : Need to take into account the hex indices that are on the edge or boundaries of the hex grid !!!!!!!!!!!!!!!!!!!!!!!
 
 //printf("hex_surface_automata_results_widget_class :: perform_hex_surface_automata_generation 9999:"); printf(" %i\n" , step);
-			for (size_t rule_result_index = 0; rule_result_index < hex_surface_automata_rule_results.size(); rule_result_index ++) {
-				hex_surface_automata_rule_result_struct_type rule_result =  hex_surface_automata_rule_results[rule_result_index];
+			for (size_t rule_result_index = 0; rule_result_index < hex_surface_automata_rule_results.size(); rule_result_index ++) { // Iterate through each rule result 
+				hex_surface_automata_rule_result_struct_type rule_result =  hex_surface_automata_rule_results[rule_result_index]; // Assign a rule result data to a temp variable
 //printf("hex_surface_automata_results_widget_class :: perform_hex_surface_automata_generation AAAA:"); printf(" %i : %i :%s \n" , step, rule_result.active_result, rule_result.result_name.c_str());
 
-				if (rule_result.active_result) {
+				if (rule_result.active_result) {// If rule result is active 
 					if ((step >= rule_result.rule_start_step  && step <= rule_result.rule_end_step) || ignore_individual_step_intervals) { // perform automata step if within specified step range
-						//printf("hex_surface_automata_results_widget_class :: perform_hex_surface_automata_generation BBBB:"); printf(" %i : %i :%s : %s\n" , step, rule_result.active_result, rule_result.result_name.c_str(), rule_result.hex_result_definition.c_str());
-						std::string rule_definitions = FW::stringtools::trim(rule_result.hex_result_definition);
-						//printf("hex_surface_automata_results_widget_class :: perform_hex_surface_automata_generation CCCC111AAAA:"); printf(" %i : %i :%s : |%s| :|%s| : %i\n" , hex_index, rule_result.active_result, rule_result.result_name.c_str(), rule_result.hex_result_definition.c_str(), rule_definitions.c_str(), rule_definitions.size());
+//printf("hex_surface_automata_results_widget_class :: perform_hex_surface_automata_generation BBBB:"); printf(" %i : %i :%s : %s\n" , step, rule_result.active_result, rule_result.result_name.c_str(), rule_result.hex_result_definition.c_str());
+						std::string rule_definitions = FW::stringtools::trim(rule_result.hex_result_definition); // make sure have no spaces in string of rule definition
+//printf("hex_surface_automata_results_widget_class :: perform_hex_surface_automata_generation CCCC111AAAA:"); printf(" %i : %i :%s : |%s| :|%s| : %i\n" , hex_index, rule_result.active_result, rule_result.result_name.c_str(), rule_result.hex_result_definition.c_str(), rule_definitions.c_str(), rule_definitions.size());
 						if (rule_definitions.empty() || rule_definitions[0] == '\0' || rule_definitions[0] == '\n') {// Want to use all rules to define result value
-							//printf("hex_surface_automata_results_widget_class :: perform_hex_surface_automata_generation CCCC111BBB:\n");
+//printf("hex_surface_automata_results_widget_class :: perform_hex_surface_automata_generation CCCC111BBB:\n");
 							if (all_rule_conditions_met(rule_result, hex_surface_object_to_execute, hex_index)) {
-								//printf("hex_surface_automata_results_widget_class :: perform_hex_surface_automata_generation CCCC111CCC:\n");
+//printf("hex_surface_automata_results_widget_class :: perform_hex_surface_automata_generation CCCC111CCC:\n");
 								assign_rule_result(hex_surface_object_to_execute, rule_result, hex_grid_copy, hex_index);
-								//printf("hex_surface_automata_results_widget_class :: perform_hex_surface_automata_generation CCCC111DDD:\n");
+//printf("hex_surface_automata_results_widget_class :: perform_hex_surface_automata_generation CCCC111DDD:\n");
+								// Add hex grid rule result grid cell to the rules result overlay hex grid for the 
+								// result rule of index rule_result_index and hex grid cell of index hex_index
 								hex_surface_object_to_execute->add_hex_grid_cell_index(rule_result_index, hex_index);
-								//printf("hex_surface_automata_results_widget_class :: perform_hex_surface_automata_generation CCCC111EEE:\n");
+//printf("hex_surface_automata_results_widget_class :: perform_hex_surface_automata_generation CCCC111EEE:\n");
 								rule_result_index = hex_surface_automata_rule_results.size();// Once a rule result condition is met, any remaining rule result conditions are skipped and ignored.
 							}
 						}
 						else { // Use specified automata rules
 							//printf("hex_surface_automata_results_widget_class :: perform_hex_surface_automata_generation CCCC222AAA:\n");
 							if (all_specified_rule_conditions_met(rule_result, hex_surface_object_to_execute, hex_index)) {
-								//printf("hex_surface_automata_results_widget_class :: perform_hex_surface_automata_generation CCCC222BBB:\n");
+//printf("hex_surface_automata_results_widget_class :: perform_hex_surface_automata_generation CCCC222BBB:\n");
 								assign_rule_result(hex_surface_object_to_execute, rule_result, hex_grid_copy, hex_index);
-								//printf("hex_surface_automata_results_widget_class :: perform_hex_surface_automata_generation CCCC222CCC:\n");
+//printf("hex_surface_automata_results_widget_class :: perform_hex_surface_automata_generation CCCC222CCC:\n");
+								// Add hex grid rule result grid cell to the rules result overlay hex grid for the 
+								// result rule of index rule_result_index and hex grid cell of index hex_index
 								hex_surface_object_to_execute->add_hex_grid_cell_index(rule_result_index, hex_index);
-								//printf("hex_surface_automata_results_widget_class :: perform_hex_surface_automata_generation CCCC222DDD\n");
+//printf("hex_surface_automata_results_widget_class :: perform_hex_surface_automata_generation CCCC222DDD\n");
 								rule_result_index = hex_surface_automata_rule_results.size();// Once a rule result condition is met, any remaining rule result conditions are skipped and ignored.
 							}
 						}
@@ -579,7 +459,8 @@ printf("hex_surface_automata_results_widget_class::perform_hex_surface_automata_
 		return true;
 	}
 	
-
+	// Function to verify that all rule result rules conditions have been met or not.
+	// rule_result must be a reference to retain changes
 	bool all_rule_conditions_met(hex_surface_automata_rule_result_struct_type &rule_result, hex_grid_base_class<T>* hex_surface_object_to_execute, hex_surface_index_data_type hex_index) {
 		if (!hex_surface_object_to_execute) {
 			afw_globalc::get_current_logger()->log(LogLevel::INFO, "hex_surface_automata_results_widget_class::all_rule_conditions_met : ERROR :  Could not test all rule conditions met. hex_surface_object_to_execute undefined \n");
@@ -594,6 +475,7 @@ printf("hex_surface_automata_results_widget_class::perform_hex_surface_automata_
 		bool have_active_and_valid_rule_met = false;// Flag to indicate if have active and valid rule met
 
 //printf("hex_surface_automata_results_widget_class :: all_rule_conditions_met 000000: %i : :%i\n" , hex_index, hex_surface_automata_rules_widget.hex_surface_automata_rules.size());
+		// Iterate through each cellula automata rule and test if all cellular automata sub rules for each rule are met or not
 		for (hex_surface_automata_rule_struct_type rule : hex_surface_automata_rules_widget.hex_surface_automata_rules) {
 //printf("hex_surface_automata_results_widget_class :: all_rule_conditions_met 11111: %i : %i :%s : %s\n" , hex_index, rule.active_rule, rule_result.result_name.c_str(), rule.rule_name.c_str());
 			//if (rule.active_rule) {
@@ -625,6 +507,8 @@ printf("hex_surface_automata_results_widget_class::perform_hex_surface_automata_
 		return have_active_and_valid_rule_met;
 	}
 
+	// Function to verify that a specified rule result rules conditions have been met or not.
+	// rule_result must be a reference to retain changes
 	bool all_specified_rule_conditions_met(hex_surface_automata_rule_result_struct_type &rule_result, hex_grid_base_class<T>* hex_surface_object_to_execute, hex_surface_index_data_type hex_index) {
 		if (!hex_surface_object_to_execute) {
 			afw_globalc::get_current_logger()->log(LogLevel::INFO, "hex_surface_automata_results_widget_class::all_specified_rule_conditions_met : ERROR :  Could not test all rule conditions met. hex_surface_object_to_execute undefined \n");
@@ -632,7 +516,7 @@ printf("hex_surface_automata_results_widget_class::perform_hex_surface_automata_
 		}
 
 //printf("hex_surface_automata_results_widget_class : all_specified_rule_conditions_met 1111\n");
-		std::vector<std::string> rule_ids = FW::stringtools::split(rule_result.hex_result_definition, ":");
+		std::vector<std::string> rule_ids = FW::stringtools::split(rule_result.hex_result_definition, ":"); // Assign each rule index id to a string vector array
 //printf("hex_surface_automata_results_widget_class : all_specified_rule_conditions_met 2222 |%s|\n", rule_result.hex_result_definition.c_str());
 //printf("hex_surface_automata_results_widget_class : all_specified_rule_conditions_met %i\n", rule_ids.size());
 
@@ -689,6 +573,8 @@ printf("hex_surface_automata_results_widget_class::perform_hex_surface_automata_
 		return have_active_and_valid_rule_met;
 	}
 
+	// Function to verify that all sub rules conditions have been met or not.
+	// rule must be a reference to retain changes
 	bool all_sub_rule_conditions_met(hex_surface_automata_rule_struct_type &rule, hex_grid_base_class<T>* hex_surface_object_to_execute, hex_surface_index_data_type hex_index) {
 		logic_parser_class<T> logic_parser;
 
@@ -699,21 +585,23 @@ printf("hex_surface_automata_results_widget_class::perform_hex_surface_automata_
 			return false;
 		}
 
-		bool have_active_sub_rule_met = false;// Flag to indicate if have active and valid sub rule met
+		bool have_active_sub_rule_met = false;// Flag to indicate if have active and valid sub rule met. Defaults to false for case of no sub rules present
 
+		// Iterate through each cellula automata sub rule and test if all cellular automata sub rules is met or not
 		for (hex_automata_sub_rule_struct_type &sub_rule : rule.sub_rules) {
 //printf("hex_surface_automata_results_widget_class :: all_sub_rule_conditions_met 000000: %i : :%s : %s\n" , hex_index, rule.rule_name.c_str(), sub_rule.sub_rule_name.c_str());
 			if (sub_rule.active_sub_rule) {
+				// Sub rule is active to be used and tested for conditions to be met
 //printf("hex_surface_automata_results_widget_class :: all_sub_rule_conditions_met 11111: \n");
 				if (sub_rule.root_parser_node == nullptr) {
-					return false;
+					return false; // Do not have a defined parser tree for sub rule
 				}
 
 //printf("hex_surface_automata_results_widget_class :: all_sub_rule_conditions_met 22222: \n");
 				bool valid_evaluation = logic_parser.evaluate_parse_tree(sub_rule.root_parser_node, hex_surface_object_to_execute, hex_index);
 
 				if (!valid_evaluation) {
-					return false;
+					return false;// Have sub rule that has conditions not met: return false
 				}
 
 //printf("hex_surface_automata_results_widget_class::all_sub_rule_conditions_met ####### ::");
@@ -723,7 +611,7 @@ printf("hex_surface_automata_results_widget_class::perform_hex_surface_automata_
 //case hex_grid_value_data_type_enum::Integer:  printf("Integer:%i\n", sub_rule.root_parser_node->value.second.ivalue); break;
 //case hex_grid_value_data_type_enum::Double:   printf("Double: %d\n", sub_rule.root_parser_node->value.second.dvalue); break;
 //}
-
+				// Assign sub rule condiitons met to false for root_parser_node value for next iteration of sub rules
 				switch (sub_rule.root_parser_node->value.first) {
 					case(parse_value_data_type_enum::Boolean): if (!sub_rule.root_parser_node->value.second.bvalue) { sub_rule.sub_rule_conditions_met = false; return false; } break;
 					case(parse_value_data_type_enum::Float)  : if (sub_rule.root_parser_node->value.second.fvalue > 0.00000000001f) { sub_rule.sub_rule_conditions_met = false; return false; } break;// This is as a precaution that a zero value in a float may not be stored as a zero value
@@ -732,21 +620,25 @@ printf("hex_surface_automata_results_widget_class::perform_hex_surface_automata_
 					//case(parse_value_data_type_enum::nan)    :  {sub_rule.root_parser_node->value.second.ivalue = 0; sub_rule.sub_rule_conditions_met = false; return false; } break;//++++++++
 				}
 
-				have_active_sub_rule_met = true;
+				have_active_sub_rule_met = true;// assign return value to true as have sub rule conditions met for current active sub rule
 			}
 		}
 
 		return have_active_sub_rule_met;
 	}
 
+	// Function to assign a rule result value to the copy of the main hexagonal automata grid (hex_grid_copy) cell of given vector array index hex_index
+	// hex_grid_copy must be a reference to retain changes
 	void assign_rule_result(hex_grid_class<T> *hex_surface_object_to_execute,hex_surface_automata_rule_result_struct_type rule_result, std::vector<T>& hex_grid_copy, hex_surface_index_data_type hex_index) {
 //printf("hex_surface_automata_results_widget_class :: assign_rule_result 000\n");
 
-		if (!hex_surface_object_to_execute) {// Here to test for debug 
+		if (!hex_surface_object_to_execute) {
 			afw_globalc::get_current_logger()->log(LogLevel::INFO, "hex_surface_automata_results_widget_class::assign_rule_result : ERROR :  Could not assign rule result. hex_surface_object_to_execute undefined \n");
 			return ;
 		}
 //printf("hex_surface_automata_results_widget_class :: assign_rule_result 111\n");
+		//Assign rule result value to hexagonal automata grid cell of vector array index hex_index
+		// Need a try system to test here ?????
 		if (hex_index >= 0 && hex_index < hex_grid_copy.size()) {
 			switch (hex_surface_object_to_execute->hex_grid_value_data_type) {
 				case hex_grid_value_data_type_enum::Boolean:
@@ -787,4 +679,159 @@ private:
 	}
 
 
+
+	// !!!!!!!!!!!!!!!!!! FUNCTIONS TO DEFINE THAT CELLULA AUTOMATA RULES AND RULE RESULTS ARE VALID OR NOT !!!!!!!!!!!!!!!!!!!!!
+	
+	// Verify that the rule result is defined within the permited minimum and maximum iteration step interval.
+	// If it is return a true value, otherwise a false value.
+	bool verify_result_rule(hex_grid_base_class<T> *hex_surface_object_to_execute,hex_surface_automata_rule_result_struct_type rule_result) {
+		if (!valid_start_step(rule_result.rule_start_step, rule_result.rule_end_step)) {
+			vwDialogs::display_error_message("Hex Rule Result", "ERROR : \nHave invalid start step value that is < 0 or above the end step value for rule result : " + rule_result.result_name + "\n");
+			return false;
+		}
+
+		if (!valid_end_step(rule_result.rule_start_step, rule_result.rule_end_step)) {
+			vwDialogs::display_error_message("Hex Rule Result", "ERROR : \nHave invalid end step value that is < 0 or above the end step value for rule result : " + rule_result.result_name + "\n");
+			return false;
+		}
+
+		if (!valid_rules(rule_result)) {
+			return false;
+		}
+
+		if (!valid_result(hex_surface_object_to_execute,rule_result.hex_result_value)) {
+			vwDialogs::display_error_message("Hex Rule Result", "ERROR : \nHave invalid rule result value that is incompatibe for hex grid data type for rule result : " + rule_result.result_name + "\n");
+			return false;
+		}
+
+		return true;
+	}
+
+	// test that have a valid start iteration step
+	bool valid_start_step(int start_step, int end_step) {
+		if (start_step < 0 || start_step > end_step) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+
+	// test that have a valid end iteration step
+	bool valid_end_step(int start_step, int end_step) {
+		if (end_step < 0 || end_step < start_step){
+			return false;
+		} else {
+			return true;}
+	}
+
+	// validate that the nominated rules of the rule result that have to be met exist in the list of available automata rules
+	bool valid_rules(hex_surface_automata_rule_result_struct_type rule_result) {
+		std::string rule_definitions = rule_result.hex_result_definition;// variable to store automata rule results for processing
+
+//printf("hex_surface_automata_results_widget_class : valid_rules 0000 |%s| %i\n", rule_definitions.c_str(), rule_definitions.size());
+		if (rule_definitions == "\0" || rule_definitions == "\n" || rule_definitions == "") { return true; }// Want to use all rules to define result value
+//printf("hex_surface_automata_results_widget_class : valid_rules 1111\n");
+
+		std::vector<std::string> rule_ids = FW::stringtools::split(rule_definitions, ":"); // define individual automata rule index ids that rule result uses
+//printf("hex_surface_automata_results_widget_class : valid_rules 2222 |%s|\n",rule_definitions.c_str());
+//printf("hex_surface_automata_results_widget_class : valid_rules %i\n", rule_ids.size());
+
+		// Will have at least one rule id defined by split function of rule_definitions
+		// If no rule id specified then all rules are to be applied so return true
+		//if (rule_ids.size() == 1  && (rule_ids[0] == "\n" || rule_ids[0] == "\0" || rule_ids[0].size() == 0)) return true; // This and variations does not work !!!!! Have no idea
+//printf("hex_surface_automata_results_widget_class : valid_rules 3333 %i\n", rule_ids.size());
+
+		for (std::string rule_id : rule_ids) { // go through list of defined cellula automata rule index ids saved as a string 
+//printf("hex_surface_automata_results_widget_class : result rule |%s|\n", rule_id.c_str());
+
+			// Make sure that there are no errors in conmverting string to integer number
+			int rule_idi;
+			try { rule_idi = stoi(rule_id); }
+			catch (std::invalid_argument const& ex)
+			{
+				// Will have at least one rule id defined by split function of rule_definitions
+				// If no rule id specified then all rules are to be applied so return true
+				// Need this because cannot return true for a null entry of rule_definitions to specify to use all automata rules
+				if (rule_ids.size() == 1) { return true; }
+				//vwDialogs::display_error_message("Hex Rule", "ERROR : \nHave invalid argument for rule id " + ahex_tools::get_propper_string(rule_id) + " for rule result " + ahex_tools::get_propper_string(rule_result.result_name) + " that is not defined in the list of rules\n");
+				vwDialogs::display_error_message("Hex Rule", "ERROR : \nHave invalid argument for rule id " + rule_id + " for rule result " + rule_result.result_name + " that is not defined in the list of rules\n");
+				return false;
+			}
+			catch (std::out_of_range const& ex)
+			{
+				// Will have at least one rule id defined by split function of rule_definitions
+				// If no rule id specified then all rules are to be applied so return true
+				// Need this because cannot return true for a null entry of rule_definitions to specify to use all automata rules
+				if (rule_ids.size() == 1) { return true; }
+				//afw_globalc::get_current_logger()->log(LogLevel::ERROR, "Have rule id out of range for rule id" + ahex_tools::get_propper_string(rule_id) + " for rule result " + ahex_tools::get_propper_string(rule_result.result_name) + " that is not defined in the list of rules !!!!\n");
+				//vwDialogs::display_error_message("Hex Rule", "ERROR : \nHave rule id out of range for rule id" + ahex_tools::get_propper_string(rule_id) + " for rule result " + ahex_tools::get_propper_string(rule_result.result_name) + " that is not defined in the list of rules\n");
+				afw_globalc::get_current_logger()->log(LogLevel::ERROR, "Have rule id out of range for rule id" + rule_id + " for rule result " +rule_result.result_name + " that is not defined in the list of rules !!!!\n");
+				vwDialogs::display_error_message("Hex Rule", "ERROR : \nHave rule id out of range for rule id" + rule_id + " for rule result " + rule_result.result_name + " that is not defined in the list of rules\n");
+				return false;
+			}
+
+			if (!valid_rule(rule_idi)) {// Test that rule index id is a valid number that is in the index range of the list of defined rules vector array
+				//vwDialogs::display_error_message("Hex Rule", "ERROR : \nHave rule of id : " + ahex_tools::get_propper_string(rule_id) + " for rule result : " + ahex_tools::get_propper_string(rule_result.result_name) + " that is not defined in the list of rules\n");
+				vwDialogs::display_error_message("Hex Rule", "ERROR : \nHave rule of id : " + rule_id + " for rule result : " + rule_result.result_name + " that is not defined in the list of rules\n");
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	// Test that a rule index id number exists within the range of the defined rules vector array
+	bool valid_rule(int rule_id) {
+		if (rule_id >= 0 and rule_id < hex_surface_automata_rules_widget.hex_surface_automata_rules.size()) {
+			return true;
+		} else{
+			return false;
+		}
+	}
+
+	// Test that a rule result value defined as a string is a valid number that can be assigned to a hex automata grid cell
+	bool valid_result(hex_grid_base_class<T> *hex_surface_object_to_execute,std::string hex_result_value) {
+		switch (hex_surface_object_to_execute->hex_grid_value_data_type) {
+			case hex_grid_value_data_type_enum::Boolean:
+			case hex_grid_value_data_type_enum::Integer: {
+				if (FW::stringtools::contains(hex_result_value,"e") || FW::stringtools::contains(hex_result_value,".") || FW::stringtools::contains(hex_result_value,"^")) {
+					//afw_globalc::get_current_logger()->log(LogLevel::ERROR, "Have invalid rule result value that is incompatibe for hex grid integer data type !!!!\n");
+					vwDialogs::display_error_message("Hex Rule", "ERROR : \nHave invalid rule result value that is incompatibe for hex grid integer data type\n");
+					return false;
+				}
+
+				try { stoi(hex_result_value);}
+				catch (std::invalid_argument const& ex)	{
+					return false;
+				}
+				catch (std::out_of_range const& ex) {
+					return false;
+				}
+				break;
+			}
+			case hex_grid_value_data_type_enum::Float: {
+				try { stof(hex_result_value); }
+				catch (std::invalid_argument const& ex) {
+					return false;
+				}
+				catch (std::out_of_range const& ex) {
+					return false;
+				}
+				break;
+			}
+			case hex_grid_value_data_type_enum::Double: {
+				try { stod(hex_result_value); }
+				catch (std::invalid_argument const& ex) {
+					return false;
+				}
+				catch (std::out_of_range const& ex) {
+					return false;
+				}
+				break;
+			}
+		}
+
+		return true;
+	}
+	// !!!!!!!!!!! End Verify rule results !!!!!!!!!!!!!!!
 };

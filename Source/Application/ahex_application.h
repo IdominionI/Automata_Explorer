@@ -4,6 +4,12 @@
 #include "Source/Editor/Main_Window/Panels/create_hex_grid_panel.h"
 #include "Source/Automata/Hex_automata_widget.h"
 
+
+// Main Application class from where application GUI, execution and exit takes place
+// The central application node from which manages the topmost application functions
+// to select and create the cellular automata grid type projects and set/manage
+// application gloabal preferences etc.
+
 template <class HT>
 class ahex_application_class {
 public:
@@ -182,12 +188,12 @@ protected:
 	}
 
 private:
-	bool global_grid_defined      = false;
-	bool create_global_grid_popup = false;
-	bool create_hex_sub_grid_popup  = false;
+	bool global_grid_defined        = false; // Flag to indicate that a project grid is defined and ready to be used
+	bool create_global_grid_popup   = false; // Flag to indicate that the ImGui popup to define and create a project grid is to be displyed
+	bool create_hex_sub_grid_popup  = false; // Flag to indicate that the ImGui popup to define and create a project sub grid is to be displyed
 
-	hex_grid_class<HT> *global_hex_grid     = nullptr;
+	hex_grid_class<HT> *global_hex_grid = nullptr; // The hexagoanal automata grid class that manages all aspects of the project hexagonal automata grid 
 
-	create_hex_grid_panel_class<HT> create_hex_grid_panel;
-	hex_surface_automata_widget_class<HT> hex_surface_automata_widget;
+	create_hex_grid_panel_class<HT>       create_hex_grid_panel;	   // Class definition of the display panel to define and create a hexagonal automata grid
+	hex_surface_automata_widget_class<HT> hex_surface_automata_widget; // Class definition of the window widget display that manages the user interaction and hexagonal automata execution
 };

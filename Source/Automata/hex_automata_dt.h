@@ -17,59 +17,37 @@
 	parameter data.
 */
 
-#define NUMBER_HEX_NEIGHBOURS 6
+//typedef unsigned long int u_long_int; // Jusin case needed
 
-#define GENERATED_HEX_SURFACE 0
-#define DEFINED_HEX_SURFACE   1
-#define RANDOM_GENERATED      2
-
-#define HEX_NEIGHBOR_IGNOR_RULE_CODE    -1
-#define HEX_NEIGHBOR_INACTIVE_RULE_CODE  0
-#define HEX_NEIGHBOR_ACTIVE_RULE_CODE    1
-
-// Start New voxel automata definitions
-#define HEX_NEIGHBOR_LESS_THAN_RULE_CODE           -2020
-#define HEX_NEIGHBOR_LESS_THAN_OR_EQUAL_RULE_CODE  -2010
-#define HEX_NEIGHBOR_NOT_EQUAL_RULE_CODE           -2000
-#define HEX_NEIGHBOR_EQUAL_RULE_CODE                2000
-#define HEX_NEIGHBOR_GREATER_THAN_OR_EQUALRULE_CODE 2010
-#define HEX_NEIGHBOR_GREATER_THAN_RULE_CODE         2020
-
-#define HEX_MAX_NAME_LENGTH			     30
-#define HEX_MAX_RULE_DEFINITION_LENGTH   1000
-#define HEX_MAX_RULE_RESULT_RULES_LENGTH 30
-#define HEX_MAX_RULE_RESULT_VALUE_LENGTH 15
-
-typedef unsigned long int u_long_int;
-
-enum class hex_lower_rule_condition_enum_type { ignore, LTEQ, LT };
-enum class hex_upper_rule_condition_enum_type { ignore, NE, EQ, LTEQ, LT };
-
+// Hexagonal automata sub rule structure type
+// To store data that defines a hexagonal cellula automata sub rule.
 struct hex_automata_sub_rule_struct_type {
-	int	 sub_rule_id = -1;
-	std::string  sub_rule_name = "sub_rule";
-	bool active_sub_rule = false;
+	int	 sub_rule_id = -1;					 // Unique id number to ba able to display Imgui widgets without identifier clashes and for simple id purposes
+	std::string  sub_rule_name = "sub_rule"; // Text label name of sub rule
+	bool active_sub_rule = false;			 // Indicate if sub rule is to be used or not
 
-	parser_base_node *root_parser_node = nullptr; //Forward declaration to root parser node of sub_rule
+	parser_base_node *root_parser_node = nullptr; // Forward declaration to root parser node of sub_rule
 
-	std::string sub_rule_definition = "";
-	std::string sub_rule_edit       = "";
+	std::string sub_rule_definition = ""; // String to store definition of sub rule as a string of text 
+	//std::string sub_rule_edit       = "";
 
-	bool sub_rule_conditions_met = false;
-	bool edit_sub_rule           = false;
-	bool edit_sub_rule_text      = false;
+	bool sub_rule_conditions_met = false; // Indicate if sub rule condition has been met
+	bool edit_sub_rule           = false; // Indicate if sub rule has been edited
+	bool edit_sub_rule_text      = false; // Indicate if sub rule can be edited or not
 
 };
 
+// Hexagonal automata rule structure type
+// To store data that defines a hexagonal cellula automata rule.
 struct hex_surface_automata_rule_struct_type {
-	int	 rule_id          = -1;
-	std::string	rule_name = "rule";
-	//bool active_rule	  = false;
-	//int  rule_start_step  = 0, rule_end_step = 0;
+	int	 rule_id          = -1;	   // Unique id number to ba able to display Imgui widgets without identifier clashes and for simple id purposes
+	std::string	rule_name = "rule";// Text label name of rule
 
-	bool display_sub_rules = false;
+	bool display_sub_rules = false; // Indicate if sub rules are to be displayed as an overlay on the main hex grid or not
 
-	std::vector<hex_automata_sub_rule_struct_type> sub_rules;
+	std::vector<hex_automata_sub_rule_struct_type> sub_rules;// List of sub rules that make up this rule defied as a dynamic vector
+
+	// !!!!!!!!! Functions to manage the sub rule definitions that make up a rule !!!!!!!!!!
 
 	void add_sub_rule(hex_automata_sub_rule_struct_type sub_rule) {
 		if (sub_rule.sub_rule_id < 0) { 
@@ -140,22 +118,28 @@ struct hex_surface_automata_rule_struct_type {
 
 
 // This struct may need to be defined elsewhere
+// Hexagonal automata rule results structure type
+// To store data that defines a set of hexagonal cellula automata rules that assign
+// a value to a hexagonal cellular automata grid cell
 struct hex_surface_automata_rule_result_struct_type {
-	int	 rule_result_id = -1;
-	std::string  result_name = "hex result";
-	bool active_result = false;
-	int  rule_start_step = 0, rule_end_step = 0;
+	int	 rule_result_id = -1;						// Unique id number to ba able to display Imgui widgets without identifier clashes and for simple id purposes
+	std::string  result_name = "hex result";		// Text label name of rule result
+	bool active_result = false;						// Indicates if the rule result is active and to be used in the iteration process or not
+	int  rule_start_step = 0, rule_end_step = 0;	// Start and end iteration steps that the rule is to be applied over
 
-	std::string hex_result_definition = "";
-	std::string hex_result_value      = "";
+	std::string hex_result_definition = "";			// Text based definition of which rule(s) are to be met
+	std::string hex_result_value      = "";			// Result to assign hex grid automata cell if all rule conditions are met
+
+	// Graphical definitions used to display rule results as an overlay on the main cellula automata hex grid
 	ImVec4 result_display_color		  = { 1.0f,1.0f,1.0f,1.0f };
 	int display_shape_id			  = 1;
 	float display_shape_size          = 6.0f;
 	ImPlotMarker_ result_display_shape = ImPlotMarker_::ImPlotMarker_Circle;
 
-	bool display_result = true;
-	std::vector<int> hex_surface_automata_rules_met;
+	bool display_result = true;						// Indicate if the rule result overlay is to be displayed or not
+	std::vector<int> hex_surface_automata_rules_met;// Indicate if all rule results have been met or not for the current iteration step
 
+	// Function to define which ImPLot shape is to be used to display the rule result 
 	void define_imgui_shape() {
 		switch (display_shape_id) {
 			case 0 : result_display_shape = ImPlotMarker_::ImPlotMarker_Circle; break;
@@ -177,8 +161,8 @@ struct hex_surface_automata_rule_result_struct_type {
 
 // End New voxel automata definitions
 
-struct hex_surface_automata_generator_parameters_struct_type {
-	float	 x_start = -1.0f, x_end = 1.0f;
-	float	 y_start = -1.0f, y_end = 1.0f;
-	float	 resolution_step = 0.01f;
-};
+//struct hex_surface_automata_generator_parameters_struct_type {
+//	float	 x_start = -1.0f, x_end = 1.0f;
+//	float	 y_start = -1.0f, y_end = 1.0f;
+//	float	 resolution_step = 0.01f;
+//};

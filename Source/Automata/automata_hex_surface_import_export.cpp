@@ -193,12 +193,12 @@
 		hex_surface_automata_rules.clear();
 		hex_surface_automata_rules.shrink_to_fit();
 
-		std::string working_model_string = FW::filetools::read_all(working_model_file);
+		std::string working_model_string = FW::filetools::read_all(working_model_file);// Read hex grid data text file into a string buffer
 
-		std::vector<std::string> lines = FW::stringtools::split(working_model_string, '\n');
-		int line_number = 0;
+		std::vector<std::string> lines = FW::stringtools::split(working_model_string, '\n');// Split string buffer into a vector array represeting lines of text
+		int line_number = 0;// variable representing file line number and lines vector array index number
 
-		if (!import_hex_automata_rules(lines, line_number)) {
+		if (!import_hex_automata_rules(lines, line_number)) {// Importation of hex automata data failed
 			stream.close();
 			
 			std::string error_message = "ERROR :: Import hex automata data failed.\n Corrupted or out of sequence data at line\n";
@@ -496,10 +496,10 @@
 			return false;
 		}
 
-		std::string working_model_string = FW::filetools::read_all(working_model_file);
+		std::string working_model_string = FW::filetools::read_all(working_model_file);// Split string buffer into a vector array represeting lines of text
 
-		std::vector<std::string> lines = FW::stringtools::split(working_model_string, '\n');
-		int line_number = 0;
+		std::vector<std::string> lines = FW::stringtools::split(working_model_string, '\n');// Split string buffer into a vector array represeting lines of text
+		int line_number = 0;// variable representing file line number and lines vector array index number
 	
 		hex_surface_automata_rule_struct_type hex_surface_automata_rule;
 		std::string line;
@@ -578,10 +578,10 @@
 			return false;
 		}
 
-		std::string working_model_string = FW::filetools::read_all(working_model_file);
+		std::string working_model_string = FW::filetools::read_all(working_model_file);// Split string buffer into a vector array represeting lines of text
 
-		std::vector<std::string> lines = FW::stringtools::split(working_model_string, '\n');
-		int line_number = 0;
+		std::vector<std::string> lines = FW::stringtools::split(working_model_string, '\n');// Split string buffer into a vector array represeting lines of text
+		int line_number = 0;// variable representing file line number and lines vector array index number
 
 		hex_automata_sub_rule_struct_type hex_automata_sub_rule;
 

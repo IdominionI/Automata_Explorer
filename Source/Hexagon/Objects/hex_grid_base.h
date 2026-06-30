@@ -5,27 +5,29 @@
 #include <type_traits>
 
 #include <Framework/AFW/Application/afw_global.h>
-
 #include <FrameWork/AFW/Tools/afw_id_key_manager.h>
 
 #include "hex_grid_parameters.h"
 
 #include <ThirdParty/ImGui/implot/implot.h>
 
+// Data structure to store and manage unordered hexagonal automata grid data and display that data 
+// as a specific shape, size and color in the main hexagonal automata grid display. 
 
 struct hex_grid_cell_data_struct_type {
 	int hex_grid_cell_data_id = -1;
-	ImVec4 hex_grid_cells_display_color = { 1.0f,1.0f,1.0f,1.0f };
-	int    display_shape_id = 1;
-	float  display_shape_size = 6.0f;
-	ImPlotMarker_ hex_grid_cells_display_shape = ImPlotMarker_::ImPlotMarker_Circle;
-
-	std::vector<hex_surface_index_data_type> hex_grid_cells_index = {};
-	std::vector<float> hex_cell_centers_x = {};
-	std::vector<float> hex_cell_centers_y = {};
-
 	bool display_data = false;
 
+	std::vector<hex_surface_index_data_type> hex_grid_cells_index = {}; // Index of Hex grid cells to display data for
+	std::vector<float> hex_cell_centers_x = {};							// x coordinates of Hex grid cells to display data for
+	std::vector<float> hex_cell_centers_y = {};							// y coordinates of Hex grid cells to display data for
+
+	ImVec4 hex_grid_cells_display_color = { 1.0f,1.0f,1.0f,1.0f };		// colors of Hex grid cells to display data for
+	int    display_shape_id = 1;										// shape id of Hex grid cells to display data for
+	float  display_shape_size = 6.0f;									// shape size of Hex grid cells to display data for
+	ImPlotMarker_ hex_grid_cells_display_shape = ImPlotMarker_::ImPlotMarker_Circle;// ImPlot shape of Hex grid cells to display data for
+
+	// Clear all hexagonal grid data as being empty and ready the dynamic vector arrays to be reused
 	void clear_hex_grid_cell_data() {
 //printf("hex_grid_cell_data_struct_type::clear_hex_grid_cell_data 000 %i : %i : %i |%i : %i : %i \n", hex_grid_cells_index.size(), hex_cell_centers_x.size(), hex_cell_centers_y.size(), hex_grid_cells_index.capacity(), hex_cell_centers_x.capacity(), hex_cell_centers_y.capacity());
 		hex_grid_cells_index.clear();
@@ -104,15 +106,23 @@ struct hex_grid_cell_data_struct_type {
 	}
 };
 
+// Data structure to store and manage ordered hexagonal automata sub grid data of the main hexagonal grid and display that data 
+
 struct hex_sub_grid_struct_type {
 	int hex_grid_range_id = -1;
 
 	hex_sub_grid_struct_type(){}
 	hex_sub_grid_struct_type(hex_surface_vec_data_type lr, hex_surface_vec_data_type ur) : lower_range(lr), upper_range(ur){}
 
-	hex_surface_vec_data_type lower_range = { 0,0 };
-	hex_surface_vec_data_type upper_range = { 0,0 };
+	hex_surface_vec_data_type lower_range = { 0,0 }; // Lower left bounds of sub grid
+	hex_surface_vec_data_type upper_range = { 0,0 }; // upper right bounds of sub grid
 
+	std::vector<float> sub_hex_centers_x = {}; // x coordinates of Hex grid cells to display data for
+	std::vector<float> sub_hex_centers_y = {}; // y coordinates of Hex grid cells to display data for
+
+	hex_surface_index_data_type child_hex_origin_index = -1; // Index of the main hexagonal grid that the origin 0 index that the sub grid references
+
+	// Function to test if sub hexagonal grid has a valid range over a hexagonal grid of passed origin and grid extent 
 	bool valid_range(hex_surface_vec_data_type origin, hex_surface_vec_data_type extent) {
 		if (lower_range.x < origin.x || lower_range.x > extent.x) { return false; }
 		if (lower_range.y < origin.y || lower_range.y > extent.y) { return false; }
@@ -123,24 +133,20 @@ struct hex_sub_grid_struct_type {
 		return true;
 	}
 
+	// Function to test if sub hexagonal grid is of a null or zero dimension
 	bool null_dimension() {
 		if (upper_range.x == lower_range.x || upper_range.y == lower_range.y) { return false; }
 
 		return true;
 	}
 
+	// Function to test if hexagonal grid corrdinate is within the hexagonal sub grid bounds
 	bool grid_coordinate_in_sub_hex_bounds(hex_surface_vec_data_type grid_coordinate) {
 		if (grid_coordinate.x < lower_range.x || grid_coordinate.x > upper_range.x) { return false; }
 		if (grid_coordinate.y < lower_range.y || grid_coordinate.y > upper_range.y) { return false; }
 
 		return true;
 	}
-
-	// ###################################################################
-	std::vector<float> sub_hex_centers_x = {};
-	std::vector<float> sub_hex_centers_y = {};
-
-	hex_surface_index_data_type child_hex_origin_index = -1;
 
 	bool display_sub_hex_grid() {
 		// This display_sub_hex_grid() function must be called within a ImGui code block similar to
@@ -156,27 +162,27 @@ struct hex_sub_grid_struct_type {
 		//	}
 		// ImGui::End();
 
-printf("hex_sub_grid_struct_type :: display_sub_hex_grid 00"); printf(" %i :: %i \n", hex_grid_range_id, sub_hex_centers_x.size());
+//printf("hex_sub_grid_struct_type :: display_sub_hex_grid 00"); printf(" %i :: %i \n", hex_grid_range_id, sub_hex_centers_x.size());
 
 		if (hex_grid_range_id < 0) {return false;}
 		if (sub_hex_centers_x.size() < 1 || sub_hex_centers_y.size() < 1) { return false; }
 
-		std::string scatter_plot_id = "sub Grid" + std::to_string(hex_grid_range_id);
+		std::string scatter_plot_id = "sub Grid" + std::to_string(hex_grid_range_id); // Change this for user to define sub grid description
 
 		ImPlot::PlotScatter(scatter_plot_id.c_str(), sub_hex_centers_x.data(), sub_hex_centers_y.data(), sub_hex_centers_x.size(), {
 			ImPlotProp_Marker, ImPlotMarker_Square,
 			ImPlotProp_MarkerSize, 6,
-			ImPlotProp_LineColor, ImPlot::GetColormapColor(hex_grid_range_id),
-			ImPlotProp_FillColor, ImPlot::GetColormapColor(hex_grid_range_id),
+			ImPlotProp_LineColor, ImPlot::GetColormapColor(hex_grid_range_id), // Change this for user to define sub grid color
+			ImPlotProp_FillColor, ImPlot::GetColormapColor(hex_grid_range_id), // Change this for user to define sub grid color
 			ImPlotProp_FillAlpha, 0.25f,
 			ImPlotProp_Flags, ImPlotFlags_Equal // Does not work
 			});
 
 		return true;
 	}
-
 };
 
+// Base class upon which all hexagonal automata grids use to define, display and manage hexagonal grid data, 
 
 template <class T>
 class hex_grid_base_class {
@@ -187,27 +193,28 @@ public:
 	}
 	~hex_grid_base_class() { delete_hex_grid(); }
 
-	std::vector<hex_sub_grid_struct_type> hex_sub_grids = {};
+	std::vector<hex_sub_grid_struct_type> hex_sub_grids = {}; // List of hexagonal sub grids that are bound to this hex_grid_base_class object
+	hex_grid_value_data_type_enum		  hex_grid_value_data_type = hex_grid_value_data_type_enum::nan; // The datatype of the hexagonal grid of this hex_grid_base_class object
 
-	int hex_grid_id = -1;
+	int hex_grid_id = -1;			// Hex grid id
 
+	// ------------- Hexagonal Grid definition --------------------
 	glm::vec2				  global_cart_origin = {0.0f,0.0f}; // Global Cartesian coordinate of the grid origin 
 	hex_surface_vec_data_type global_grid_origin = {0,0};		// Global Index origin that is of the top parent hexagonal grid.
 
 	hex_surface_vec_data_type grid_dimension	 = { 0,0 };     // Dimensions of the hex grid
 
-	hex_grid_value_data_type_enum hex_grid_value_data_type = hex_grid_value_data_type_enum::nan;
-	std::vector<T> hex_grid	= {};		  //hexgrid data
+	// ------------- Hexagonal Grid data Storage --------------------
+	std::vector<T> hex_grid	= {};			// hexgrid cell data
 
-	float hex_size = 1.0f;
+	float hex_size = 1.0f;					// hex grid cell display size
 
-	// THIS PART TO BE DEFINED AS A HEX GRID BUFFER
-	// +++++++++++++++++++++++++++++++++++++++++++++++++++
-	std::vector<float> hex_centers_x = {};
-	std::vector<float> hex_centers_y = {};
+	std::vector<float> hex_centers_x = {};   // Hex grid cell Cartesian x coordinates
+	std::vector<float> hex_centers_y = {};   // Hex grid cell Cartesian y coordinates
 
 	ImVec4 hex_grid_display_color = { 0.5f,0.5f,1.0f,1.0f };
-	std::vector<ImU32> hex_colors = {};
+	std::vector<ImU32> hex_colors = {};		// Hex grid cell color data
+	// --------------------------------------------------------
 
 	bool define_hex_grid_coordinates() {
 		if (hex_grid.size() == 0) { return false; }
@@ -219,16 +226,14 @@ public:
 			hex_centers_x.push_back(hex_center.x);
 			hex_centers_y.push_back(hex_center.y);
 
-
 			hex_colors.push_back(icu32);
 //printf("define_hex_grid_coordinates : %f : %f \n", hex_center.x, hex_center.y);
 		}
 
 		return true;
 	}
-	
-	// +++++++++++++++++++++++++++++++++++++++++++++++++++
 
+	// Virtual functions that all derived classes must have defined accordint to the datatype that they are defined as
 	virtual void delete_hex_grid_data(hex_surface_index_data_type i) = 0;
 	virtual void invalidate_hex_grid_data_value(hex_surface_index_data_type index) = 0;
 	virtual bool display_hex_grid() = 0;
@@ -247,7 +252,7 @@ public:
 		define_hex_grid(value, grid_dimension);
 	}
 
-	bool null_dimension() {
+	bool null_dimension() {// Test to determin if have grid of zero dimension on one axis
 		if (grid_dimension.x < 1 || grid_dimension.y < 1){
 			return false;
 		}else{
@@ -256,6 +261,7 @@ public:
 	}
 	
 	// ---------------------------------------------------------------------------------
+	// Functions to calculate/retrieve hexagonal grid index from x-y grid index coordinates 
 	hex_surface_index_data_type get_index_value(hex_surface_index_data_type iX, hex_surface_index_data_type iY, hex_surface_index_data_type iZ) {
 		// Even z level
 		return (hex_surface_index_data_type(iY / 2) + iY % 2) * grid_dimension.x + hex_surface_index_data_type(iY / 2) * (grid_dimension.x - 1) + iX;
@@ -282,7 +288,7 @@ public:
 	// ---------------------------------------------------------------------------------
 
 	// ###################
-
+	//Create Hex grid of x-y index coordinate range with specified initial value and hex grid size
 	bool create_hex_grid(T initial_hex_data_value, hex_surface_vec_data_type min_range, hex_surface_vec_data_type max_range, float hex_size) {
 		float x_iextent = max_range.x - min_range.x;
 		float y_iextent = max_range.y - min_range.y;
@@ -295,6 +301,7 @@ public:
 		return define_hex_grid(initial_hex_data_value,grid_dimension);
 	}
 
+	//Create Hex grid of x-y Cartesian coordinate range with specified initial value and hex grid size
 	bool create_hex_grid(T initial_hex_data_value,glm::vec2 min_range, glm::vec2 max_range, float hex_size) {
 		float x_extent = max_range.x - min_range.x;
 		float y_extent = max_range.y - min_range.y;
@@ -323,6 +330,7 @@ public:
 		return define_hex_grid(initial_hex_data_value,grid_dimension);
 	}
 
+	// create hex sub grid of specified x-y index coordinate range
 	int create_hex_sub_grid(hex_surface_vec_data_type min_range, hex_surface_vec_data_type max_range) {
 		hex_sub_grid_struct_type hex_sub_grid(min_range,max_range);
 
@@ -337,6 +345,7 @@ public:
 		return hex_sub_grid.hex_grid_range_id;
 	}
 
+	// create hex sub grid of specified x-y index coordinate range and value
 	bool create_hex_sub_grid(T initial_hex_value, hex_surface_vec_data_type min_range, hex_surface_vec_data_type max_range) {
 
 		if (create_hex_sub_grid(min_range, max_range) < 0) {
@@ -381,12 +390,13 @@ public:
 		return true;
 	}
 
-
+	//Create Hex grid of x-y dimension with specified initial value
 	bool define_hex_grid(T initial_hex_data_value, hex_surface_vec_data_type dimension) {
 		define_initial_hex_data_value(initial_hex_data_value);
 		return define_hex_grid(dimension);
 	}
 
+	//Create Hex grid of x-y dimension with currently defined initial value
 	bool define_hex_grid(hex_surface_vec_data_type dimension) {
 		if (!dimension.x || !dimension.y) {
 			afw_globalc::get_current_logger()->log(LogLevel::INFO, "Define hex grid :: Cannot define hex grid having a zero dimension\n");
@@ -411,6 +421,8 @@ public:
 		return true;
 	}
 
+	// Clear hex grid of all data values and initilaise it ready to be reused
+	// Need to rename it to clear_hex_grid()??????
 	void delete_hex_grid() {
 		// Including any of the following crashes application in certain circumstances with error ocurring in the
 		// for  or delete_hex_grid_data(f) statements.
@@ -494,6 +506,7 @@ printf("hex_grid_base_class :: delete_hex_grid 111"); printf(" %i\n", hex_grid.s
 		return matrix_coord;
 	}
 
+	// Retrieve the Cartesian coord of the hex grid x-y index coordinate hex_surface_coord and hex grid cell size hex_size
 	glm::vec2 get_hex_surface_cartesian_coordinate(hex_surface_vec_data_type hex_surface_coord, float hex_size) {
 		hex_surface_index_data_type i = hex_surface_coord.x, j = hex_surface_coord.y, k = 0;
 
@@ -511,16 +524,19 @@ printf("hex_grid_base_class :: delete_hex_grid 111"); printf(" %i\n", hex_grid.s
 		return hex_cartesian_coordinate;
 	}
 
+	// Retrieve the Cartesian coord of the hex grid x-y index coordinate hex_surface_coord
 	glm::vec2 get_hex_surface_cartesian_coordinate(hex_surface_vec_data_type hex_surface_coord) {
 		return get_hex_surface_cartesian_coordinate(hex_surface_coord, hex_size);
 	}
 
+	// Retrieve the global Cartesian coord of the hex grid x-y index coordinate hex_surface_coord
 	glm::vec2 get_hex_surface_world_cartesian_coordinate(hex_surface_vec_data_type voxel_matrix_coord) {
 		glm::vec2  voxel_cart_coord = get_hex_surface_cartesian_coordinate(voxel_matrix_coord) + global_cart_origin;
 
 		return voxel_cart_coord;
 	}
 
+	// Retrieve the Cartesian coord of the hex grid cell of index
 	glm::vec2 get_hex_surface_world_cartesian_coordinate(hex_surface_index_data_type index) {
 		hex_surface_vec_data_type voxel_matrix_coord = get_matrix_coordinate(index);
 //printf("get_hex_surface_world_cartesian_coordinate index 000 : %i : %i : %i \n",index, voxel_matrix_coord.x, voxel_matrix_coord.y);
@@ -531,6 +547,7 @@ printf("hex_grid_base_class :: delete_hex_grid 111"); printf(" %i\n", hex_grid.s
 		return voxel_cart_coord;
 	}
 
+	// Retrieve the hex grid index coordinate that corresponds to the hex x-y index coordinate matrix_coord
 	hex_surface_index_data_type get_hex_surface_matrix_data_index(hex_surface_vec_data_type matrix_coord) {// y in matrix_coord must be the corrected_y as defined in get_hex_surface_matrix_bit_location
 		return get_index_value(matrix_coord.x, matrix_coord.y, 0);
 	}
@@ -555,7 +572,7 @@ printf("hex_grid_base_class :: delete_hex_grid 111"); printf(" %i\n", hex_grid.s
 	*/
 
 	// Find the index of the one dimensional vertex vector array that a point P of cartesian coordinte
-	// (x,y) will be within the bounds of a 2D hegagon voxel cell.
+	// (x,y) will be within the bounds of a 2D hexagon voxel cell.
 	hex_surface_index_data_type index_of_hex_cell_with_cartesian_coord(float x, float y) {
 		hex_surface_vec_data_type hex_coord = hexagon_cell_coord_from_cartesian(x,y);
 
@@ -573,7 +590,8 @@ printf("hex_grid_base_class :: delete_hex_grid 111"); printf(" %i\n", hex_grid.s
 		return cartesian_coord_within_grid_bounds(hex_coord);
 	}
 
-	///bool cartesian_coord_within_grid_bounds(glm::ivec3 hex_coord) {
+	// Determine if a point P of hex grid x-y index coordinates is within the limits of
+	// the dimensions of the hexagonal grid that is stored in the computer memory
 	bool cartesian_coord_within_grid_bounds(hex_surface_vec_data_type hex_coord) {
 		if (hex_coord.x < 0 || hex_coord.y < 0) { return false; }
 
@@ -655,6 +673,7 @@ printf("hex_grid_base_class :: delete_hex_grid 111"); printf(" %i\n", hex_grid.s
 
 	// ###########################################################################
 
+	// Test  to see if hex grid cell of x-y index coordinate grid_coordinate is within a hex grid hex_grid
 	bool grid_coordinate_in_hex_grid_bounds(hex_grid_base_class *hex_grid, hex_surface_vec_data_type grid_coordinate) {
 		if (!hex_grid) return false;
 		if (hex_grid->grid_dimension.x < 1 || hex_grid->grid_dimension.y < 1) { return false; }
@@ -670,6 +689,7 @@ printf("hex_grid_base_class :: delete_hex_grid 111"); printf(" %i\n", hex_grid.s
 		return true;
 	}
 
+	// Test  to see if hex grid cell of x-y index coordinate grid_coordinate is within this class hex grid
 	bool grid_coordinate_in_hex_grid_bounds(hex_surface_vec_data_type grid_coordinate) {
 		if (grid_dimension.x < 1 || grid_dimension.y < 1) { return false; }
 
@@ -685,6 +705,8 @@ printf("hex_grid_base_class :: delete_hex_grid 111"); printf(" %i\n", hex_grid.s
 		return true;
 	}
 
+	// Retrun the index value of the first hex sub grid that exists within the list of hex sub grids for
+	//  this class that has a coordinate global_grid_coordinate existing with this class hex grid bounds
 	hex_surface_index_data_type get_hex_sub_grid_index_with_global_grid_coord(hex_surface_vec_data_type global_grid_coordinate) {
 		if (hex_sub_grids.size() < 1) { return -1; }
 
@@ -749,7 +771,7 @@ printf("hex_grid_base_class :: delete_hex_grid 111"); printf(" %i\n", hex_grid.s
 	}
 
 protected:
-	T initial_hex_data_value;
+	T initial_hex_data_value; // Initial value that all hexagonal grid cells are assigned to
 
 
 private:

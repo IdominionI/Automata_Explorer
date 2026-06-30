@@ -13,14 +13,20 @@
 #include "Source/Application/random_engine.h"
 #include "Source/Hex_grids/hex_grid_brush.h"
 
-#include "hex_surface_import_export.h"// ++++
+#include "hex_surface_import_export.h"
+
+// Central main hexagonal automata grid class that defines, stores, creates, displays and manages all aspects
+// of the hexagonal automata grid data to be used in the application
+// This class has incorporated classes or structures that are used to modify, display or define the hex grid 
+//   gradient
+//   random engine
+//   hex grid brush
+//   hex surface import/export
 
 template <class T>
 class hex_grid_class : public hex_grid_base_class<T> , public hex_sub_grid_manager_class{
-	using HGBC = hex_grid_base_class<T>;
+	using HGBC = hex_grid_base_class<T>; // Need to define this so as to have access to the hex_grid_base_class class : Due to using template
 public:
-    std::string gradient_dir_path = "./Gradients";
-
 	hex_grid_class() {
         initialise_gradient();
         //random_engine.initialise_distribution_input_parameters();
@@ -31,9 +37,11 @@ public:
     }
 	~hex_grid_class() {}
 
-    bool first = true;
+    std::string gradient_dir_path = "./Gradients"; // Path name to the default directory that the gradient class exists within
 
-    std::vector<hex_grid_cell_data_struct_type> hex_grid_cells_data_list = {};
+    //bool first = true;
+
+    std::vector<hex_grid_cell_data_struct_type> hex_grid_cells_data_list = {};// vector list of hex grid data to display as an overlay on main grid display
 
 	void delete_hex_grid_data(hex_surface_index_data_type i) override {
 		// integer value does not need to be deleted
@@ -43,7 +51,8 @@ public:
         HGBC::hex_grid.at(index) = INVALID_INT_DATA_VALUE;
 	}
 
-
+    // The central main core function that manages the display of the hex grid window panels that
+    // the user interacts with to display and edit hex grid data values.
 	bool display_hex_grid() override {
         if (HGBC::hex_centers_x.size() == 0) { return false; }
 //printf("hex_grid_class::display_hex_grid 000\n");
@@ -60,12 +69,13 @@ public:
         }
 //printf("hex_grid_class::display_hex_grid 2222\n");
 
-        display_automata_rule_results();
+        display_automata_rule_results();// Display the current main hexagonal grid data which the user can interact with
 
 //printf("hex_grid_class::display_hex_grid 4444\n");
         return true;
 	}
 
+    // Default initialisation of hex grid data value gradient 
     void initialise_gradient() {
         state.AddColorMarker(0.0f, { 1.0f, 1.0f, 1.0f }, 1.0f);
         state.AddColorMarker(1.0f, { 0.0f, 1.0f, 0.0f }, 1.0f);
@@ -83,13 +93,15 @@ public:
         return hex_grid_cell_data.hex_grid_cell_data_id;
     }
 
+    // Clear all the hex grid cell data of the hex_grid_cells_data_list to be reused
     void clear_all_hex_grid_cell_data() {
-        hex_grid_cell_data_id = -1;// +++++++
+        hex_grid_cell_data_id = -1;
         for (hex_grid_cell_data_struct_type &hex_grid_cell : hex_grid_cells_data_list) {
             hex_grid_cell.clear_hex_grid_cell_data();
         }
     }
 
+    // Clear hex grid cell data of the hex_grid_cells_data_list of id number hex_grid_cell_data_id
     bool clear_hex_grid_cell_data(int  hex_grid_cell_data_id) {
         for (size_t i = 0; i < hex_grid_cells_data_list.size(); i++) {
             if (hex_grid_cells_data_list[i].hex_grid_cell_data_id == hex_grid_cell_data_id) {
@@ -101,6 +113,7 @@ public:
         return false;
     }
 
+    // Delete all the hex grid cell data of the hex_grid_cells_data_list
     bool delete_hex_grid_cell_data(int hex_grid_cell_data_id) {
         for (size_t i = hex_grid_cells_data_list.size()-1; i > -1;i--) {
             if (hex_grid_cells_data_list[i].hex_grid_cell_data_id == hex_grid_cell_data_id) {
@@ -119,6 +132,7 @@ public:
         hex_grid_cells_data_list.shrink_to_fit();
     }
 
+    // Get the hex grid cell data entry within the hex_grid_cells_data_list that has an ID value of hex_grid_cell_data_id
     int get_hex_grid_cell_data_index(int hex_grid_cell_data_id) {
 //printf("hex_grid_class :: get_hex_grid_cell_data_index 0000: %i : %i\n" , hex_grid_cells_data_list.size(), hex_grid_cell_data_id);
         for (size_t i = 0; i < hex_grid_cells_data_list.size(); i++) {
@@ -131,6 +145,7 @@ public:
         return -1;
     }
 
+    // Add the hex grid index of the main hexagonal hex grid hex_grid_index to the hex_grid_cells_data_list entry with index hex_grid_cell_index
     bool add_hex_grid_cell_index(int hex_grid_cell_index, hex_surface_index_data_type hex_grid_index) {
         if (hex_grid_cell_index < 0 || hex_grid_cell_index >= hex_grid_cells_data_list.size()) {
 //printf("hex_grid_class :: add_hex_grid_cell_index %i : %i 000\n", hex_grid_cell_index, hex_grid_cells_data_list.size());
@@ -144,6 +159,7 @@ public:
         return true;
     }
 
+    // Add the hex grid index of the main hexagonal hex grid hex_grid_index to the hex_grid_cells_data_list entry with a id number of  hex_grid_cell_data_id
     bool add_hex_grid_cell_id(int hex_grid_cell_data_id, hex_surface_index_data_type hex_grid_index) {
         int hex_grid_cell_index = get_hex_grid_cell_data_index(hex_grid_cell_data_id);
         if (hex_grid_cell_index < 0) { return false; }
@@ -155,7 +171,8 @@ public:
 
     }
 
-
+    // Sub grid Test functions
+    /*
     void logical_test_hex_sub_grids() {
 //printf("test_hex_sub_grids::display 00000 \n");
 
@@ -220,7 +237,11 @@ public:
 
         return true;
     }
+    */
 
+    // Update the main hexagonal grid color data with a value that corresponds to the color of the current hex grid gradient display for that value
+    // If the data value is out of range and beyond the bounds of the defied gradient, assign the min or max color value depending if the value is 
+    // below or above the gradient min max display value
     void update_hex_grid_colors() {
         for (size_t i = 0; i < HGBC::hex_colors.size(); i++) {
             if ((float)HGBC::hex_grid[i] < (float)state.min_grad_value || (float)HGBC::hex_grid[i] > (float)state.max_grad_value) {
@@ -237,26 +258,32 @@ public:
         }
     }
 
+    // Edit the main hex grid data with the hex grid brush data of edit_brush_grid
+    // x_coord,y_coord is the x-y coordinate index of the main hex grid that is to be referencd for editing
+    // b_x_coord,b_y_coord  is the x-y index coordinate index of the hex grid brush that is to be referencd for changing the main hex grid to.
+    // If hex grid brush cell at x-y index coordinate  b_x_coord,b_y_coord has a value greater than 0, then the current main hex grid at  x-y index coordinate  x_coord,y_coord is changed
     void draw_hex_grid_brush(hex_grid_class<T> *edit_brush_grid, hex_surface_index_data_type x_coord, hex_surface_index_data_type y_coord, hex_surface_index_data_type b_x_coord, hex_surface_index_data_type b_y_coord) {
-        hex_surface_index_data_type grid_index = HGBC::get_hex_surface_matrix_data_index({ x_coord ,y_coord });
-        hex_surface_index_data_type brush_index = edit_brush_grid->get_hex_surface_matrix_data_index({ b_x_coord ,b_y_coord });
+        hex_surface_index_data_type grid_index  = HGBC::get_hex_surface_matrix_data_index({ x_coord ,y_coord });               // Get main hex grid cell index that corresponds to the main hex grid x-y index coordinate 
+        hex_surface_index_data_type brush_index = edit_brush_grid->get_hex_surface_matrix_data_index({ b_x_coord ,b_y_coord });// Get hex brush grid cell index that corresponds to the hex brush grid cell x-y index coordinate 
 //printf("edit_grid:draw_hex_grid_brush brush 3333 : %i : brush %i\n", grid_index, brush_index);
-        if (grid_index > -1 && grid_index < HGBC::hex_grid.size()) {
-            if (brush_index > -1 && brush_index < edit_brush_grid->hex_grid.size()) {
+        if (grid_index > -1 && grid_index < HGBC::hex_grid.size()) { // check that retrieved main hex grid cell index is in the bounds of the current hex grid array size
+            if (brush_index > -1 && brush_index < edit_brush_grid->hex_grid.size()) {// check that retrieved hex grid brush cell index is in the bounds of the current hex grid brush array size
 //printf("edit_grid:draw_hex_grid_brush brush 33AA : brush value :%i\n", edit_brush_grid->hex_grid[brush_index]);
-                if (edit_brush_grid->hex_grid[brush_index] > 0) {
+                if (edit_brush_grid->hex_grid[brush_index] > 0) {// If the hex grid brush cell of index brush_index has a non zero value then edit main hex grid cell data and color values 
                     update_hex_grid_brush_colors(grid_index);
                 }
             }
         }
     }
 
+    // Change the current main hex grid cell value with an array index grid_index to the current hex_grid_edit_value
+    // and update the color data with the color of the colour gradient that corresponds to the hex_grid_edit_value
     void update_hex_grid_brush_colors(hex_surface_index_data_type grid_index) {
-        HGBC::hex_grid[grid_index] = hex_grid_edit_value;
-        float grid_value_pos = hex_grid_edit_value / ((float)state.max_grad_value - (float)state.min_grad_value);
-        std::array<float, 4> c = state.GetColorAndIntensity(grid_value_pos);
-        ImU32 hex_grid_edit_color = ImGui::GetColorU32({ c[0], c[1], c[2],c[3] });
-        HGBC::hex_colors[grid_index] = hex_grid_edit_color;
+        HGBC::hex_grid[grid_index]   = hex_grid_edit_value; // Change hex grid value
+        float grid_value_pos         = hex_grid_edit_value / ((float)state.max_grad_value - (float)state.min_grad_value); // get position in the gradient that corresponds to hex_grid_edit_value
+        std::array<float, 4> c       = state.GetColorAndIntensity(grid_value_pos);// get color data as a color array  from the gradient that is at position grid_value_pos in the gradient 
+        ImU32 hex_grid_edit_color    = ImGui::GetColorU32({ c[0], c[1], c[2],c[3] }); // convert color array data to an ImGui color U32 format
+        HGBC::hex_colors[grid_index] = hex_grid_edit_color; // Update hex grid cell color data 
     }
 
 //    bool test_hex_grid_cell_list() {
@@ -293,17 +320,20 @@ public:
 //    }
 
 protected:
+    // Main ImGui window widget or panel that displays and manages the widgets used as inputs 
+    // for user interaction to query and edit the main hexagonal grid data values and its display 
     void display_grid_parameters_panel() {
         ImGui::Begin("Hex Automata grid display parameters");
         {
+            //###### interactively change main hex grid display color of hex grid cell locations ######
             ImGui::Text("Color : ");
             ImGui::SameLine();
-            // interactively change result display color
             if (ImGui::ColorEdit4("##hgc", (float*)&hex_grid_display_color, ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel | ImGuiColorEditFlags_None)) {
                 HGBC::hex_grid_display_color = hex_grid_display_color;
             }
             //ImGui::ColorEdit4("##hgc", (float*)HGBC::hex_grid_display_color, ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel | ImGuiColorEditFlags_None); //This generates compilor error
             ImGui::SameLine();
+            // interactively change main hex grid display shape of hex grid cell locations
             ImGui::Text("Shape : ");
             ImGui::SameLine();
             ImGui::SetNextItemWidth(60);
@@ -324,21 +354,22 @@ protected:
                 ImGui::EndCombo();
             }
             ImGui::SameLine();
+            // interactively change main hex grid display shape size of hex grid cell locations
             ImGui::Text("Size : ");
             ImGui::SameLine();
             ImGui::SetNextItemWidth(60);
-            // interactively change result display shape size
             ImGui::DragFloat("##hgsi", &hex_grid_display_shape_size, 0.1f, 1.0f, 50.0f, "%2.2f");
             ImGui::SameLine();
+            // interactively change main hex grid display of hex grid cell locations on or off
             ImGui::Text("Display : ");
             ImGui::SameLine();
-            // interactively display hex grid
             ImGui::Checkbox("##hgad", &display_ahex_grid);
             ImGui::Separator();
+            // interactively change the range of main hex grid cells displayed
             ImGui::Text("Hex Grid Extents Displayed");
+            // interactively change x axis display limits
             ImGui::Text("Min X: ");
             ImGui::SameLine();
-            // interactively change axis display limits
             ImGui::SetNextItemWidth(60);
             //if (ImGui::SliderFloat("Min X##hgmnx", &plot_min_x, -1.0f, 1000.0f, "%3.1f")) {
             if (ImGui::DragFloat("##hgmnx", &plot_min_x, 1.0f, -1.0f, 1000.0f, "%3.1f")) {
@@ -353,6 +384,7 @@ protected:
                 plot_axis_limit_changed = IMGUI_WINDOW_BORDER_RIGHT;
             }
             ImGui::SameLine();
+            // interactively change y axis display limits
             ImGui::Text("Min Y: ");
             ImGui::SameLine();
             ImGui::SetNextItemWidth(60);
@@ -369,12 +401,10 @@ protected:
                 plot_axis_limit_changed = IMGUI_WINDOW_BORDER_RIGHT;
             }
 
-            // ++++
             ImGui::Separator();
 
-            // ################# Hex Grid Value Display Gradient #####################
-
-            //++++++++++
+            // ################# Hex Grid Value Display Color Gradient #####################
+            // Inputs to define gradient min max values to be represented as the min max color markers
             ImGui::Text("         Grid Value display Gradient limits");
             ImGui::Text("           Min                       Max");
             ImGui::SetNextItemWidth(200);
@@ -383,11 +413,13 @@ protected:
             ImGui::SetNextItemWidth(200);
             ImGui::InputInt("##hgmxgv", &state.max_grad_value);// Had a crash from this point after pressing return !!!!!!
 
+            // Display the current value and color that the mouse cursor is hovering above the gradient display
             ImGui::Text("Inquired Gradient Value : %4.3f ", state.current_gradient_value);
             ImGui::Text("Inquired Gradient color : %4.2f | %4.2f | %4.2f | %4.2f  ", state.current_gradient_color[0], state.current_gradient_color[1], state.current_gradient_color[2], state.current_gradient_color[3]);
 
-            ImGradientHDR(stateID, state, tempState, isMarkerShown);
+            ImGradientHDR(stateID, state, tempState, isMarkerShown);// Gradient display widget that changes values of the state, tempState, isMarkerShown as the user interacts with this widget
 
+            // Tests to perform actions on the gradient and gradient display widget to manage gradient marker creation, deletion and modification of position and color
             if (tempState.selectedMarkerType == ImGradientHDRMarkerType::Color)
             {
                 selectedColorMarker = state.GetColorMarker(tempState.selectedIndex);
@@ -416,6 +448,7 @@ protected:
                 }
             }
 
+            // Widget buttons to save and load gradient data 
             ImGui::SetCursorPosX(100);
             if (ImGui::Button("Save Gradient")) {
                 save_gradienthdr_data();
@@ -427,32 +460,40 @@ protected:
                 load_gradienthdr();
             }
 
+            // Widget button to update main hex grid color data to that of the color gradient
+            // after changes or loading of gradient file
             ImGui::SetCursorPosX(140);
             if (ImGui::Button("Update Hex Grid Colors")) {
                 update_hex_grid_colors();
             }
-            // ++++
 
-
+            // Widget to activate/deactivate the hex edit window flag variable
+            // and display or not display the panel to edit hex grid cell data values
             ImGui::Separator();
             ImGui::Text("Edit Hex grid: ");
             ImGui::SameLine();
-            // interactively edit hex grid
             ImGui::Checkbox("##hged", &edit_ahex_grid);
 
         }
         ImGui::End();
     }
 
-
-
+    // ImGui window widget or panel that displays and manages the widgets used as inputs 
+    // for user interaction to query and edit the main hexagonal grid cell data values
+    // Only active and displayed if user has selected the edit hex grid checkbox widget into active mode
     void display_grid_edit_panel(){
         ImGui::Begin("Edit Hex Automata Grid"); {
-            ImGuiContext* cec = ImGui::GetCurrentContext();
-            bool edit_mode = true;
 
-            if (cec && cec->HoveredWindow) {
-                if (cec->HoveredWindow->ID == plot_window->ID) {
+            // ###### This section of code is relevant to the main Hexagonal Automata grid        ###########
+            // ###### display window and if the mouse cusor is within it to perform editing tasks ###########
+            // Test if the mouse cursor is within the bounds of the main hex grid display window and if it is
+            // test for any valid user interactions with the hex grid data and perform tasks according to what
+            // keyboard or mouse interaction are initiated.
+            ImGuiContext* cec = ImGui::GetCurrentContext();// Get current Imgui context of what is happening 
+            bool edit_mode = true; // default mode of interaction 
+
+            if (cec && cec->HoveredWindow) {// Have mouse cursor hovering within an ImGui window
+                if (cec->HoveredWindow->ID == plot_window->ID) { // If the mouse cursor is hovering over the window that the hex grid is being displayed in
                     if (ImGui::GetIO().KeyShift) { // Enable plot inputs and window interaction when shift key is pressed in edit mode and disable edit functions
                         plot_flags = ImPlotFlags_Equal | ImPlotFlags_NoMenus | ImPlotFlags_Crosshairs | ImPlotFlags_NoLegend;
                         plot_window_flags = ImGuiWindowFlags_None;
@@ -465,22 +506,25 @@ protected:
 
 //printf("ImGui::GetCurrentContext().CurrentWindow.ID!= ImGui::GetCurrentContext().CurrentWindow.GetID(plot_window_id.c_str())\n");
 //printf("current context %i : %i\n", ImGui::GetCurrentContext()->HoveredWindow->ID, plot_window->ID);
+                    // If mouse cursor is within the bounds of the hex grid display then can perform hex grid edit functions
                     if (mouse_plot_pos.x > plot_min_x && mouse_plot_pos.x < plot_max_x && mouse_plot_pos.y > plot_min_y && mouse_plot_pos.y < plot_max_y) {
+                        // Mouse cursor position is given in Cartesian coordinates of the hex grid ImPlot being displayed, so need to convert mouse Cartesian
+                        // coordinates to hex grid index and hex grid x-y index coordinates to be able to edit the hex grid cell data values and retrieve them for display
                         hex_grid_index = HGBC::index_of_hex_cell_with_cartesian_coord(mouse_plot_pos.x, mouse_plot_pos.y);
                         hex_grid_coord = HGBC::get_matrix_coordinate(hex_grid_index);
 
-                        if (ImGui::IsMouseClicked(ImGuiMouseButton_Left)) {
+                        if (ImGui::IsMouseClicked(ImGuiMouseButton_Left)) {// Left mouse click interaction
 //printf("edit_grid::mouse button left : %i\n", hex_grid_index);
                             if(hex_grid_index > -1 && hex_grid_index < HGBC::hex_grid.size()){
-                                // +++++++++++++++++
-                                if (use_hex_grid_brush && hex_grid_brush.hex_grid_brush_selection.second) {
+                                if (use_hex_grid_brush && hex_grid_brush.hex_grid_brush_selection.second) { // Using a hex grid brush to edit hex grid cell data values and have a valid hex grid brush selected
 //printf("edit_grid:display_grid_edit_panel brush 0000 : %i\n", hex_grid_index);
                                    // hex_grid_brush_edit();
-                                    hex_grid_class<T>         *edit_brush_grid = hex_grid_brush.hex_grid_brush_selection.second;
-                                    if (!edit_brush_grid) {
+                                    hex_grid_class<T> *edit_brush_grid = hex_grid_brush.hex_grid_brush_selection.second;// Get the current selected hex grid brush data
+                                    if (!edit_brush_grid) { // Test have a valid hex grid brush selected
                                         return;
                                     }
 //printf("edit_grid:display_grid_edit_panel brush 1111 : %i\n", hex_grid_index);
+                                    // Define hex brush center in x-y index coordinate and calculate hex brush grid extents from that center location
                                     hex_surface_vec_data_type brush_dim = edit_brush_grid->grid_dimension;
                                     hex_surface_vec_data_type brush_center = { 0, 0 };
 
@@ -497,23 +541,25 @@ protected:
                                         brush_center.x = (int)(brush_dim.x / 2) - 1;
                                     }
 
-                                    hex_surface_vec_data_type hex_grid_brush_origin = { hex_grid_coord.x - brush_center.x ,hex_grid_coord.y - brush_center.y };
+                                    hex_surface_vec_data_type hex_grid_brush_origin = { hex_grid_coord.x - brush_center.x ,hex_grid_coord.y - brush_center.y }; // main hex grid x-y index coordinate where hex grid brush (0,0) origin index lies
 //printf("edit_grid:display_grid_edit_panel brush 2222 : %i : %i : origin %i : %i \n", brush_center.x, brush_center.y, hex_grid_brush_origin.x, hex_grid_brush_origin.y);
+                                    // Iterate through each hex brush grid x-y index coordinate and corresponding overlapped main hex grid x-y index coordinate
+                                    // and perform the edit the main hex grid cell data value and colors function
                                     for (int b_y_coord = 0; b_y_coord < brush_dim.y; b_y_coord++) {
-                                        hex_surface_index_data_type y_coord = hex_grid_brush_origin.y + b_y_coord;
+                                        hex_surface_index_data_type y_coord = hex_grid_brush_origin.y + b_y_coord; // main hex grid y index coordinate that corresonds to the hex grid brush y index coordinate
                                         if (y_coord >= 0 && y_coord < HGBC::grid_dimension.y) {// brush element is within the hex grid bounds
                                             if (b_y_coord % 2 == 0) {// even brush row
                                                 for (int b_x_coord = 0; b_x_coord < brush_dim.x; b_x_coord++) {
-                                                    hex_surface_index_data_type x_coord = hex_grid_brush_origin.x + b_x_coord;
+                                                    hex_surface_index_data_type x_coord = hex_grid_brush_origin.x + b_x_coord;// main hex grid x index coordinate that corresonds to the hex grid brush x index coordinate
                                                     if ((y_coord % 2 == 0 && x_coord >= 0 && x_coord < HGBC::grid_dimension.x) || ((y_coord % 2 == 1 && x_coord >= 0 && x_coord < HGBC::grid_dimension.x-1))) {// brush element is within the hex grid bounds
-                                                        draw_hex_grid_brush(edit_brush_grid, x_coord, y_coord, b_x_coord, b_y_coord);
+                                                        draw_hex_grid_brush(edit_brush_grid, x_coord, y_coord, b_x_coord, b_y_coord);// Edit main hex grid cell data and color value according to hex brush cell data value 
                                                     }
                                                 }
                                             }else {// odd brush row
                                                 for (int b_x_coord = 0; b_x_coord < brush_dim.x-1; b_x_coord++) {
-                                                    hex_surface_index_data_type x_coord = hex_grid_brush_origin.x + b_x_coord;
+                                                    hex_surface_index_data_type x_coord = hex_grid_brush_origin.x + b_x_coord;// main hex grid x index coordinate that corresonds to the hex grid brush x index coordinate
                                                     if ((y_coord % 2 == 0 && x_coord >= 0 && x_coord < HGBC::grid_dimension.x) || ((y_coord % 2 == 1 && x_coord >= 0 && x_coord < HGBC::grid_dimension.x - 1))) {// brush element is within the hex grid bounds
-                                                        if ((y_coord % 2 == 0 && x_coord >= 0 && x_coord < HGBC::grid_dimension.x)) { 
+                                                        if ((y_coord % 2 == 0 && x_coord >= 0 && x_coord < HGBC::grid_dimension.x)) { // Edit main hex grid cell data and color value according to hex brush cell data value 
                                                             x_coord += 1; }// !!!!!!!!!!!!!!
                                                             draw_hex_grid_brush(edit_brush_grid, x_coord, y_coord, b_x_coord, b_y_coord);
                                                     }
@@ -523,7 +569,7 @@ protected:
                                     }
                                 }
                                 else {
-                                    update_hex_grid_brush_colors(hex_grid_index);
+                                    update_hex_grid_brush_colors(hex_grid_index);// Edit the hovered main hex grid cell data and color value
                                 }       
 //printf("edit_grid::mouse button left :index %i | value %i ::color | %0.3f| %0.3f| %0.3f| %0.3f\n", hex_grid_index, HGBC::hex_grid[hex_grid_index], c[0], c[1], c[2], c[3]);
                             }
@@ -539,8 +585,12 @@ protected:
                     edit_mode = false;
                 }
             }
+            // ##################################################################################################
 
-
+            // ###### This section of code is relevant to the display of the Hexagonal Automata grid edit ###########
+            // ###### widgets  to define the hex grid edit inputs and perform hex grid edit processes     ###########
+            // Display the current hex grid data and coordinate values that the mouse cursor is hovering over in the
+            // main hexagonal automata grid display window
             ImGui::Text("Hex Grid Coordinate ::   ");
             ImGui::SameLine();
             ImGui::Text("X : %i | ", hex_grid_coord.x);
@@ -557,10 +607,10 @@ protected:
             ImGui::Text(" Hex Grid value : %i", hex_grid_value); // Need to accomidate all data types of hex grid here !!!!
             ImGui::Separator();
 
-            display_random_hex_generator();
+            display_random_hex_generator(); // Display the random engine window widgets to create a hex grid of random generated numbers
 
             ImGui::Separator();
-
+            // Display ImGui widgets to enter value to edit/change hovered hex grid cell to either as an individual hex grid cell or with a hex grid brush
             ImGui::Text("Edit Hex Automata Grid Values");
             ImGui::Text("Value : ");
             ImGui::SameLine();
@@ -568,12 +618,13 @@ protected:
             // interactively change result display shape size
             ImGui::DragFloat("##hgsi", &hex_grid_edit_value, 0.1f, 1.0f, 50.0f, "%2.2f");  // Need to accomidate all data types of hex grid here !!!!
             ImGui::SameLine();
-            ImGui::Checkbox("Use Hex Grid Brush", &use_hex_grid_brush);
+            ImGui::Checkbox("Use Hex Grid Brush", &use_hex_grid_brush);// flag to use a hex grid brush to perform edits
 
-            if (use_hex_grid_brush) {
-                hex_grid_brush.display_hex_grid_brush_panel();
+            if (use_hex_grid_brush) {// If use hex grid brush
+                hex_grid_brush.display_hex_grid_brush_panel();// display hex grid brush window widget panel
             }
 
+            // Widget inputs to create a border of a given value at the edge of the current hex grid
             ImGui::Separator();
             ImGui::Text("Hex Grid Border");
             ImGui::Text("Border Value: ");
@@ -584,68 +635,6 @@ protected:
             if (ImGui::Button("Add Hex Grid Border")) {
                 add_hex_grid_border();
             }
-
-            //ImGui::Separator();
-
-            //// ################# Hex Grid Value Display Gradient #####################
-
-            ////++++++++++
-            //ImGui::Text("         Grid Value display Gradient limits");
-            //ImGui::Text("           Min                       Max");
-            //ImGui::SetNextItemWidth(200);
-            //ImGui::InputInt("##hgmngv", &state.min_grad_value);
-            //ImGui::SameLine();
-            //ImGui::SetNextItemWidth(200);
-            //ImGui::InputInt("##hgmxgv", &state.max_grad_value);// Had a crash from this point after pressing return !!!!!!
-
-            //ImGui::Text("Inquired Gradient Value : %4.3f ", state.current_gradient_value);
-            //ImGui::Text("Inquired Gradient color : %4.2f | %4.2f | %4.2f | %4.2f  ", state.current_gradient_color[0], state.current_gradient_color[1], state.current_gradient_color[2], state.current_gradient_color[3]);
-
-            //ImGradientHDR(stateID, state, tempState, isMarkerShown);
-            //    
-            //if (tempState.selectedMarkerType == ImGradientHDRMarkerType::Color)
-            //{
-            //    selectedColorMarker = state.GetColorMarker(tempState.selectedIndex);
-            //    if (selectedColorMarker != nullptr ) {
-            //        cm = selectedColorMarker;
-            //    }
-            //}
-
-            //if (cm != nullptr){
-            //    ImGui::ColorEdit3("Color", (float*)cm->Color.data(), ImGuiColorEditFlags_Float);
-            //    ImGui::DragFloat("Intensity", &cm->Intensity, 0.1f, 0.0f, 100.0f, "%f", 1.0f);
-            //}
-
-            //if (tempState.selectedMarkerType != ImGradientHDRMarkerType::Unknown){
-            //    if (ImGui::Button("Delete Gradient Marker")){
-            //        if (tempState.selectedMarkerType == ImGradientHDRMarkerType::Color){
-            //            state.RemoveColorMarker(tempState.selectedIndex);
-            //            tempState = ImGradientHDRTemporaryState{};
-            //        } else {
-            //            if (tempState.selectedMarkerType == ImGradientHDRMarkerType::Alpha){
-            //                state.RemoveAlphaMarker(tempState.selectedIndex);
-            //                tempState = ImGradientHDRTemporaryState{};
-            //            }
-            //        }
-            //    }
-            //}
-
-            //ImGui::SetCursorPosX(100);
-            //if (ImGui::Button("Save Gradient")) {
-            //    save_gradienthdr_data();
-            //}
-
-            //ImGui::SameLine();
-            //ImGui::SetCursorPosX(250);
-            //if (ImGui::Button("Load Gradient")) {
-            //    load_gradienthdr();
-            //}
-
-            //ImGui::SetCursorPosX(140);
-            //if (ImGui::Button("Update Hex Grid Colors")){
-            //    update_hex_grid_colors();
-            //}
-
         }
         ImGui::End();
     }
@@ -717,12 +706,15 @@ protected:
         update_hex_grid_colors();
     }
 
+    // Display the random number generator and distribution ImGui widgets to select the random number generator
+    // and number ditribution function and enter the parameter data required to generate a random number and
+    // generate the random number.
     void display_random_hex_generator(){
         random_engine.display_generation_inputs();
 
         ImGui::SetCursorPosX(100);
-        if (ImGui::Button("Generate Random Hex Grid")) {
-            random_engine.define_random_engine();
+        if (ImGui::Button("Generate Random Hex Grid")) {// button widget to activate the creation of a random number
+            random_engine.define_random_engine(); // Define the random engine input data to generate a randome number
 
             // Following testing only: Comment out or delete when finished
             //for (int i = 0; i < 20; i++) {
@@ -739,6 +731,8 @@ protected:
 
     // CRITICAL : The random_distribution_index assignment must match the index of the random_distributions array list that
     //            the user has selected in the ImGui combo widget of random number distributions.
+    // Generate a random number for every hex grid cell based upon the selections made in the random engine GUI
+    // One function exists for each possible number distribution type.
     void generate_random_hex_grid() {
          switch (random_engine.random_distribution_index) {
             case 0:  { uniform_int_distribution_hex_grid_random_generation(); break; }
@@ -760,6 +754,11 @@ protected:
             case 16: { student_t_distribution_hex_grid_random_generation(); break; }
         }
     }
+
+
+    // ##################################################################
+    // ## Functions to generate a random number for each hex grid cell ##
+    // ## One function is defined for each number ditribution type     ##
 
     // NOTE : The
     // if (random_engine.rng_add_to_existing_hex_grid) {
@@ -999,7 +998,8 @@ protected:
         }
     }
 
-
+    // ImGui window widget to display the hex automata grid cell data and overlying hex_grid_cells_data_list list of 
+    // hex sub grid data using the ImPlot::ScatterPlot function. 
     void display_automata_rule_results(){
         ImGui::Begin("Hex Automata", nullptr, plot_window_flags);// If Have name of ImGui::Begin then have ability to minimise and dock 
 
@@ -1053,17 +1053,18 @@ protected:
 //if (cpc)
 //    printf("display_hex_grid : px %f : py %f: x %f : y %f \n", prev_width, prev_height,cpc->CurrentWindow->Size.x, cpc->CurrentWindow->Size.y);
 
-
+            // Constrain the hex grid display to a min max Cartesian coordinate range of coordinates
             ImPlot::SetupAxisLimitsConstraints(ImAxis_X1, plot_min_x, plot_max_x);
             //ImPlot::SetupAxisZoomConstraints(ImAxis_X1, plot_min_zoom, plot_max_zoom);
             ImPlot::SetupAxisLimitsConstraints(ImAxis_Y1, plot_min_y, plot_max_y);
             //ImPlot::SetupAxisZoomConstraints(ImAxis_Y1, plot_min_zoom, plot_max_zoom);
 
+//testing only delete/comment out when not needed
 if(HGBC::hex_centers_x.empty()){
     printf("hex_grid_class::display_automata_rule_results:: ERROR \n", HGBC::hex_centers_x.empty());
 }
-
-            if (display_ahex_grid) {
+            // ImPlot::ScatterPlot function to display main hex grid cell data
+            if (display_ahex_grid) {// If display hex grid flag is true
                 ImPlot::PlotScatter("hex", HGBC::hex_centers_x.data(), HGBC::hex_centers_y.data(), HGBC::hex_centers_x.size(), {
 			        ImPlotProp_Marker, hex_grid_display_shape,// use this when testing
 			        ImPlotProp_MarkerSize, hex_grid_display_shape_size,
@@ -1078,7 +1079,6 @@ if(HGBC::hex_centers_x.empty()){
             }
 
             mouse_plot_pos = ImPlot::GetPlotMousePos(); // This must be placed within the BeginPlot : EndPlot block or application will crash 
-            
 
             for (hex_sub_grid_struct_type hex_sub_grid : HGBC::hex_sub_grids) {
                 hex_sub_grid.display_sub_hex_grid();
@@ -1086,7 +1086,7 @@ if(HGBC::hex_centers_x.empty()){
 
             for (hex_grid_cell_data_struct_type hex_grid_cell : hex_grid_cells_data_list) {
 //printf("hex_grid_class::display_hex_grid 3333 :"); printf(" %i : %i\n", hex_grid_cell.hex_grid_cell_data_id, hex_grid_cell.display_shape_id);
-               hex_grid_cell.display_hex_cell_data();
+               hex_grid_cell.display_hex_cell_data();// This is the hex grid automata rules display data
             }
             
             ImPlot::EndPlot();
@@ -1221,7 +1221,7 @@ private:
         style.PlotDefaultSize.y = new_style_height;
     }
 
-    void define_imgui_shape() {
+    void define_imgui_shape() {// default shapes to display
         switch (hex_grid_display_shape_id) {
             case 0:  hex_grid_display_shape = ImPlotMarker_::ImPlotMarker_Circle; break;
             case 1:  hex_grid_display_shape = ImPlotMarker_::ImPlotMarker_Square; break;

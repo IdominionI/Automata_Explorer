@@ -18,7 +18,7 @@
 #define BEGIN_HEX_GRID_DATA_BLOCK  "{"
 #define END_HEX_GRID_DATA_BLOCK    "}"
 
-
+//data type flags
 #define DATA_TYPE_BOOLEAN   0
 #define DATA_TYPE_FLOAT     1
 #define DATA_TYPE_INTEGER   2
@@ -84,12 +84,12 @@ public:
 			return false;
 		}
 
-		std::string working_model_string = FW::filetools::read_all(working_model_file);
+		std::string working_model_string = FW::filetools::read_all(working_model_file);// Read hex grid data text file into a string buffer
 
-		std::vector<std::string> lines = FW::stringtools::split(working_model_string, '\n');
-		int line_number = 0;
+		std::vector<std::string> lines = FW::stringtools::split(working_model_string, '\n');// Split string buffer into a vector array represeting lines of text
+		int line_number = 0; // variable representing file line number and lines vector array index number
 
-		if (!import_hex_grid_data(lines, line_number, hex_grid)) {
+		if (!import_hex_grid_data(lines, line_number, hex_grid)) {// Importation of hex grid data failed
 			stream.close();
 
 			std::string error_message = "ERROR :: Import hex grid data failed.\n Corrupted or out of sequence data at line\n";

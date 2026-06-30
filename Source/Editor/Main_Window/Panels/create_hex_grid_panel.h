@@ -8,14 +8,14 @@
 
 #include "Source/Hex_grids/hex_grid.h"
 
+// Class to display ImGui popups to create hex automata grid and subgrid and create them
+
 template <class T>
 class create_hex_grid_panel_class {
 public:
-
-
+	// Popup to display parameters for user to enter values to create and create application main hex automata  grid 
 	hex_grid_class<T>* create_global_hex_popup(bool &cancel=false) {
 //printf("create_hex_grid_panel_class::display AAAAA \n");
-
 		ImGui::OpenPopup("Global Hex Grid");
 
 		// Always center this window when appearing
@@ -67,6 +67,7 @@ public:
 
 	}
 
+	// Popup to display parameters for user to enter values to create and create application hex automata sub grid 
 	bool add_hex_sub_grid_popup(hex_grid_class<T> * hex_grid, bool& cancel = false) {
 //printf("create_hex_grid_panel_class::display AAAAA \n");
 

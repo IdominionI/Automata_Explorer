@@ -16,25 +16,33 @@
 template <typename T>
 class hex_grid_class; // Need to forward declare this as have a case of circular referencing 
 
+// Hex grid brush class to display a user interface to create, store and manage hex grid
+// brushes that are used to edit the main hexagonal automata grid cell data values. 
+// Similar to the maim hex_grid_class except does not inherit hex_grid_base_class.
+// Each hex Brush is a hex grid class object and are stored as a vector list of these 
+// hex grid class objects.
+
 template <class T>
 class hex_grid_brush_class {
-    using HGBC = hex_grid_base_class<T>;
+    //using HGBC = hex_grid_base_class<T>;
 public:
     hex_grid_brush_class() {}
 	~hex_grid_brush_class() {}
 
-    std::string brush_pathname = "Brushes";
+    std::string brush_pathname = "Brushes";// default pathname to application sub directory 
     std::filesystem::path item_path;
 
-    typedef std::pair < std::string, hex_grid_class<T>*> hex_grid_brush_list_data_type;
-    hex_grid_brush_list_data_type hex_grid_brush_selection;
-    std::vector <hex_grid_brush_list_data_type > hex_grid_brush_selections = {};
+    typedef std::pair < std::string, hex_grid_class<T>*> hex_grid_brush_list_data_type; // basic hex grid brush datatype
+    hex_grid_brush_list_data_type hex_grid_brush_selection;                             // Current selected hex grid brush datatype
+    std::vector <hex_grid_brush_list_data_type > hex_grid_brush_selections = {};        // vector list of hex grid brushes to select
     
-    hex_grid_brush_list_data_type hex_grid_brush_edit;
-    hex_grid_class<T> *hex_grid_brush = nullptr;
+    hex_grid_brush_list_data_type hex_grid_brush_edit;                                  // Flag to edit a hex grid brush
+    hex_grid_class<T> *hex_grid_brush = nullptr;                                        // pointer to current selected hex grid brush
 
-    std::vector<hex_grid_cell_data_struct_type> hex_grid_cells_data_list = {};
+    std::vector<hex_grid_cell_data_struct_type> hex_grid_cells_data_list = {};          // vector list of hex grid brushes diaplay data to display on screen
 
+    // Function to load existing hex grid brush data from disc files into a list of
+    //  hex grid brushes and list of display color shape and size data
     void initialise_hex_grid_brushes() {
         //folowing for testing only : comment out or delete when finished
         //hex_grid_brush_list_data_type brush0;
@@ -65,12 +73,10 @@ public:
         // This structure would distinguish a file from a directory
         struct stat sb;
 
-        // Looping until all the items of the directory are
-        // exhausted
+        // Looping until all the items of the directory are exhausted
         for (const auto& entry : std::filesystem::directory_iterator(brush_pathname)) {
 
-            // Converting the path to const char * in the
-            // subsequent lines
+            // Converting the path to const char * in the subsequent lines
             std::filesystem::path outfilename = entry.path();
             std::string outfilename_str = outfilename.string();
             const char* path = outfilename_str.c_str();
@@ -120,6 +126,7 @@ public:
 			//}
         }     
 
+        // Initialise default hex brush slection
         hex_grid_brush_edit.first = "null";
         hex_grid_brush_edit.second = nullptr;
 
@@ -176,20 +183,30 @@ public:
         return add_brush_to_list(hex_grid_brush);// No brush to overwrite : add brush to list
     }
 
+
+    // The main ImGui window widget panel to display widgets for user to interact with to select
+    // existing hex brush to use for editing the main hex automata grid, or to create/edit/save/load
+    // hex brush grid. If the editing of a hex brush is activarted, a hex brush edit window will
+    // appear that operates similarly to the main hex grid automata display window widget.
     void display_hex_grid_brush_panel() {
-        if (!brushes_list_initialised) {
+        if (!brushes_list_initialised) { // need this or brushes will be added at infenitum every ImGui frame call
             initialise_hex_grid_brushes();
             brushes_list_initialised = true;
         }
 
         ImGui::Begin("Hex Grid Brush ", nullptr, plot_window_flags);// If Have name of ImGui::Begin then have ability to minimise and dock 
 
+        // ###### This section of code is relevant to the main Hex brush grid display ###########
+        // ###### window and if the mouse cusor is within it to perform editing tasks ###########
+        // Test if the mouse cursor is within the bounds of the hex brush display window and if it is
+        // test for any valid user interactions with the hex brush data and perform tasks according to what
+        // keyboard or mouse interaction are initiated.
         if (hex_grid_brush && display_hex_grid_brush_edit) {
-            ImGuiContext* cec = ImGui::GetCurrentContext();
-            bool edit_mode = true;
+            ImGuiContext* cec = ImGui::GetCurrentContext();// Get current Imgui context of what is happening 
+            bool edit_mode = true;// default mode of interaction 
 
-            if (cec && cec->HoveredWindow) {
-                if (cec->HoveredWindow->ID == plot_window->ID) {
+            if (cec && cec->HoveredWindow) {// Have mouse cursor hovering within an ImGui window
+                if (cec->HoveredWindow->ID == plot_window->ID) { // If the mouse cursor is hovering over the window that the hex brush is being displayed in
                     if (ImGui::GetIO().KeyShift) { // Enable plot inputs and window interaction when shift key is pressed in edit mode and disable edit functions
                         plot_flags = ImPlotFlags_Equal | ImPlotFlags_NoMenus | ImPlotFlags_Crosshairs | ImPlotFlags_NoLegend;
                         plot_window_flags = ImGuiWindowFlags_None;
@@ -202,23 +219,25 @@ public:
 
 //printf("ImGui::GetCurrentContext().CurrentWindow.ID!= ImGui::GetCurrentContext().CurrentWindow.GetID(plot_window_id.c_str())\n");
 //printf("current context %i : %i\n", ImGui::GetCurrentContext()->HoveredWindow->ID, plot_window->ID);
+                    // If mouse cursor is within the bounds of the hex brush display then can perform hex brush edit functions
                     if (mouse_plot_pos.x > plot_min_x && mouse_plot_pos.x < plot_max_x && mouse_plot_pos.y > plot_min_y && mouse_plot_pos.y < plot_max_y) {
+                        // Mouse cursor position is given in Cartesian coordinates of the hex brush grid ImPlot being displayed, so need to convert mouse Cartesian
+                        // coordinates to hex brush grid index and hex brush grid x-y index coordinates to be able to edit the hex brush grid cell data values and retrieve them for display
                         hex_grid_index = hex_grid_brush->index_of_hex_cell_with_cartesian_coord(mouse_plot_pos.x, mouse_plot_pos.y);
                         hex_grid_brush_coord = hex_grid_brush->get_matrix_coordinate(hex_grid_index);
 
-                        if (ImGui::IsMouseClicked(ImGuiMouseButton_Left)) {
+                        if (ImGui::IsMouseClicked(ImGuiMouseButton_Left)) { //On left mouse click flip set the hex brush call value to 1 and change the hex brush grid display data
 //printf("edit_grid::mouse button left : %i\n", hex_grid_index);
                             if (hex_grid_index > -1 && hex_grid_index < hex_grid_brush->hex_grid.size()) {
                                 hex_grid_brush->hex_grid[hex_grid_index] = hex_grid_edit_value;
                                 hex_grid_brush->hex_colors[hex_grid_index] = ImGui::GetColorU32(hex_grid_edit_color);
-
 //printf("edit_grid::mouse button left :index %i | value %i ::color | %0.3f| %0.3f| %0.3f| %0.3f\n", hex_grid_index, hex_grid_brush->hex_grid[hex_grid_index], c[0], c[1], c[2], c[3]);
                             }
 
                         }
 
-                        if (ImGui::IsMouseClicked(ImGuiMouseButton_Right)) {
-                            //printf("edit_grid::mouse button left : %i\n", hex_grid_index);
+                        if (ImGui::IsMouseClicked(ImGuiMouseButton_Right)) {//On right mouse click flip set the hex brush call value to 0 and change the hex brush grid display data
+//printf("edit_grid::mouse button left : %i\n", hex_grid_index);
                             if (hex_grid_index > -1 && hex_grid_index < hex_grid_brush->hex_grid.size()) {
                                 hex_grid_brush->hex_grid[hex_grid_index] = 0.0f;
                                 hex_grid_brush->hex_colors[hex_grid_index] = ImGui::GetColorU32(hex_grid_display_color);
@@ -241,11 +260,17 @@ public:
             }
         }
 
-        // ---------------------------------------------------------
+        // ##################################################################################################
+
+        // ###### This section of code is relevant to the display of the Hex brush grid edit widgets ###########
+        // ###### to define the hex brush grid edit inputs and perform hex brush grid edit processes ###########
+        // Display the current hex brush grid data and coordinate values that the mouse cursor is hovering over in the
+        // hexa brush grid display window
+
         float x_pos = 10.0f, y_pos = 20.0f;
 
         text("Hex grid Brush", x_pos, y_pos);
-        // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 
         ImGui::Text("Select Brush To Use");
         static int item_selected_idx = 0; // Here we store our selected data as an index.
@@ -253,6 +278,7 @@ public:
         //static bool item_highlight = false;
         int item_highlighted_idx = -1; // Here we store our highlighted data as an index.
 
+        // Display list of available hex brush grids to select for use or edit
         ImGui::SetNextItemWidth(300);
         if (ImGui::BeginListBox("##hbslb"))
         {
@@ -287,7 +313,8 @@ public:
 
 if (!hex_grid_brush_selection.second) printf("!hex_grid_brush_selection.second\n");
 
-        if (hex_grid_brush_selection.second) {
+        // Display a preview of the selected hex brush in a ImPlot::ScatterPlot widget that the user cannot interact with
+        if (hex_grid_brush_selection.second) {// Test that have a valid hex brush grid selected
 //printf("hex_grid_brush_class::display_hex_grid_brush_panel hex_grid_brush_selection.second : %i : %i : %i\n", hex_grid_brush_selection.second->hex_centers_x.size(), hex_grid_brush_selection.second->hex_centers_y.size(),hex_grid_brush_selection.second->hex_colors.size());
 
         int brush_max_dim = std::max(hex_grid_brush_selection.second->grid_dimension.x, hex_grid_brush_selection.second->grid_dimension.y);
@@ -313,14 +340,15 @@ if (!hex_grid_brush_selection.second) printf("!hex_grid_brush_selection.second\n
 
         // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-        // Display brushes to select and current selected brush here
+        // ###### Widget to display the hex brush edit window to edit selected or create a new hex brush #####
         ImGui::SetCursorPosY(ImGui::GetCursorPosY()+10);
         ImGui::Text("Edit/Create Brush : ");
         ImGui::SameLine();
-        // interactively display edit hec grid brush
+        // interactively display edit hex grid brush
         ImGui::Checkbox("##hgebd", &display_hex_grid_brush_edit);
 
-        if (display_hex_grid_brush_edit) {
+        // Display hex brush widgets that the user can interact with to edit a hex brush grid
+        if (display_hex_grid_brush_edit) {// Display hex brush edit widgets if flag to edit hex grid brush is set to true
             ImGui::Separator();
             ImGui::Text("Edit/Create hex grid Brush");
 
@@ -412,7 +440,6 @@ if (!hex_grid_brush_selection.second) printf("!hex_grid_brush_selection.second\n
                     hex_grid_brush_edit = hex_grid_brush_selection;
                     hex_grid_brush_defined = true;
                 }
-                //create_hex_grid_brush_popup = true;
             }
 
             y_pos += 30;
@@ -471,13 +498,11 @@ if (!hex_grid_brush_selection.second) printf("!hex_grid_brush_selection.second\n
 
         }
 
-        if (hex_grid_brush_defined && display_hex_grid_brush_edit) {
+        if (hex_grid_brush_defined && display_hex_grid_brush_edit) {// Display hex brush edit window widget of hex brush grid cell data
 //printf("ahex_application_class: display_ahex_main_gui_panel : 0000  \n");
-
-            //if (hex_grid_brush) {
             if (hex_grid_brush_edit.second) {
                 // hex_grid_brush->display_hex_grid(); do not use this
-                if (!hex_grid_brush_edit_display()) {
+                if (!hex_grid_brush_edit_display()) { // Display hex brush edit window widget of hex brush grid cell data
                     vwDialogs::display_error_message("Edit Brush ERROR:", "Can not edit current selected brush. \nIt is undefined.");
                     hex_grid_brush_defined = false;
                 }
@@ -487,6 +512,7 @@ if (!hex_grid_brush_selection.second) printf("!hex_grid_brush_selection.second\n
         ImGui::End();
     }
 
+    // Popup window widget function to define inputs to initiate and create a new hex brush grid to edit
     hex_grid_brush_list_data_type display_create_hex_grid_brush_popup(bool &cancel = false) {
 //printf("hex_grid_brush_class::display_create_hex_grid_brush_popup AAAAA \n");
 
@@ -547,11 +573,12 @@ if (!hex_grid_brush_selection.second) printf("!hex_grid_brush_selection.second\n
 		return return_value;
     }
 
+    // ImGui window widget to display the hex brush grid cell data using the ImPlot::ScatterPlot function. 
     bool hex_grid_brush_edit_display(){
         hex_grid_class<T> *hex_grid_brush = hex_grid_brush_edit.second;
 
         if (!hex_grid_brush) {// comment out when confident this function will not be called if hex_grid_brush_edit.second is a nullptr
-            //printf("hex_grid_brush_class::hex_grid_brush_edit_display ERROR: Hex grid brush to edit is a nullptr\n");
+//printf("hex_grid_brush_class::hex_grid_brush_edit_display ERROR: Hex grid brush to edit is a nullptr\n");
             return false;
         }
 
@@ -607,12 +634,13 @@ if (!hex_grid_brush_selection.second) printf("!hex_grid_brush_selection.second\n
 //if (cpc)
 //    printf("display_hex_grid : px %f : py %f: x %f : y %f \n", prev_width, prev_height,cpc->CurrentWindow->Size.x, cpc->CurrentWindow->Size.y);
 
-
+            // Constrain the hex grid display to a min max Cartesian coordinate range of coordinates
             ImPlot::SetupAxisLimitsConstraints(ImAxis_X1, plot_min_x, plot_max_x);
             //ImPlot::SetupAxisZoomConstraints(ImAxis_X1, plot_min_zoom, plot_max_zoom);
             ImPlot::SetupAxisLimitsConstraints(ImAxis_Y1, plot_min_y, plot_max_y);
             //ImPlot::SetupAxisZoomConstraints(ImAxis_Y1, plot_min_zoom, plot_max_zoom);
 
+            // ImPlot::ScatterPlot function to display main hex grid cell data if flag is set to display hex brush grid
             if (display_ahex_grid) {
                // ImPlot::PlotScatter("hex brush", hex_grid_brush->hex_centers_x.data(), hex_grid_brush->hex_centers_y.data(), hex_grid_brush->hex_centers_x.size(), {
                 ImPlot::PlotScatter("hex brush", hex_grid_brush->hex_centers_x.data(), hex_grid_brush->hex_centers_y.data(), hex_grid_brush->hex_centers_x.size(), {
