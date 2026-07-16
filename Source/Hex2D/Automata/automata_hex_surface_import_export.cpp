@@ -318,12 +318,14 @@
 		for (std::string s_color : color) {
 			float f_color;
 			try { f_color = stof(s_color); }
-			catch (std::invalid_argument const& ex)
+			//catch (std::invalid_argument const& ex)
+			catch (std::invalid_argument)
 			{
 				vwDialogs::display_error_message("Import hex automata rules", "ERROR : \n Have invalid color for result rules at line " + std::to_string(line_number) + "!\n");
 				return false;
 			}
-			catch (std::out_of_range const& ex)
+			//catch (std::out_of_range const& ex)
+			catch (std::out_of_range)
 			{
 				vwDialogs::display_error_message("Import hex automata rules", "ERROR : \n Have color out of range for result rules at line " + std::to_string(line_number) + "!\n");
 				return false;

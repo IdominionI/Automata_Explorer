@@ -11,7 +11,7 @@
 #include <FrameWork/AFW/Interface/IconsFontAwesome4.h>
 #include <FrameWork/AFW/tools/afw_string_tools.h>
 
-#include "Source/Hex_grids/hex_surface_import_export.h"
+#include "Source/Hex2d/Hex_grids/hex_surface_import_export.h"
 
 template <typename T>
 class hex_grid_class; // Need to forward declare this as have a case of circular referencing 

@@ -195,16 +195,16 @@
     <ClInclude Include="ThirdParty\tinyFileDialog\tinyfiledialogs.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Hexagon\Objects\hex_grid_base.h">
+    <ClInclude Include="Source\Hex2D\Objects\hex_grid_base.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Hexagon\Objects\hex_grid_manager.h">
+    <ClInclude Include="Source\Hex2D\Objects\hex_grid_manager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Hexagon\Objects\hex_grid_parameters.h">
+    <ClInclude Include="Source\Hex2D\Objects\hex_grid_parameters.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Hex_grids\hex_grid.h">
+    <ClInclude Include="Source\Hex2D\Hex_grids\hex_grid.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ThirdParty\ImGui\implot\implot.h">
@@ -213,25 +213,22 @@
     <ClInclude Include="ThirdParty\ImGui\implot\implot_internal.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Application\ahex_application.h">
+    <ClInclude Include="Source\Hex2D\ahex_application.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Editor\Main_Window\Panels\create_hex_grid_panel.h">
+    <ClInclude Include="Source\Hex2D\Editor\create_hex_grid_panel.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Hexagon\Objects\hex_sub_grid_manager.h">
+    <ClInclude Include="Source\Hex2D\Objects\hex_sub_grid_manager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Automata\hex_automata_dt.h">
+    <ClInclude Include="Source\Hex2D\Automata\hex_automata_dt.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Automata\hex_surface_automata_rules_widget.h">
+    <ClInclude Include="Source\Hex2D\Automata\hex_surface_automata_rules_widget.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Automata\Hex_automata_widget.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Parser\logic_parser.h">
+    <ClInclude Include="Source\Hex2D\Automata\Hex_automata_widget.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Parser\functions.h">
@@ -240,19 +237,16 @@
     <ClInclude Include="Source\Parser\parser_definitions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Automata\hex_surface_automata_results_widget.h">
+    <ClInclude Include="Source\Hex2D\Automata\hex_surface_automata_results_widget.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Automata\automata_hex_surface_import_export.h">
+    <ClInclude Include="Source\Hex2D\Automata\automata_hex_surface_import_export.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Hex_grids\hex_surface_import_export.h">
+    <ClInclude Include="Source\Hex2D\Hex_grids\hex_surface_import_export.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ThirdParty\ImGui\ImGradientHDR\src\ImGradientHDR.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Editor\Main_Window\Widgets\ImGradientHDR.h">
+    <ClInclude Include="Source\Widgets\ImGradientHDR.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ThirdParty\ImGui\imgui_docking\misc\cpp\imgui_stdlib.h">
@@ -261,7 +255,16 @@
     <ClInclude Include="Source\Application\random_engine.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Hex_grids\hex_grid_brush.h">
+    <ClInclude Include="Source\Hex2D\Hex_grids\hex_grid_brush.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Application\vwa_application.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Hex2D\Parser\hex_functions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Hex2D\Parser\hex_logic_parser.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -413,13 +416,10 @@
     <ClCompile Include="ThirdParty\ImGui\implot\implot_items.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Automata\automata_hex_surface_import_export.cpp">
+    <ClCompile Include="Source\Hex2D\Automata\automata_hex_surface_import_export.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ThirdParty\ImGui\ImGradientHDR\src\ImGradientHDR.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Editor\Main_Window\Widgets\ImGradientHDR.cpp">
+    <ClCompile Include="Source\Widgets\ImGradientHDR.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ThirdParty\ImGui\imgui_docking\misc\cpp\imgui_stdlib.cpp">

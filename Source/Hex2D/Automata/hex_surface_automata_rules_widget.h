@@ -6,7 +6,7 @@
 
 #include <Framework/AFW/Tools/afw_string_tools.h>
 
-#include "../Parser/logic_parser.h"
+#include "Source/Hex2D/Parser/hex_logic_parser.h"
 #include "automata_hex_surface_import_export.h"
 
 /*
@@ -447,7 +447,8 @@ private:
 	int rule_selected_index = -1;
 	int sub_rule_selected_index = -1;
 
-	logic_parser_class<T> logic_parser;
+	//logic_parser_class<T> logic_parser;
+	hex_logic_parser_class<T> logic_parser;
 	parser_base_node* logic_parser_tree = nullptr;
 
 

@@ -8,8 +8,6 @@
 #include <memory>
 #include <cctype>
 
-#include "../Hexagon/Objects/hex_grid_parameters.h"
-
 #define BRACE_LEFT             '('
 #define BRACE_RIGHT            ')'
 #define SET_BRACE_LEFT         '{'

@@ -6,9 +6,9 @@
 #include "ThirdParty/ImGui/imgui_docking/imgui.h"
 #include "ThirdParty/ImGui/implot/implot.h"
 
-#include "../Hexagon/Objects/hex_grid_parameters.h"
+#include "Source/Hex2D/Objects/hex_grid_parameters.h"
 
-#include "../Parser/parser_definitions.h"
+#include "Source/Parser/parser_definitions.h"
 
 /*
 	Structures and definitions that define the parameters

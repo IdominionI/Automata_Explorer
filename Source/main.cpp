@@ -7,7 +7,7 @@
 #include <FrameWork/OGLFW/Window/glfw_ogl_window.h>
 #include <FrameWork/OGLFW/imGui/oglfw_imgui_glfw.h>
 
-#include "Application/ahex_application.h"
+#include "Application/vwa_application.h"
 
 #include <glm/glm.hpp>
 
@@ -167,7 +167,8 @@ public:
         //tron_style();
         ImGui::DockSpaceOverViewport(0, ImGui::GetMainViewport());// Required to have the main glfw window viewport as the main docking node
 
-        ahex_application.display_ahex_main_gui_panel(glfw_window);// Display main application GUI
+        //ahex_application.display_ahex_main_gui_panel(glfw_window);// Display main application GUI
+        vwa_application.display_ahex_main_gui_panel(glfw_window);// Display main application GUI
  
         // Uncommented following uwhen investigating ImGui widget examples
         ImGui::Begin;
@@ -239,7 +240,8 @@ private:
     // Hexagaonal automata application class that handles and manages application GUI, execution and exit
     // Currently set to handle hexagaonal automata grid of type integer. 
     // Future enhancement to handle float and boolean datatypes to be done
-    ahex_application_class<int> ahex_application;
+    //ahex_application_class<int> ahex_application;
+    vwa_application_class vwa_application;
 };
 
 // Application entry point

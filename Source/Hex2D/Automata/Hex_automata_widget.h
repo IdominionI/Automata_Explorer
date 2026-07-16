@@ -6,10 +6,10 @@
 
 #include <FrameWork/AFW/Tools/afw_dialogs.h> // PLace this here and not needed to be defined in following included files
 
-#include "../Hex_grids/hex_grid.h"
+#include "Source/Hex2D/Hex_grids/hex_grid.h"
 
 #include "automata_hex_surface_import_export.h"
-#include "../Hex_grids/hex_surface_import_export.h"
+#include "Source/Hex2D/Hex_grids/hex_surface_import_export.h"
 
 #include "hex_surface_automata_rules_widget.h"
 #include "hex_surface_automata_results_widget.h"

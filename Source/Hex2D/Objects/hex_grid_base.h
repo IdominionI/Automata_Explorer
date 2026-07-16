@@ -434,7 +434,7 @@ public:
 		//for (hex_surface_index_data_type f = 5; f>=0;f--) {
 			//delete_hex_grid_data(f);
 		//}
-printf("hex_grid_base_class :: delete_hex_grid 000"); printf(" %i\n", hex_grid.size());
+printf("hex_grid_base_class :: delete_hex_grid 000"); printf(" %zu\n", hex_grid.size());
 
 		hex_centers_x.clear();
 		hex_centers_y.clear();
@@ -447,7 +447,7 @@ printf("hex_grid_base_class :: delete_hex_grid 000"); printf(" %i\n", hex_grid.s
 		hex_colors.shrink_to_fit();
 
 		hex_grid.shrink_to_fit();
-printf("hex_grid_base_class :: delete_hex_grid 111"); printf(" %i\n", hex_grid.size());
+printf("hex_grid_base_class :: delete_hex_grid 111"); printf(" %zu\n", hex_grid.size());
 	}
 
 	//bool resize_hex_grid() {

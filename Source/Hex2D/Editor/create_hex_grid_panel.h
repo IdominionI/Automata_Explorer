@@ -6,7 +6,7 @@
 
 #include <FrameWork/AFW/Interface/IconsFontAwesome4.h>
 
-#include "Source/Hex_grids/hex_grid.h"
+#include "Source/Hex2d/Hex_grids/hex_grid.h"
 
 // Class to display ImGui popups to create hex automata grid and subgrid and create them
 

@@ -6,13 +6,11 @@
 #include <FrameWork/AFW/ImGUI/ImGuiEx/imgui_widgets.h>
 #include <FrameWork/AFW/Interface/IconsFontAwesome4.h>
 
-#include "Source/Hexagon/Objects/hex_sub_grid_manager.h"
-
-#include "../Editor/Main_Window/Widgets/ImGradientHDR.h"
-
+#include "Source/Hex2d/Objects/hex_sub_grid_manager.h"
+#include "Source/Widgets/ImGradientHDR.h"
 #include "Source/Application/random_engine.h"
-#include "Source/Hex_grids/hex_grid_brush.h"
 
+#include "hex_grid_brush.h"
 #include "hex_surface_import_export.h"
 
 // Central main hexagonal automata grid class that defines, stores, creates, displays and manages all aspects

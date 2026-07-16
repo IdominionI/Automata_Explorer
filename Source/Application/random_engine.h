@@ -55,7 +55,8 @@ struct random_number_generator_struct_type {
     number_generation_engine_enum number_generation_engine = number_generation_engine_enum::default_engine;
 
     bool               use_default_seed = true;
-    unsigned long long seed_value = 0;
+    //unsigned long long seed_value = 0;
+    unsigned int seed_value = 0;
 
     std::default_random_engine default_random_engine;
     std::minstd_rand           minstd_rand_engine;

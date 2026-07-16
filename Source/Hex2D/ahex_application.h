@@ -1,9 +1,8 @@
 #pragma once
 
-#include "Source/Hex_grids/hex_grid.h"
-#include "Source/Editor/Main_Window/Panels/create_hex_grid_panel.h"
-#include "Source/Automata/Hex_automata_widget.h"
-
+#include "Hex_grids/hex_grid.h"
+#include "Editor/create_hex_grid_panel.h"
+#include "Automata/Hex_automata_widget.h"
 
 // Main Application class from where application GUI, execution and exit takes place
 // The central application node from which manages the topmost application functions
@@ -16,74 +15,7 @@ public:
 	ahex_application_class() {}
 	~ahex_application_class() {}
 
-	void display_ahex_main_gui_panel(glfw_openGL_window_class *glfw_window) {
-//printf("ahex_application_class::display_ahex_main_gui_panel 000\n");	
-		// Display main window menu bar
-		if (ImGui::BeginMainMenuBar()) {// UnComment out to have menu in application main window
-
-			if (ImGui::BeginMenu("Project")) {
-//printf("display_tree_branch :BeginMenu: %s : %i \n", child_tree_branch->label.c_str(), i);
-
-				if (ImGui::MenuItem("New Automata Project")) {
-//printf("Add to selection :MenuItem: \n");
-					if (global_hex_grid) end_current_project();
-					if (!global_hex_grid) create_global_grid_popup = true;
-				}
-
-				if (ImGui::MenuItem("End Current Automata Poject")) {
-//printf("Edit selection :MenuItem:\n");
-					if (global_hex_grid) end_current_project();
-				}
-
-				if (ImGui::MenuItem("Add Child Grid")) {
-//printf("Remove from selection :MenuItem:\n");
-					if (global_hex_grid) create_hex_sub_grid_popup = true;
-				}
-
-				if (ImGui::MenuItem("Exit")) {
-//printf("Exit WSM :MenuItem:\n");
-					exit_ahex_application(glfw_window);
-				}
-
-				ImGui::EndMenu();
-			}
-
-// Preferences menu just in case it will bw implemented
-/*
-			if (ImGui::BeginMenu("Preferences")) {
-				if (ImGui::BeginMenu("Define WSM Media Apps ...")) {
-					if (ImGui::MenuItem("html editor")) {
-//printf("Add to selection :MenuItem: \n");
-						//define_html_editor();
-					}
-
-					if (ImGui::MenuItem("image editor")) {
-//printf("Add to selection :MenuItem: \n");
-						//define_image_editor();
-					}
-
-					if (ImGui::MenuItem("text editor")) {
-//printf("Add to selection :MenuItem: \n");
-						//define_text_editor();
-					}
-
-					if (ImGui::MenuItem("media player")) {
-//printf("Add to selection :MenuItem: \n");
-						//define_media_player();
-					}
-
-					// Add other web site media applications to view/edit WSM files here
-
-					ImGui::EndMenu();
-				}
-
-				ImGui::EndMenu();
-			}
-*/
-			ImGui::EndMainMenuBar();// UnComment out to have menu in application main window
-		}// UnComment out to have menu in application main window
-
-
+	void hex_grid_run_loop() {
 		if (global_grid_defined) {
 //printf("ahex_application_class: display_ahex_main_gui_panel : 0000  \n");
 
@@ -112,13 +44,12 @@ public:
 	}
 
 
-
-protected:
-	void exit_ahex_application(glfw_openGL_window_class* glfw_window) {
-		end_current_project();
-		glfwDestroyWindow(glfw_window->get_window_ptr());
-		exit(0);
-	}
+//protected:
+	//void exit_ahex_application(glfw_openGL_window_class* glfw_window) {
+	//	end_current_project();
+	//	glfwDestroyWindow(glfw_window->get_window_ptr());
+	//	exit(0);
+	//}
 
 	void end_current_project() {
 		hex_surface_automata_widget.stop_automata_execution();
@@ -187,7 +118,7 @@ protected:
 		hex_surface_automata_widget.display(global_hex_grid);
 	}
 
-private:
+//private:
 	bool global_grid_defined        = false; // Flag to indicate that a project grid is defined and ready to be used
 	bool create_global_grid_popup   = false; // Flag to indicate that the ImGui popup to define and create a project grid is to be displyed
 	bool create_hex_sub_grid_popup  = false; // Flag to indicate that the ImGui popup to define and create a project sub grid is to be displyed

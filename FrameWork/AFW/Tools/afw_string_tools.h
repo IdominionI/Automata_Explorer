@@ -962,7 +962,7 @@ namespace FW {
         }
 
         // ++++++++++ Addition to initial code +++++++++++++++
-        inline int number_characters_in_string(std::string string) {
+        inline size_t number_characters_in_string(std::string string) {
             std::vector<char> char_vector = toCharArray(string);
 
             for (int i = 0; i < char_vector.size(); i++) {

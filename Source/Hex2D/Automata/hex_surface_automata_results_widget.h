@@ -576,7 +576,8 @@ printf("hex_surface_automata_results_widget_class::perform_hex_surface_automata_
 	// Function to verify that all sub rules conditions have been met or not.
 	// rule must be a reference to retain changes
 	bool all_sub_rule_conditions_met(hex_surface_automata_rule_struct_type &rule, hex_grid_base_class<T>* hex_surface_object_to_execute, hex_surface_index_data_type hex_index) {
-		logic_parser_class<T> logic_parser;
+		//logic_parser_class<T> logic_parser;
+		hex_logic_parser_class<T> logic_parser;//++++
 
 		if (rule.sub_rules.empty()) {
 			//afw_globalc::get_current_logger()->log(LogLevel::ERROR, "hex_surface_automata_results_widget_class::all_sub_rule_conditions_met : rule " + rule.rule_name + " has no sub rules !!!!Cannot perform automata. !!!\n");
