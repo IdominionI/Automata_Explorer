@@ -163,6 +163,23 @@
     <ClInclude Include="FrameWork\OGLFW\ImGui\oglfw_imgui_glfw.h" />
     <ClInclude Include="FrameWork\OGLFW\Window\glfw_ogl_window.h" />
     <ClInclude Include="FrameWork\OGLFW\Window\oglfw_window_settings.h" />
+    <ClInclude Include="Source\Application\vwa_application_parameters.h" />
+    <ClInclude Include="Source\Cart2D\Automata\automata_cart2D_surface_import_export.h" />
+    <ClInclude Include="Source\Cart2D\Automata\cart2D_automata_dt.h" />
+    <ClInclude Include="Source\Cart2D\Automata\cart2D_automata_widget.h" />
+    <ClInclude Include="Source\Cart2D\Automata\cart2D_surface_automata_results_widget.h" />
+    <ClInclude Include="Source\Cart2D\Automata\cart2D_surface_automata_rules_widget.h" />
+    <ClInclude Include="Source\Cart2D\cart2D_application.h" />
+    <ClInclude Include="Source\Cart2D\Cart2D_grids\cart2D_grid.h" />
+    <ClInclude Include="Source\Cart2D\Cart2D_grids\cart2D_grid_brush.h" />
+    <ClInclude Include="Source\Cart2D\Cart2D_grids\cart2D_surface_import_export.h" />
+    <ClInclude Include="Source\Cart2D\Editor\create_cart2D_grid_panel.h" />
+    <ClInclude Include="Source\Cart2D\Objects\cart2D_grid_base.h" />
+    <ClInclude Include="Source\Cart2D\Objects\cart2D_grid_parameters.h" />
+    <ClInclude Include="Source\Cart2D\Objects\cart2D_grid_manager.h" />
+    <ClInclude Include="Source\Cart2D\Objects\cart2D_sub_grid_manager.h" />
+    <ClInclude Include="Source\Cart2D\Parser\cart2D_functions.h" />
+    <ClInclude Include="Source\Cart2D\Parser\cart2D_logic_parser.h" />
     <ClInclude Include="Source\Hex2D\ahex_application.h" />
     <ClInclude Include="Source\Application\random_engine.h" />
     <ClInclude Include="Source\Application\vwa_application.h" />
@@ -224,6 +241,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="FrameWork\AFW\Events\afw_glfw_event.cpp" />
+    <ClCompile Include="Source\Cart2D\Automata\automata_cart2D_surface_import_export.cpp" />
     <ClCompile Include="Source\Hex2D\Automata\automata_hex_surface_import_export.cpp" />
     <ClCompile Include="Source\Widgets\ImGradientHDR.cpp" />
     <ClCompile Include="Source\main.cpp" />

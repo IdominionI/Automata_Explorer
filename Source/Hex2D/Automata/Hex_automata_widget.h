@@ -14,7 +14,7 @@
 #include "hex_surface_automata_rules_widget.h"
 #include "hex_surface_automata_results_widget.h"
 
-#define IM_CLAMP(V, MN, MX)     ((V) < (MN) ? (MN) : (V) > (MX) ? (MX) : (V)) // move this to another location ????
+//#define IM_CLAMP(V, MN, MX)     ((V) < (MN) ? (MN) : (V) > (MX) ? (MX) : (V)) // move this to another location ????
 
 /*
 		Hexagonal cellula automata rules widget class
@@ -33,8 +33,8 @@ template <class T>
 class hex_surface_automata_widget_class {
 public:
 
-	std::string automata_rules_dir_path = ".//Rules/Automata";// Default path name to the directory where the cellular automata rules data files are stored
-	std::string automata_grids_dir_path = ".//Grids";		  // Default path name to the directory where the cellular automata grid data files are stored
+	std::string automata_rules_dir_path = ".//Rules/Automata/Hex2D_A";// Default path name to the directory where the cellular automata rules data files are stored
+	std::string automata_grids_dir_path = ".//Grids/Hex2D_G";		  // Default path name to the directory where the cellular automata grid data files are stored
 
 	// The main ImGui window widget function to display widgets and to manage the user interaction with them to
 	// create, edit, save/load the hexagaonal cellular automata rules and manage the display and functioning

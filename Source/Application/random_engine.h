@@ -240,7 +240,7 @@ public:
     int random_generator_index = 0;
     int random_distribution_index = 0;
     bool rng_use_seed = false;
-    bool rng_add_to_existing_hex_grid = false;
+    bool rng_add_to_existing_grid = false;
     int seed_type_rb = 0;
     int machine_seed_type_rb = 0;
 
@@ -258,7 +258,7 @@ public:
     void display_generation_inputs() {
         ImGui::Text("--- Random Hex Grid Generation ---");
 
-        ImGui::Checkbox("Add to Existing Grid", &rng_add_to_existing_hex_grid);
+        ImGui::Checkbox("Add to Existing Grid", &rng_add_to_existing_grid);
 
         const char* combo_random_generator = random_generators[random_generator_index];
         ImGui::SetNextItemWidth(100);

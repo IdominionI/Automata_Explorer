@@ -29,7 +29,7 @@ public:
     hex_grid_brush_class() {}
 	~hex_grid_brush_class() {}
 
-    std::string brush_pathname = "Brushes";// default pathname to application sub directory 
+    std::string brush_pathname = "Brushes/Hex_Brushes";// default pathname to application sub directory
     std::filesystem::path item_path;
 
     typedef std::pair < std::string, hex_grid_class<T>*> hex_grid_brush_list_data_type; // basic hex grid brush datatype
@@ -194,7 +194,12 @@ public:
             brushes_list_initialised = true;
         }
 
-        ImGui::Begin("Hex Grid Brush ", nullptr, plot_window_flags);// If Have name of ImGui::Begin then have ability to minimise and dock 
+        // For some unknown reason naming the ImGui::Begin window below other than Hex Grid Brush causes ImPlot::BeginPlot to crash application with error
+        // [01120] [imgui-error] (current settings: Assert=1, Log=1, Tooltip=1)
+        // [01120][imgui - error] In window 'cart Grid Brush ': Setup needs to be called after BeginPlot and before any setup locking functions(e.g.PlotX)!
+        // 
+        ImGui::Begin("Hex Grid Brush", nullptr, plot_window_flags);// If Have name of ImGui::Begin then have ability to minimise and dock 
+        //ImGui::Begin("cart Grid Brush ", nullptr, plot_window_flags);// If Have name of ImGui::Begin then have ability to minimise and dock 
 
         // ###### This section of code is relevant to the main Hex brush grid display ###########
         // ###### window and if the mouse cusor is within it to perform editing tasks ###########
@@ -311,7 +316,7 @@ public:
         ImGui::SameLine();
         ImGui::Text("Current Selected Brush :\n %s", hex_grid_brush_selection.first.c_str());
 
-if (!hex_grid_brush_selection.second) printf("!hex_grid_brush_selection.second\n");
+//if (!hex_grid_brush_selection.second) printf("!hex_grid_brush_selection.second\n");
 
         // Display a preview of the selected hex brush in a ImPlot::ScatterPlot widget that the user cannot interact with
         if (hex_grid_brush_selection.second) {// Test that have a valid hex brush grid selected

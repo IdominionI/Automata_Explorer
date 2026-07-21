@@ -1,6 +1,12 @@
 #pragma once
 
+//enum class grid_value_data_type_enum { Boolean, Float, Integer, Double, nan };
+//#define IM_CLAMP(V, MN, MX)     ((V) < (MN) ? (MN) : (V) > (MX) ? (MX) : (V)) // move this to another location ????
+
+#include "Source/Application/vwa_application_parameters.h"
+
 #include "Source/Hex2D/ahex_application.h"
+#include "Source/Cart2D/cart2D_application.h"
 
 // Move these enum class to a definition .h file
 enum class automata_grid_type_enum {none, hex2D, cart2D, trd3D, cart3D };
@@ -48,10 +54,33 @@ public:
 							ImGui::EndMenu();
 						}
 
-						if (ImGui::MenuItem("Cartesian 2D")) {
-							//printf("ahex_application_class:display_ahex_main_gui_panel:Cartesian 2D\n");
-														//if (global_hex_grid) end_current_project();
-														//if (!global_hex_grid) create_global_grid_popup = true;
+						if (ImGui::BeginMenu("Cartesian 2D")) {
+							if (ImGui::MenuItem("Cartesian 2D Integer")) {
+//printf("ahex_application_class:display_ahex_main_gui_panel:Hexagonal 2D\n");
+								automata_grid_type = automata_grid_type_enum::cart2D;
+								automata_data_type = automata_data_type_enum::Integer;
+
+								if (cart2D_application_int.global_cart2D_grid) cart2D_application_int.end_current_project();
+								if (!cart2D_application_int.global_cart2D_grid) cart2D_application_int.create_global_grid_popup = true;
+							}
+
+							if (ImGui::MenuItem("Cartesian 2D Float")) {
+								automata_grid_type = automata_grid_type_enum::cart2D;
+								automata_data_type = automata_data_type_enum::Float;
+//printf("ahex_application_class:display_ahex_main_gui_panel:Hexagonal 2D\n");
+								//if (ahex_application.global_hex_grid) ahex_application.end_current_project();
+								//if (!ahex_application.global_hex_grid) ahex_application.create_global_grid_popup = true;
+							}
+
+							if (ImGui::MenuItem("Cartesian 2D Boolean")) {
+								automata_grid_type = automata_grid_type_enum::cart2D;
+								automata_data_type = automata_data_type_enum::Boolean;
+//printf("ahex_application_class:display_ahex_main_gui_panel:Hexagonal 2D\n");
+								//if (ahex_application.global_hex_grid) ahex_application.end_current_project();
+								//if (!ahex_application.global_hex_grid) ahex_application.create_global_grid_popup = true;
+							}
+
+							ImGui::EndMenu();
 						}
 
 						if (ImGui::MenuItem("Trapezo-rhombic dodecahedral 3D")) {
@@ -78,7 +107,7 @@ public:
 
 					if (ImGui::MenuItem("Add Child Grid")) {
 //printf("Remove from selection :MenuItem:\n");
-						if (ahex_application_int.global_hex_grid) { ahex_application_int.create_hex_sub_grid_popup = true; }
+						//if (ahex_application_int.global_hex_grid) { ahex_application_int.create_hex_sub_grid_popup = true; }
 					}
 
 					if (ImGui::MenuItem("Exit")) {
@@ -146,7 +175,7 @@ public:
 
 	void perform_cart2D_grid_run_loop() {
 		switch (automata_data_type) {
-			//case automata_data_type_enum::Integer: { ahex_application_int.hex_grid_run_loop();   break; }
+			case automata_data_type_enum::Integer: { cart2D_application_int.cart2D_grid_run_loop();   break; }
 			//case automata_data_type_enum::Float   : {ahex_application_float.hex_grid_run_loop(); break; }
 			//case automata_data_type_enum::Boolean : {ahex_application_bool.hex_grid_run_loop();  break; }
 		}
@@ -186,11 +215,11 @@ public:
 	}
 
 	void end_cart2d_project() {
-		//switch (automata_data_type) {
-		//	case automata_data_type_enum::Integer: { ahex_application_int.end_current_project();   break; }
-		//	case automata_data_type_enum::Float:   { ahex_application_float.end_current_project(); break; }
-		//	case automata_data_type_enum::Boolean: { ahex_application_bool.end_current_project();  break; }
-		//}
+		switch (automata_data_type) {
+			case automata_data_type_enum::Integer: { cart2D_application_int.end_current_project();   break; }
+		//	case automata_data_type_enum::Float:   { cart2D_application_float.end_current_project(); break; }
+		//	case automata_data_type_enum::Boolean: { cart2D_application_bool.end_current_project();  break; }
+		}
 	}
 
 	void end_trd3d_project() {
@@ -221,6 +250,10 @@ private:
 	automata_data_type_enum automata_data_type = automata_data_type_enum::Integer;
 
 	ahex_application_class<int>   ahex_application_int;
+	//ahex_application_class<float> ahex_application_float;
+	//ahex_application_class<bool>  ahex_application_bool;
+
+	cart2D_application_class<int>   cart2D_application_int;
 	//ahex_application_class<float> ahex_application_float;
 	//ahex_application_class<bool>  ahex_application_bool;
 

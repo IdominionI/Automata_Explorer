@@ -8,6 +8,8 @@
 #include <memory>
 #include <cctype>
 
+#include "Source/Application/vwa_application_parameters.h"
+
 #define BRACE_LEFT             '('
 #define BRACE_RIGHT            ')'
 #define SET_BRACE_LEFT         '{'
@@ -56,7 +58,8 @@
 
 // other expression operatiors defined here
 
-typedef hex_grid_value_data_type_enum parse_value_data_type_enum;
+//typedef hex_grid_value_data_type_enum parse_value_data_type_enum;
+typedef grid_value_data_type_enum parse_value_data_type_enum;
 enum class function_type_enum         { unary, binary, set, value, data, nan }; // add as required
 
 // pair datatype as a container to hold parser token function data in the form of

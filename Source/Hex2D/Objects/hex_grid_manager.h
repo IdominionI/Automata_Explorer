@@ -2,8 +2,6 @@
 
 #include "hex_grid_base.h"
 
-//#include "hex_grid_parameters.h"
-
 template <class T>
 class hex_grid_manager_class {
 public:

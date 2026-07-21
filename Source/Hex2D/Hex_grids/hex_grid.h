@@ -46,7 +46,7 @@ public:
 	}
 
 	void invalidate_hex_grid_data_value(hex_surface_index_data_type index) override {
-        HGBC::hex_grid.at(index) = INVALID_INT_DATA_VALUE;
+        HGBC::hex_grid.at(index) = INVALID_HEX_INT_DATA_VALUE;// Need to cater for float, double and boolean data types !!!!
 	}
 
     // The central main core function that manages the display of the hex grid window panels that
@@ -759,7 +759,7 @@ protected:
     // ## One function is defined for each number ditribution type     ##
 
     // NOTE : The
-    // if (random_engine.rng_add_to_existing_hex_grid) {
+    // if (random_engine.rng_add_to_existing_grid) {
     //      rn = HGBC::hex_grid[i] + rn;
     // }
     // to add random distribution numbers to the existing grid may not
@@ -772,7 +772,7 @@ protected:
 
             T rn = (T) random_engine.uniform_int_distribution.generated_number_value;
             
-            if (random_engine.rng_add_to_existing_hex_grid) {
+            if (random_engine.rng_add_to_existing_grid) {
                 rn = HGBC::hex_grid[i] + rn;
             }
 
@@ -793,7 +793,7 @@ protected:
 
             T rn = (T)random_engine.uniform_real_distribution.generated_number_value;
 
-            if (random_engine.rng_add_to_existing_hex_grid) {
+            if (random_engine.rng_add_to_existing_grid) {
                 rn = HGBC::hex_grid[i] + rn;
             }
 
@@ -806,7 +806,7 @@ protected:
 
             T rn = (T)random_engine.bernoulli_distribution.generated_number_value;
 
-            if (random_engine.rng_add_to_existing_hex_grid) {
+            if (random_engine.rng_add_to_existing_grid) {
                 rn = HGBC::hex_grid[i] + rn;
             }
 
@@ -819,7 +819,7 @@ protected:
 
             T rn = (T)random_engine.binomial_distribution.generated_number_value;
 
-            if (random_engine.rng_add_to_existing_hex_grid) {
+            if (random_engine.rng_add_to_existing_grid) {
                 rn = HGBC::hex_grid[i] + rn;
             }
 
@@ -832,7 +832,7 @@ protected:
 
             T rn = (T)random_engine.geometric_distribution.generated_number_value;
 
-            if (random_engine.rng_add_to_existing_hex_grid) {
+            if (random_engine.rng_add_to_existing_grid) {
                 rn = HGBC::hex_grid[i] + rn;
             }
 
@@ -845,7 +845,7 @@ protected:
 
             T rn = (T)random_engine.negative_binomial_distribution.generated_number_value;
 
-            if (random_engine.rng_add_to_existing_hex_grid) {
+            if (random_engine.rng_add_to_existing_grid) {
                 rn = HGBC::hex_grid[i] + rn;
             }
 
@@ -858,7 +858,7 @@ protected:
 
             T rn = (T)random_engine.poisson_distribution.generated_number_value;
 
-            if (random_engine.rng_add_to_existing_hex_grid) {
+            if (random_engine.rng_add_to_existing_grid) {
                 rn = HGBC::hex_grid[i] + rn;
             }
 
@@ -871,7 +871,7 @@ protected:
 
             T rn = (T)random_engine.exponential_distribution.generated_number_value;
 
-            if (random_engine.rng_add_to_existing_hex_grid) {
+            if (random_engine.rng_add_to_existing_grid) {
                 rn = HGBC::hex_grid[i] + rn;
             }
 
@@ -884,7 +884,7 @@ protected:
 
             T rn = (T)random_engine.gamma_distribution.generated_number_value;
 
-            if (random_engine.rng_add_to_existing_hex_grid) {
+            if (random_engine.rng_add_to_existing_grid) {
                 rn = HGBC::hex_grid[i] + rn;
             }
 
@@ -897,7 +897,7 @@ protected:
 
             T rn = (T)random_engine.weibull_distribution.generated_number_value;
             
-            if (random_engine.rng_add_to_existing_hex_grid) {
+            if (random_engine.rng_add_to_existing_grid) {
                 rn = HGBC::hex_grid[i] + rn;
             }
 
@@ -910,7 +910,7 @@ protected:
 
             T rn = (T)random_engine.extreme_value_distribution.generated_number_value;
 
-            if (random_engine.rng_add_to_existing_hex_grid) {
+            if (random_engine.rng_add_to_existing_grid) {
                 rn = HGBC::hex_grid[i] + rn;
             }
 
@@ -923,7 +923,7 @@ protected:
 
             T rn = (T)random_engine.normal_distribution.generated_number_value;
 
-            if (random_engine.rng_add_to_existing_hex_grid) {
+            if (random_engine.rng_add_to_existing_grid) {
                 rn = HGBC::hex_grid[i] + rn;
             }
 
@@ -936,7 +936,7 @@ protected:
 
             T rn = (T)random_engine.lognormal_distribution.generated_number_value;
 
-            if (random_engine.rng_add_to_existing_hex_grid) {
+            if (random_engine.rng_add_to_existing_grid) {
                 rn = HGBC::hex_grid[i] + rn;
             }
 
@@ -949,7 +949,7 @@ protected:
 
             T rn = (T)random_engine.chi_squared_distribution.generated_number_value;
 
-            if (random_engine.rng_add_to_existing_hex_grid) {
+            if (random_engine.rng_add_to_existing_grid) {
                 rn = HGBC::hex_grid[i] + rn;
             }
 
@@ -962,7 +962,7 @@ protected:
 
             T rn = (T)random_engine.cauchy_distribution.generated_number_value;
 
-            if (random_engine.rng_add_to_existing_hex_grid) {
+            if (random_engine.rng_add_to_existing_grid) {
                 rn = HGBC::hex_grid[i] + rn;
             }
 
@@ -975,7 +975,7 @@ protected:
 
             T rn = (T)random_engine.fisher_f_distribution.generated_number_value;
 
-            if (random_engine.rng_add_to_existing_hex_grid) {
+            if (random_engine.rng_add_to_existing_grid) {
                 rn = HGBC::hex_grid[i] + rn;
             }
 
@@ -988,7 +988,7 @@ protected:
 
             T rn = (T)random_engine.student_t_distribution.generated_number_value;
 
-            if (random_engine.rng_add_to_existing_hex_grid) {
+            if (random_engine.rng_add_to_existing_grid) {
                 rn = HGBC::hex_grid[i] + rn;
             }
 

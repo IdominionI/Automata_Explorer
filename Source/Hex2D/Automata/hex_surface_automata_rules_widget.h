@@ -25,8 +25,8 @@ public:
 
 	int current_selected_var_id = -1;
 
-	std::string automata_rule_dir_path = "./Rules/Rules";		// Path name to the default directory where the cellula automata rules are to be exported/imported
-	std::string automata_sub_rule_dir_path = "./Rules/Subrules";// Path name to the default directory where the cellula automata sub rules are to be exported/imported
+	std::string automata_rule_dir_path     = "./Rules/Rules/Hex2D_Rules";		// Path name to the default directory where the cellula automata rules are to be exported/imported
+	std::string automata_sub_rule_dir_path = "./Rules/Subrules/Hex2D_Subrules";// Path name to the default directory where the cellula automata sub rules are to be exported/imported
 
 	std::vector<hex_surface_automata_rule_struct_type> hex_surface_automata_rules;// List of hex automata rules stored as a C++ dynamic vector array
 
