@@ -174,7 +174,7 @@ protected:
 	}
 
 	bool create_hex_sub_grid(hex_grid_class<T>* hex_grid, hex_surface_vec_data_type lower_range, hex_surface_vec_data_type upper_range, int &error_code) {
-printf("create_hex_grid_panel_class::create_global_grid 00000 \n");
+//printf("create_hex_grid_panel_class::create_global_grid 00000 \n");
 		//bool cancel = false;
 
 		if (!hex_grid) {return false;}

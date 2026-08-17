@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Source/Cart2D/Objects/cart2D_grid_base.h"
+#include "Source/Cart2D/Cart2D_grids/cart2D_grid_base.h"
 #include "Source/Parser/functions.h"
 
 // ###### HEXAGONAL GRID CELL PARSER TOKEN DEFINITIONS ######
@@ -70,7 +70,6 @@ public:
 
     cart2D_surface_vec_data_type get_cart2D_surface_neighbour_index_coordinates(size_t neighbour, int x_index, int y_index) {
         cart2D_surface_vec_data_type neighbor_index_coordinate;
-        //if (y_index % 2 == 0) { // Even Y 
             switch (neighbour) {
                 case 1: neighbor_index_coordinate.x = x_index;     neighbor_index_coordinate.y = y_index + 1; break;
                 case 2: neighbor_index_coordinate.x = x_index + 1; neighbor_index_coordinate.y = y_index + 1; break;
@@ -82,17 +81,7 @@ public:
                 case 7: neighbor_index_coordinate.x = x_index - 1; neighbor_index_coordinate.y = y_index;     break;
                 case 8: neighbor_index_coordinate.x = x_index - 1; neighbor_index_coordinate.y = y_index + 1; break;
             }
-        //}
-        //else {// Odd Y 
-        //    switch (neighbour) {
-        //        case 1: neighbor_index_coordinate.x = x_index + 1; neighbor_index_coordinate.y = y_index + 1; break;
-        //        case 2: neighbor_index_coordinate.x = x_index + 1; neighbor_index_coordinate.y = y_index;     break;
-        //        case 3: neighbor_index_coordinate.x = x_index + 1; neighbor_index_coordinate.y = y_index - 1; break;
-        //        case 4: neighbor_index_coordinate.x = x_index;     neighbor_index_coordinate.y = y_index - 1; break;
-        //        case 5: neighbor_index_coordinate.x = x_index - 1; neighbor_index_coordinate.y = y_index;     break;
-        //        case 6: neighbor_index_coordinate.x = x_index;     neighbor_index_coordinate.y = y_index + 1;  break;
-        //    }
-        //}
+
         return neighbor_index_coordinate;
     }
 

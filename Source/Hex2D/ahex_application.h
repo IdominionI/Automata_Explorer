@@ -80,12 +80,6 @@ public:
 		if (global_hex_grid) {
 			global_grid_defined = true;
 			create_global_grid_popup = false;
-		
-			// !!!! Testing only : delete or comment out when finished !!!!
-			//for (size_t i = 95; i < 105; i++) {
-			//	global_hex_grid->hex_grid[i] = 1;
-			//}
-			//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!	
 		}
 
 		if (canceled_global_grid) { create_global_grid_popup = false; }

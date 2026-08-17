@@ -29,17 +29,17 @@ struct cart2D_grid_cell_data_struct_type {
 
 	// Clear all hexagonal grid data as being empty and ready the dynamic vector arrays to be reused
 	void clear_cart2D_grid_cell_data() {
-		//printf("cart2D_grid_cell_data_struct_type::clear_cart2D_grid_cell_data 000 %i : %i : %i |%i : %i : %i \n", cart2D_grid_cells_index.size(), cart2D_cell_centers_x.size(), cart2D_cell_centers_y.size(), cart2D_grid_cells_index.capacity(), cart2D_cell_centers_x.capacity(), cart2D_cell_centers_y.capacity());
+//printf("cart2D_grid_cell_data_struct_type::clear_cart2D_grid_cell_data 000 %i : %i : %i |%i : %i : %i \n", cart2D_grid_cells_index.size(), cart2D_cell_centers_x.size(), cart2D_cell_centers_y.size(), cart2D_grid_cells_index.capacity(), cart2D_cell_centers_x.capacity(), cart2D_cell_centers_y.capacity());
 		cart2D_grid_cells_index.clear();
 		cart2D_cell_centers_x.clear();
 		cart2D_cell_centers_y.clear();
 
-		//printf("cart2D_grid_cell_data_struct_type::clear_cart2D_grid_cell_data 111 %i : %i : %i|%i : %i : %i\n", cart2D_grid_cells_index.size(), cart2D_cell_centers_x.size(), cart2D_cell_centers_y.size(), cart2D_grid_cells_index.capacity(), cart2D_cell_centers_x.capacity(), cart2D_cell_centers_y.capacity());
+//printf("cart2D_grid_cell_data_struct_type::clear_cart2D_grid_cell_data 111 %i : %i : %i|%i : %i : %i\n", cart2D_grid_cells_index.size(), cart2D_cell_centers_x.size(), cart2D_cell_centers_y.size(), cart2D_grid_cells_index.capacity(), cart2D_cell_centers_x.capacity(), cart2D_cell_centers_y.capacity());
 		cart2D_grid_cells_index.shrink_to_fit();
 		cart2D_cell_centers_x.shrink_to_fit();
 		cart2D_cell_centers_y.shrink_to_fit();
 
-		//printf("cart2D_grid_cell_data_struct_type::clear_cart2D_grid_cell_data 222 %i : %i : %i|%i : %i : %i\n", cart2D_grid_cells_index.size(), cart2D_cell_centers_x.size(), cart2D_cell_centers_y.size(), cart2D_grid_cells_index.capacity(), cart2D_cell_centers_x.capacity(), cart2D_cell_centers_y.capacity());
+//printf("cart2D_grid_cell_data_struct_type::clear_cart2D_grid_cell_data 222 %i : %i : %i|%i : %i : %i\n", cart2D_grid_cells_index.size(), cart2D_cell_centers_x.size(), cart2D_cell_centers_y.size(), cart2D_grid_cells_index.capacity(), cart2D_cell_centers_x.capacity(), cart2D_cell_centers_y.capacity());
 	}
 
 	void add_cart2D_grid_cell(cart2D_surface_index_data_type cart2D_grid_cell_index, float x_coord, float y_coord) {
@@ -85,9 +85,9 @@ struct cart2D_grid_cell_data_struct_type {
 			return false;
 		}
 
-		//for (int i = 0; i < cart2D_cell_centers_x.size(); i++) {
-		//	printf("cart2D_grid_cell_data_struct_type :: display_cart2D_cell_data 00 %i : %f : %f \n", cart2D_grid_cell_data_id, cart2D_cell_centers_x[i], cart2D_cell_centers_y[i]);
-		//}
+//for (int i = 0; i < cart2D_cell_centers_x.size(); i++) {
+//	printf("cart2D_grid_cell_data_struct_type :: display_cart2D_cell_data 00 %i : %f : %f \n", cart2D_grid_cell_data_id, cart2D_cell_centers_x[i], cart2D_cell_centers_y[i]);
+//}
 
 		std::string scatter_plot_id = "Result Grid" + std::to_string(cart2D_grid_cell_data_id);
 
@@ -264,12 +264,10 @@ public:
 	// ---------------------------------------------------------------------------------
 	// Functions to calculate/retrieve hexagonal grid index from x-y grid index coordinates 
 	cart2D_surface_index_data_type get_index_value(cart2D_surface_index_data_type iX, cart2D_surface_index_data_type iY, cart2D_surface_index_data_type iZ) {
-		//return (cart2D_surface_index_data_type(iY / 2) + iY % 2) * grid_dimension.x + cart2D_surface_index_data_type(iY / 2) * (grid_dimension.x) + iX;
 		return iY * grid_dimension.x + iX;
 	}
 
 	cart2D_surface_index_data_type get_z_layer_total(cart2D_surface_index_data_type xdim, cart2D_surface_index_data_type ydim) {
-		//return (cart2D_surface_index_data_type(ydim / 2) + ydim % 2) * xdim + cart2D_surface_index_data_type(ydim / 2) * (xdim - 1);
 		return xdim * ydim;
 	}
 
@@ -309,9 +307,6 @@ public:
 
 		float x_res_step = cart2D_size * 2.0f;
 		float y_res_step = cart2D_size * 2.0f;
-
-		//float x_res_step = cart2D_size * 1.0f;
-		//float y_res_step = cart2D_size * 1.0f;
 
 		cart2D_surface_index_data_type data_set_x_size, data_set_y_size;
 
@@ -356,42 +351,12 @@ public:
 
 		size_t index_offset = 0;
 		for (size_t row = 0; row < num_rows; row++) {
-			//size_t max_cols = 0;
-			//if (row % 2 == 0) {// even row
-			//	if (num_cols == 1)
-			//	{
-			//		max_cols = 1;
-			//	}
-			//	else
-			//	{
-			//		max_cols = num_cols - 1;
-			//	}
-			//}
-			//else { // odd row
-			//	if (num_cols <= 2)
-			//	{
-			//		max_cols = 1;
-			//	}
-			//	else
-			//	{
-			//		max_cols = num_cols - 2;
-			//	}
-			//}
-
 			for (size_t col = 0; col < num_cols; col++) {
 				cart2D_surface_index_data_type cart2D_index = child_cart2D_origin_index + index_offset + col;
 				cart2D_grid[cart2D_index] = initial_cart2D_value;
 			}
 
-			//if (row % 2 == 0) {// even row
-			//	index_offset += grid_dimension.x;
-			//}
-			//else { // odd row
-			//	index_offset += grid_dimension.x - 1;
-			//}
-
 			index_offset += grid_dimension.x;
-
 		}
 
 		return true;
@@ -508,14 +473,8 @@ public:
 
 		glm::vec2 cart2D_cartesian_coordinate;
 
-		//cart2D_cartesian_coordinate.x = (float(i) * 2) * cart2D_size;
-		//cart2D_cartesian_coordinate.y = (2 * float(j)) * cart2D_size;
-
 		cart2D_cartesian_coordinate.x = (float(i) * 2) * cart2D_size + cart2D_size;
 		cart2D_cartesian_coordinate.y = (2 * float(j)) * cart2D_size + cart2D_size;
-
-		//cart2D_cartesian_coordinate.x = float(i) * cart2D_size;
-		//cart2D_cartesian_coordinate.y = float(j) * cart2D_size;
 
 		return cart2D_cartesian_coordinate;
 	}
@@ -605,10 +564,7 @@ public:
 	// (x,y) will be found to be within the bounds of a 2D hexgagon voxel cell.
 	cart2D_surface_vec_data_type hexagon_cell_coord_from_cartesian(float x, float y) {
 		float grid_radius = cart2D_size;
-		//float grid_height = grid_radius * (sqrt(3.0f));
 		float grid_height = grid_radius;
-		//float c = grid_radius / (sqrt(3.0f));
-		//float c = 1.0f;
 
 //printf("hexagon_cell_coord_from_cartesian 000 voxel_size : %f :grid_height %f : grid_radius %f : c %f \n", cart2D_size, grid_height, grid_radius,c);
 //printf("hexagon_cell_coord_from_cartesian 111 grid_origin :x %f :y %f \n", grid_origin.x, grid_origin.y);
@@ -622,9 +578,6 @@ public:
 
 		row    = (int)floor(grid_y / (cart2D_size * 2.0f));
 		column = (int)floor(grid_x / (cart2D_size * 2.0f));
-
-		//row    = (int)floor(grid_y / cart2D_size);
-		//column = (int)floor(grid_x / cart2D_size);
 
 		cart2D_surface_vec_data_type cart2D_coord;
 		cart2D_coord.x = column;
@@ -685,22 +638,9 @@ public:
 		size_t num_rows = cart2D_sub_grid.upper_range.y - cart2D_sub_grid.lower_range.y + 1;
 		size_t num_cols = cart2D_sub_grid.upper_range.x - cart2D_sub_grid.lower_range.x + 1;
 
-		//if (cart2D_sub_grid.upper_range.x % 2 == 0) { num_cols += 1; } // even max row
 		size_t index_offset = 0;
 
 		for (size_t row = 0; row < num_rows; row++) {
-			//size_t max_cols = 0;
-
-			//if (num_cols == 1)
-			//{
-			//	max_cols = 1;
-			//}
-			//else
-			//{
-			//	max_cols = num_cols - 1;
-			//}
-
-			//for (size_t col = 0; col < max_cols; col++) {
 			for (size_t col = 0; col < num_cols; col++) {
 				cart2D_surface_index_data_type cart2D_index = child_cart2D_origin_index + index_offset + col;
 

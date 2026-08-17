@@ -1,0 +1,591 @@
+#pragma once
+
+#include <vector>
+
+#include <ImGui/imgui_docking/misc/cpp/imgui_stdlib.h>// Need This so as to be able to input text as a std::string variable
+
+#include <Framework/AFW/Tools/afw_string_tools.h>
+
+#include "Source/Cubic/Parser/cubic_logic_parser.h"
+#include "automata_cubic_surface_import_export.h"
+
+/*
+	Cubic cellula automata rules widget class
+
+	This class widget defines an ImGui widget that is used to define
+	a set of cellula automata rules that the hexagonal 2D surface
+	grid model can be subjected to perform.
+*/
+
+template <class T>
+class cubic_surface_automata_rules_widget_class {
+public:
+	int current_selected_var_id = -1;
+
+	std::string automata_rule_dir_path     = "./Rules/Rules/Cubic_Rules";		// Path name to the default directory where the cellula automata rules are to be exported/imported
+	std::string automata_sub_rule_dir_path = "./Rules/Subrules/Cubic_Subrules";// Path name to the default directory where the cellula automata sub rules are to be exported/imported
+
+	std::vector<cubic_surface_automata_rule_struct_type> cubic_surface_automata_rules;// List of hex automata rules stored as a C++ dynamic vector array
+
+	bool logic_parser_tree_defined = false;// Indicate if sub rule parser tree  for a rule sub rule has been defined or not
+
+	void add_rule(cubic_surface_automata_rule_struct_type rule) {
+		if (rule.rule_id < 0) {
+			rule_id += 1;
+			rule.rule_id = rule_id;
+		}
+		cubic_surface_automata_rules.push_back(rule);
+	}
+
+	// Delete all rules from the current hexagonal automata project
+	void delete_all_rules() {
+		for (int i = cubic_surface_automata_rules.size() - 1; i > -1; i--) {
+			delete_automata_rule(i);
+		}
+
+		cubic_surface_automata_rules.clear();
+		cubic_surface_automata_rules.shrink_to_fit();
+		rule_id = -1;// Reinitialise rule id : Critical
+	}
+
+	// Display the main hexagonal automata rules editor and manager section
+	void cubic_automata_rules_editor(ImVec2 editor_display_window_size) {
+		ImGui::BeginChild("Automata Rules", editor_display_window_size, true);
+
+		// ImGui popup menu to manage individual cellula automata rules as a floating menu
+		if (ImGui::BeginPopupContextWindow(0, 1)) {
+			ImVec2 click_pos = ImGui::GetMousePosOnOpeningCurrentPopup();
+
+			if (ImGui::BeginMenu("Automata Rules")) {
+				if (ImGui::MenuItem("Add Rule")) {
+					add_new_automata_rule();
+				}
+
+				if (ImGui::MenuItem("Import Rule")) {
+					import_automata_rule();
+				}
+
+				if (rule_selected_index > -1) {// Index of selected rule to perform management tasks upon is not none
+
+					if (ImGui::MenuItem("Delete Rule")) {
+//printf("cubic_surface_automata_rules_widget_class :: cubic_automata_rules_editor:: %i : %s\n", cubic_surface_automata_rules[rule_selected_index].rule_id, cubic_surface_automata_rules[rule_selected_index].rule_name.c_str());
+						delete_automata_rule(rule_selected_index);
+						rule_selected_index = -1;
+					}
+
+					if (ImGui::MenuItem("Save Rule")) {
+//printf("cubic_surface_automata_rules_widget_class :: cubic_automata_rules_editor:: %i : %s\n", cubic_surface_automata_rules[rule_selected_index].rule_id, cubic_surface_automata_rules[rule_selected_index].rule_name.c_str());
+						save_automata_rule(rule_selected_index);
+						rule_selected_index = -1;
+					}
+				}
+				ImGui::EndMenu();
+			}
+			ImGui::EndPopup();
+		}
+
+			if (ImGui::IsMouseClicked(ImGuiMouseButton_Right)) {//selection of sub rule by hovering over input test entry and right mouse 
+//printf("cubic_surface_automata_rules_widget_class :: cubic_automata_rules_editor:: LEFT\n");
+				rule_selected_index = -1;
+			}
+
+		display_cubic_automata_rules();
+
+		ImGui::EndChild();
+	}
+
+	// Function to display the hexagaonl cellula automata rules as rows of ImGui widgets that the user can interact with
+	void display_cubic_automata_rules() {
+		float x_pos = 5.0f, y_pos = 5.0f;
+
+		float t_height = ImGui::GetTextLineHeight();
+//printf("cubic_surface_automata_rules_widget_class :: display_cubic_automata_rules:: 00000 :%i\n", cubic_surface_automata_rules.size());
+		for (size_t i = 0; i < cubic_surface_automata_rules.size(); i++) {
+			float y_pos2 = y_pos + (t_height * 2) * i;
+			display_cubic_automata_rule({ x_pos,y_pos2 },i, cubic_surface_automata_rules[i]);
+
+
+			if (cubic_surface_automata_rules[i].display_sub_rules) {
+//if(i==0){
+//printf("cubic_surface_automata_rules_widget_class :: display_cubic_automata_rules:: AAAAA :"); printf("%i\n", cubic_surface_automata_rules[i].display_sub_rules);
+//}
+
+				display_cubic_automata_sub_rules_widget(cubic_surface_automata_rules[i]);
+			}
+		}
+	}
+
+	// Function to display the hexagaonl cellula automata rules as a row of ImGui widgets that the user can interact with
+	//  cubic_surface_automata_rule needs to be referenced or change will be lost.
+	void display_cubic_automata_rule(glm::vec2 window_loc,size_t rule_index, cubic_surface_automata_rule_struct_type &cubic_surface_automata_rule) {
+		ImGui::SetNextItemWidth(50);
+		text(std::to_string(rule_index), window_loc.x, window_loc.y + 5);
+
+		ImGui::SetCursorPosX(window_loc.x+50);
+		ImGui::SetCursorPosY(window_loc.y);
+
+		// Define individual ImGui identifiers for each Imgui widget so as to avoid
+		// identifier clashes and be able to display multiple like widgets 
+		std::string w_id = "##curcb" + std::to_string(cubic_surface_automata_rule.rule_id);
+		std::string rn_id = "##currn" + std::to_string(cubic_surface_automata_rule.rule_id);
+		std::string ss_id_string = "##curss" + std::to_string(cubic_surface_automata_rule.rule_id);
+		std::string es_id_string = "##curer" + std::to_string(cubic_surface_automata_rule.rule_id);
+		std::string sr_id_string = "EDIT RULES##cursr" + std::to_string(cubic_surface_automata_rule.rule_id);
+
+		ImGui::BeginGroup();
+		{
+			//ImGui::Checkbox(w_id.c_str(), &cubic_surface_automata_rule.active_rule);
+			//ImGui::SameLine();
+			ImGui::SetNextItemWidth(120);
+			ImGui::InputText(rn_id.c_str(), &cubic_surface_automata_rule.rule_name, ImGuiInputTextFlags_CallbackCharFilter, Input_Filters::name);
+			ImGui::SameLine();
+			//ImGui::SetNextItemWidth(50);
+			//ImGui::InputInt(ss_id_string.c_str(), &cubic_surface_automata_rule.rule_start_step, 0);
+			//ImGui::SameLine();
+			//ImGui::SetNextItemWidth(50);
+			//ImGui::InputInt(es_id_string.c_str(), &cubic_surface_automata_rule.rule_end_step, 0);
+			ImGui::SameLine();
+			ImGui::SetNextItemWidth(100);
+
+			if (ImGui::Button(sr_id_string.c_str(), { 80,20 })) {
+//printf("cubic_surface_automata_rules_widget_class :: display_cubic_automata_rule:: BBBB \n");
+
+				cubic_surface_automata_rule.display_sub_rules = true;
+//printf("cubic_surface_automata_rules_widget_class :: display_cubic_automata_rule:: BBBB1111::"); printf("%i\n", cubic_surface_automata_rule.display_sub_rules);
+
+			}
+		}
+		ImGui::EndGroup();
+
+		if (ImGui::IsItemClicked(ImGuiMouseButton_Right)) {//selection of sub rule by hovering over input test entry and right mouse 
+//printf("cubic_surface_automata_rules_widget_class :: display_cubic_automata_rule:: %i : %s\n", cubic_surface_automata_rule.rule_id, cubic_surface_automata_rule.rule_name.c_str());
+			rule_selected_index = rule_index;
+		} 
+
+	}
+
+	// Function to display an ImGui window widget to display and manage the cellula automata sub rules of a cellula automata rule
+	//cubic_surface_automata_rule needs to be referenced or changes will be lost.
+	void display_cubic_automata_sub_rules_widget(cubic_surface_automata_rule_struct_type &cubic_surface_automata_rule) {
+		std::string sr_id = "Automata Sub Rules : " + cubic_surface_automata_rule.rule_name + "##asr" + std::to_string(cubic_surface_automata_rule.rule_id);
+		std::string sr_id2 = "##asrc" + std::to_string(cubic_surface_automata_rule.rule_id);
+
+//printf("cubic_surface_automata_rules_widget_class :: display_cubic_automata_sub_rules:: 0000 \n");
+
+		if (ImGui::Begin(sr_id.c_str())) {
+
+			// Define individual ImGui identifiers for each Imgui widget so as to avoid
+			// identifier clashes and be able to display multiple like widgets 
+			std::string sra_id_string = "ACCEPT##cursr" + std::to_string(cubic_surface_automata_rule.rule_id);
+			std::string srq_id_string = "QUIT##cursr" + std::to_string(cubic_surface_automata_rule.rule_id);
+
+			float x_pos = 10.0f, y_pos = 60.0f;
+
+			// Always center this window when appearing
+			ImVec2 center = ImGui::GetMainViewport()->GetCenter();
+			ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+
+			ImVec2 click_pos = ImGui::GetMousePosOnOpeningCurrentPopup();
+
+			title("Hex Surface Automata");
+			text("Automata Sub Rules", x_pos, y_pos);
+
+			ImGui::BeginChild(sr_id2.c_str(), ImVec2(370, 200.0f), true);
+
+//printf("cubic_surface_automata_rules_widget_class :: display_cubic_automata_sub_rules:: 1111 \n");
+			// ImGui popup menu to manage individual callula automata sub rules as a floating menu
+			if (ImGui::BeginPopupContextWindow(0, 1)) {
+				ImVec2 click_pos = ImGui::GetMousePosOnOpeningCurrentPopup();
+
+				if (ImGui::BeginMenu("Automata Sub Rules")) {
+					if (ImGui::MenuItem("Add Sub Rule")) {
+						add_new_automata_sub_rule(cubic_surface_automata_rule);
+					}
+
+					if (ImGui::MenuItem("Import Sub Rule")) {
+						import_automata_sub_rule(cubic_surface_automata_rule);
+					}
+
+					if (sub_rule_selected_index > -1) {// Index of selected sub rule to perform management tasks upon is not none
+
+						if (ImGui::MenuItem("Remove Sub Rule")) {
+//printf("cubic_surface_automata_rules_widget_class :: display_cubic_automata_sub_rules_widget:: sub rule to delete : %i : %s \n", sub_rule_selected_index,cubic_surface_automata_rule.sub_rules[sub_rule_selected_index].sub_rule_name.c_str());
+								delete_rule_sub_rule(cubic_surface_automata_rule, sub_rule_selected_index);
+								sub_rule_selected_index = -1;
+						}
+
+						if (ImGui::MenuItem("Save Sub Rule")) {
+//printf("cubic_surface_automata_rules_widget_class :: display_cubic_automata_sub_rules_widget:: sub rule to delete : %i : %s \n", sub_rule_selected_index,cubic_surface_automata_rule.sub_rules[sub_rule_selected_index].sub_rule_name.c_str());
+								save_rule_sub_rule(cubic_surface_automata_rule, sub_rule_selected_index);
+								sub_rule_selected_index = -1;
+						}
+// Not sure if the following should be implemented as it may cause too many problems
+// Left here just in case it will be implemented
+/*
+						if (ImGui::BeginMenu("Move Sub Rule")) {
+							if (ImGui::MenuItem("Up##msru")) {
+								//create_node<cubic_voxel_node_class>(click_pos); // uncomment when cubic_voxel implemented
+								sub_rule_selected_index = -1;
+							}
+
+							if (ImGui::MenuItem("Down##sard")) {
+								//create_node<cubic_voxel_node_class>(click_pos); // uncomment when cubic_voxel implemented
+								sub_rule_selected_index = -1;
+							}
+
+							if (ImGui::MenuItem("To Top##sart")) {
+								//create_node<cubic_voxel_node_class>(click_pos); // uncomment when cubic_voxel implemented
+								sub_rule_selected_index = -1;
+							}
+
+							if (ImGui::MenuItem("To Bottom##sarb")) {
+								//create_node<cubic_voxel_node_class>(click_pos); // uncomment when cubic_voxel implemented
+								sub_rule_selected_index = -1;
+							}
+
+							ImGui::EndMenu();
+						}
+*/
+					}
+					ImGui::EndMenu();
+				}
+				ImGui::EndPopup();
+			}
+
+			if (ImGui::IsMouseClicked(ImGuiMouseButton_Right)) {//selection of sub rule by hovering over input test entry and right mouse click
+//printf("cubic_surface_automata_rules_widget_class :: cubic_automata_rules_editor:: LEFT\n");
+				sub_rule_selected_index = -1;// Reset index of selected sub rule to perform management tasks upon to be none
+			}
+
+			display_cubic_automata_sub_rules(cubic_surface_automata_rule);
+
+			ImGui::EndChild();
+
+			ImGui::SetCursorPosX(x_pos+40);
+
+			if (ImGui::Button(sra_id_string.c_str(), { 80,20 })) {
+				// Copy sub rules to cubic_surface_automata_rule subrules;
+				cubic_surface_automata_rule.display_sub_rules = false;
+//printf("cubic_surface_automata_rules_widget_class :: display_cubic_automata_sub_rules_widget:: B accept \n");
+			}
+
+			ImGui::SameLine();
+			ImGui::SetCursorPosX(x_pos + 220);
+			if (ImGui::Button(srq_id_string.c_str(), { 80,20 })) {
+				// exit sub rules without performing any further actions
+				cubic_surface_automata_rule.display_sub_rules = false;
+//printf("cubic_surface_automata_rules_widget_class :: display_cubic_automata_sub_rules_widget:: B quit \n");
+			}
+		}
+		ImGui::End();
+
+		
+	}
+
+	// Function to display the list of hexagonal automata sub rules that exist for the hexagonal automata
+	// rule as a row of ImGui widgets defined by cubic_surface_automata_rule. cubic_surface_automata_rule needs
+	// to be referenced or changes will be lost.
+	void display_cubic_automata_sub_rules(cubic_surface_automata_rule_struct_type &cubic_surface_automata_rule) {
+		float x_pos = 5.0f, y_pos = 5.0f;
+		float t_height = ImGui::GetTextLineHeight();
+
+		for (size_t i = 0; i < cubic_surface_automata_rule.sub_rules.size(); i++) {
+			float y_pos2 = y_pos + (t_height * 2) * i;
+			display_cubic_automata_sub_rule({ x_pos,y_pos2 }, cubic_surface_automata_rule.sub_rules[i],i);
+		}
+//printf("cubic_surface_automata_rules_widget_class :: display_cubic_automata_sub_rules:: %i \n", selected);
+	}
+
+	// Function to display a hexagonal cellula automata sub rule as a single row of ImGui widgets which the user can interact with and initiate a ImGui
+	// text editor to define the hexagonal cellula automata sub rule.cubic_surface_automata_rule needs to be referenced or changes will be lost.
+	void display_cubic_automata_sub_rule(glm::vec2 window_loc, cubic_automata_sub_rule_struct_type &cubic_surface_automata_sub_rule, int sub_rule_index) {
+		ImGui::SetCursorPosX(window_loc.x);
+		ImGui::SetCursorPosY(window_loc.y);
+
+		// Define individual ImGui identifiers for each Imgui widget so as to avoid
+		// identifier clashes and be able to display multiple like widgets 
+		std::string w_id = "##cusrcb" + std::to_string(cubic_surface_automata_sub_rule.sub_rule_id);
+		std::string rn_id = "##cusrrn" + std::to_string(cubic_surface_automata_sub_rule.sub_rule_id);
+		std::string sr_id_string = "EDIT SUB RULE##cusrsr" + std::to_string(cubic_surface_automata_sub_rule.sub_rule_id);
+
+		ImGui::BeginGroup();
+		{
+			ImGui::Checkbox(w_id.c_str(), &cubic_surface_automata_sub_rule.active_sub_rule);
+			ImGui::SameLine();
+			ImGui::SetNextItemWidth(120);
+			ImGui::InputText(rn_id.c_str(), &cubic_surface_automata_sub_rule.sub_rule_name, ImGuiInputTextFlags_CallbackCharFilter, Input_Filters::name);
+			ImGui::SameLine();
+			ImGui::SetNextItemWidth(250);
+			if (ImGui::Button(sr_id_string.c_str(), { 120,20 }) && cubic_surface_automata_sub_rule.edit_sub_rule == false) {
+				cubic_surface_automata_sub_rule.edit_sub_rule = true; // Initiate flag to enable edit of the selected sub rule
+//printf("cubic_surface_automata_rules_widget_class :: Edit_cubic_automata_sub_rule:: BBBB %i\n", cubic_surface_automata_sub_rule.sub_rule_id);
+			}
+
+			if (cubic_surface_automata_sub_rule.edit_sub_rule) { // have a sub rule initiated to be edited 
+				edit_cubic_surface_automata_sub_rule(cubic_surface_automata_sub_rule);
+			}
+		}
+		ImGui::EndGroup();
+
+		if (ImGui::IsItemClicked(ImGuiMouseButton_Right)) {//selection of sub rule by hovering over input test entry and right mouse 
+//printf("cubic_surface_automata_rules_widget_class :: Edit_cubic_automata_sub_rule:: BBBB %i : %s\n", cubic_surface_automata_sub_rule.sub_rule_id, cubic_surface_automata_sub_rule.sub_rule_name.c_str());
+			sub_rule_selected_index = sub_rule_index;
+		}
+
+	}
+
+	// Function to open a window widget of ImGui widgets to perform editing tasks upon a hexagonal automata sub rule definition
+	// cubic_surface_automata_rule needs to be referenced or changes will be lost.
+	void edit_cubic_surface_automata_sub_rule(cubic_automata_sub_rule_struct_type& cubic_surface_automata_sub_rule) {
+		// Define individual ImGui identifiers for each Imgui widget so as to avoid
+		// identifier clashes and be able to display multiple like widgets
+		std::string esr_id = "##ehsrw" + std::to_string(cubic_surface_automata_sub_rule.sub_rule_id);
+		std::string esre_id = "##ehsrte" + std::to_string(cubic_surface_automata_sub_rule.sub_rule_id);
+		std::string esrb0_id = "Verify Code##ehsrvb" + std::to_string(cubic_surface_automata_sub_rule.sub_rule_id);
+		std::string esrb1_id = "Accept##ehsrab" + std::to_string(cubic_surface_automata_sub_rule.sub_rule_id);
+		std::string esrb2_id = "Reject##ehsreb" + std::to_string(cubic_surface_automata_sub_rule.sub_rule_id);
+
+		std::string title = "Edit Hex Surface Automata Sub Rule " + cubic_surface_automata_sub_rule.sub_rule_name;
+
+		ImGuiInputTextFlags flags = ImGuiInputTextFlags_AllowTabInput;
+
+		static std::string sub_rule_text;// Container to store a string of characters of the sub rule definition to be edited
+		if (!cubic_surface_automata_sub_rule.edit_sub_rule_text) { // Sub rule has not been defined to be able to be edited
+			sub_rule_text = cubic_surface_automata_sub_rule.sub_rule_definition; // Assign sub_rule_text to text be edited
+			cubic_surface_automata_sub_rule.edit_sub_rule_text = true;// define Sub rule to be able to be edited
+		}
+
+		// Popup to display hex cellula automata sub rule editor window widget
+		std::string popup_id = "Hex Surface Automata Sub Rule " + cubic_surface_automata_sub_rule.sub_rule_name;
+		ImGui::OpenPopup(popup_id.c_str());
+
+		if (ImGui::BeginPopupModal(popup_id.c_str(), NULL, ImGuiWindowFlags_AlwaysAutoResize))
+		{
+			float x_pos = 10.0f;
+			ImGui::SetCursorPosX(x_pos);
+			ImGui::SetNextItemWidth(300);
+			ImGui::InputTextMultiline(esre_id.c_str(), &sub_rule_text ,ImVec2(-FLT_MIN, ImGui::GetTextLineHeight() * 16), flags);
+//			if (ImGui::InputTextMultiline(esre_id.c_str(), &sub_rule_text, ImVec2(-FLT_MIN, ImGui::GetTextLineHeight() * 16), flags)) {
+//printf("test input multiline string text %i : |%s|\n", sub_rule_text.size(), sub_rule_text.c_str());
+//			}
+
+			ImGui::SetCursorPosX(x_pos + 100);
+			if (ImGui::Button(esrb0_id.c_str(), { 100,20 })) { // Validate sub rule code 
+printf("cubic_surface_automata_rules_widget_class :: display_cubic_automata_sub_rules:: B verify code"); printf(" %s\n",sub_rule_text.c_str());
+				if (valid_sub_rule_definition(sub_rule_text)) {// if have validated sub rule code
+					vwDialogs::display_error_message("Automata sub rule", "INFO : \n Automata sub rule is valid\n");
+					afw_globalc::get_current_logger()->log(LogLevel::INFO, "Have valid automata sub rule definition for " + cubic_surface_automata_sub_rule.sub_rule_name + "!!!!\n");
+				} else {
+					vwDialogs::display_error_message("Automata sub rule", "INFO : \n Automata sub rule is invalid\n");
+					afw_globalc::get_current_logger()->log(LogLevel::INFO, "Have invalid automata sub rule definition for " + cubic_surface_automata_sub_rule.sub_rule_name + "!!!!\n");
+				}
+			}
+
+			ImGui::SetCursorPosX(x_pos);
+			if (ImGui::Button(esrb1_id.c_str(), { 80,20 })) {// Accept entered code to be saved as a sub rule
+printf("cubic_surface_automata_rules_widget_class :: display_cubic_automata_sub_rules:: B accept code  0000:\n");
+				logic_parser_tree = valid_sub_rule_definition(sub_rule_text); // Validate sub rule code 
+				if (logic_parser_tree) {// if have valid code set appropriate flags to end editing and save sub rule definitiion
+					cubic_surface_automata_sub_rule.edit_sub_rule      = false;
+					cubic_surface_automata_sub_rule.edit_sub_rule_text = false;
+					cubic_surface_automata_sub_rule.root_parser_node = logic_parser_tree;
+					logic_parser_tree_defined = true;
+					cubic_surface_automata_sub_rule.sub_rule_definition = sub_rule_text.c_str();
+					vwDialogs::display_error_message("Automata sub rule", "INFO : \n Valid automata sub rule definition accepted\n");
+					afw_globalc::get_current_logger()->log(LogLevel::INFO, "Have valid automata sub rule definition accepted for " + cubic_surface_automata_sub_rule.sub_rule_name + "!!!!\n");
+				} else {// if have invalid code  set appropriate flags to continue editing
+					logic_parser_tree_defined = false;
+					cubic_surface_automata_sub_rule.root_parser_node = nullptr;
+					vwDialogs::display_error_message("Automata sub rule", "INFO : \n Invalid automata sub rule definition not accepted\n");
+					afw_globalc::get_current_logger()->log(LogLevel::INFO, "Have invalid automata sub rule definition not accepted for " + cubic_surface_automata_sub_rule.sub_rule_name + "!!!!\n");
+				}
+
+printf("cubic_surface_automata_rules_widget_class :: display_cubic_automata_sub_rules:: B accept code  :"); printf(" %i : %s \n", cubic_surface_automata_sub_rule.sub_rule_definition.size(), cubic_surface_automata_sub_rule.sub_rule_definition.c_str());
+			}
+
+			ImGui::SameLine();
+			ImGui::SetCursorPosX(x_pos + 220);
+			if (ImGui::Button(esrb2_id.c_str(), { 80,20 })) {// Quit editing session without validating or saving any edited code
+				//set appropriate flags to end editing
+				cubic_surface_automata_sub_rule.edit_sub_rule = false;
+				cubic_surface_automata_sub_rule.edit_sub_rule_text = false;
+printf("cubic_surface_automata_rules_widget_class :: display_cubic_automata_sub_rules:: B reject  code\n");
+			}
+
+			ImGui::EndPopup();
+		}
+	}
+
+	// Functionre to test if have valid code entered and if so return a parser tree representing that code or otherwise return a null value
+	parser_base_node  *valid_sub_rule_definition(std::string &sub_rule_text) {
+printf("cubic_surface_automata_rules_widget_class :: valid_sub_rule_definition:: B accept code  0000:"); printf("|%s|\n", sub_rule_text.c_str());
+
+		//Test if have a new line character at the end of the rule definition string, and if not append at end of string
+		if (sub_rule_text.find_first_of('\n') == sub_rule_text.npos || sub_rule_text.find_last_of('\n') < sub_rule_text.size()) {
+			sub_rule_text.append("\n");
+		} 
+
+printf("cubic_surface_automata_rules_widget_class :: valid_sub_rule_definition:: B accept code  3333:"); printf(" |%s| \n", sub_rule_text.c_str());
+		return logic_parser.create_logic_parse_tree(sub_rule_text);
+	}
+
+private:
+	int rule_id = -1;
+
+	int rule_selected_index = -1;
+	int sub_rule_selected_index = -1;
+
+	cubic_logic_parser_class<T> logic_parser;
+	parser_base_node* logic_parser_tree = nullptr;
+
+
+	import_export_cubic_surface_automata_rules_class import_export_cubic_surface_automata_rules;
+
+	// !!!!!!!!!!!!!! Functions to manage the cellula automata rules !!!!!!!!!!!!!!!!!!
+
+	void add_new_automata_rule() {
+		cubic_surface_automata_rule_struct_type automata_rule;
+		add_rule(automata_rule);
+	}
+
+	bool delete_rule(int rule_id) {
+		for (size_t i = 0; i < cubic_surface_automata_rules.size(); i++) {
+			if (cubic_surface_automata_rules[i].rule_id == rule_id) {
+				return delete_automata_rule(cubic_surface_automata_rules[i].rule_id);
+			}
+		}
+		return false;
+	}
+
+	bool delete_automata_rule(int rule_selected_index) {
+		if (rule_selected_index > -1 && rule_selected_index < cubic_surface_automata_rules.size()) {
+			delete_all_sub_rules(cubic_surface_automata_rules[rule_selected_index].sub_rules);
+			cubic_surface_automata_rules.erase(cubic_surface_automata_rules.begin() + rule_selected_index);
+			return true;
+		}
+
+		return false;
+	}
+
+	cubic_surface_automata_rule_struct_type* get_rule(int rule_id) {
+		for (cubic_surface_automata_rule_struct_type rule : cubic_surface_automata_rules) {
+			if (rule.rule_id == rule_id) {
+				return &rule;
+				break;
+			}
+		}
+
+		return nullptr;
+	}
+
+	bool modify_rule(cubic_surface_automata_rule_struct_type sr) {
+		for (cubic_surface_automata_rule_struct_type rule : cubic_surface_automata_rules) {
+			if (rule.rule_id == sr.rule_id) {
+				rule = sr;
+				return true;
+				break;
+			}
+		}
+
+		return false;
+	}
+
+
+	void add_new_automata_sub_rule(cubic_surface_automata_rule_struct_type& cubic_surface_automata_rule) {
+		cubic_automata_sub_rule_struct_type sub_rule;
+
+		cubic_surface_automata_rule.add_sub_rule(sub_rule);
+	}
+
+
+	bool delete_rule_sub_rule(cubic_surface_automata_rule_struct_type& rule, int sub_rule_index) {
+		if (sub_rule_index < 0 || sub_rule_index > rule.sub_rules.size()) { return false; }
+
+		logic_parser.delete_pars_tree(rule.sub_rules[sub_rule_index].root_parser_node);
+		rule.sub_rules.erase(rule.sub_rules.begin() + sub_rule_index);
+		return true;
+	}
+
+	void delete_all_sub_rules(std::vector<cubic_automata_sub_rule_struct_type>& sub_rules) {
+		for (int i = sub_rules.size() - 1; i > -1; i--) {
+			logic_parser.delete_pars_tree(sub_rules[i].root_parser_node);
+			sub_rules.erase(sub_rules.begin() + i);
+		}
+	}
+
+	// Save an individual cellula automata rule selected from the list of cellula automata rules that has a list index of rule_selected_index
+	void save_automata_rule(int rule_selected_index) {
+		char const* patterns[] = { "*HCPGR.txt" };
+		char const* file_pathname = vwDialogs::save_file(automata_rule_dir_path.c_str(), patterns, 1);// get file pathname to export automata rule data to
+
+		if (file_pathname == nullptr) {
+			vwDialogs::display_error_message("Save Automata Rule", "ERROR : \n No automata rule file defined to save hex surface automata rule data to\nSave automata rule aborted");
+			return;
+		}
+
+		if (rule_selected_index < 0 || rule_selected_index > cubic_surface_automata_rules.size()) {
+			return;// rule_selected_index is not valid 
+		}
+
+		// Function to export selected cellula automata rule data to pathname file_pathname
+		import_export_cubic_surface_automata_rules.save_automata_rule(file_pathname, cubic_surface_automata_rules[rule_selected_index]);
+	}
+
+	// Import an individual cellula automata rule to the end of the list of cellula automata rules
+	void import_automata_rule() {
+		char const* patterns[] = { "*HCPGR.txt" };
+		char const* file_pathname = vwDialogs::open_file(automata_rule_dir_path.c_str(), patterns, 1);// get file pathname to import automata rule data from
+
+		if (file_pathname == nullptr) {
+			vwDialogs::display_error_message("Import Automata Rule", "ERROR : \n No automata rule file defined to import hex surface automata rule data to\nImport automata rule aborted");
+			return;
+		}
+
+		// Function to import text based cellula automata rule data of pathname file_pathname to the end of the list of cellula automata rules
+		if (import_export_cubic_surface_automata_rules.import_automata_rule(file_pathname, cubic_surface_automata_rules)) {
+			// Successfully imported rule data into the list of cellula automata rules
+			rule_id += 1; // define rule id number for imported rule
+			cubic_surface_automata_rule_struct_type& rule = cubic_surface_automata_rules.back();
+
+			rule.rule_id = rule_id;// imported file is last cubic_surface_automata_rules vector element
+
+			// Need to edit sub rule id number manually here to enable ImGui to display widgets without error and to initialise an ID idetification for each sub rule.
+			for (cubic_automata_sub_rule_struct_type& sub_rule : rule.sub_rules) {
+//std::cout << "cubic_surface_automata_widget_class::load_automata_rules iiiiiA : " << rule.sub_rules.size() << "::" << sub_rule.sub_rule_id << std::endl;
+				rule.sub_rule_id += 1;
+				sub_rule.sub_rule_id = rule.sub_rule_id;
+//std::cout << "cubic_surface_automata_widget_class::load_automata_rules iiiiiB : " << rule.sub_rules.size() << "::" << sub_rule.sub_rule_id << std::endl;
+			}
+		}
+	}
+
+	// Save an individual cellula automata sub rule of a cellula automata rule selected from the list of cellula automata sub rules of that cellula automata rule that has a list index of sub_rule_index
+	void save_rule_sub_rule(cubic_surface_automata_rule_struct_type rule, int sub_rule_index) {
+		char const* patterns[] = { "*HCPGSR.txt" };
+		char const* file_pathname = vwDialogs::save_file(automata_sub_rule_dir_path.c_str(), patterns, 1);// get file pathname to export automata sub rule data to
+
+		if (file_pathname == nullptr) {
+			vwDialogs::display_error_message("Save Automata Sub Rule", "ERROR : \n No automata sub rule file defined to save hex surface automata sub rule data to\nSave automata sub rule aborted");
+			return;
+		}
+
+		if (sub_rule_index < 0 || sub_rule_index > rule.sub_rules.size()) {
+			return;
+		}
+
+		import_export_cubic_surface_automata_rules.save_automata_sub_rule(file_pathname, rule.sub_rules[sub_rule_index]);
+	}
+
+	// Import an individual cellula automata sub rule to the end of the selected cellula automata rule list of sub rules
+	void import_automata_sub_rule(cubic_surface_automata_rule_struct_type& cubic_surface_automata_rule) {
+		char const* patterns[] = { "*HCPGSR.txt" };
+		char const* file_pathname = vwDialogs::open_file(automata_sub_rule_dir_path.c_str(), patterns, 1);// get file pathname to import automata sub rule data from
+
+		if (file_pathname == nullptr) {
+			vwDialogs::display_error_message("Import Automata Sub Rule", "ERROR : \n No automata sub rule file defined to import hex surface automata sub rule data to\nImport automata sub rule aborted");
+			return;
+		}
+
+		import_export_cubic_surface_automata_rules.import_automata_sub_rule(file_pathname, cubic_surface_automata_rule);
+	}
+};

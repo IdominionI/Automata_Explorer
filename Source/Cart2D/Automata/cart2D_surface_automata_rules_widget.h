@@ -20,9 +20,6 @@
 template <class T>
 class cart2D_surface_automata_rules_widget_class {
 public:
-	// for testing only Delete or comment out when not in use or needed
-	//cart2D_grid_base_class<T>* cart2D_test_grid = nullptr;
-
 	int current_selected_var_id = -1;
 
 	std::string automata_rule_dir_path     = "./Rules/Rules/Cart2D_Rules";		// Path name to the default directory where the cellula automata rules are to be exported/imported
@@ -137,25 +134,15 @@ public:
 
 		ImGui::BeginGroup();
 		{
-			//ImGui::Checkbox(w_id.c_str(), &cart2D_surface_automata_rule.active_rule);
-			//ImGui::SameLine();
 			ImGui::SetNextItemWidth(120);
 			ImGui::InputText(rn_id.c_str(), &cart2D_surface_automata_rule.rule_name, ImGuiInputTextFlags_CallbackCharFilter, Input_Filters::name);
-			ImGui::SameLine();
-			//ImGui::SetNextItemWidth(50);
-			//ImGui::InputInt(ss_id_string.c_str(), &cart2D_surface_automata_rule.rule_start_step, 0);
-			//ImGui::SameLine();
-			//ImGui::SetNextItemWidth(50);
-			//ImGui::InputInt(es_id_string.c_str(), &cart2D_surface_automata_rule.rule_end_step, 0);
 			ImGui::SameLine();
 			ImGui::SetNextItemWidth(100);
 
 			if (ImGui::Button(sr_id_string.c_str(), { 80,20 })) {
 //printf("cart2D_surface_automata_rules_widget_class :: display_cart2D_automata_rule:: BBBB \n");
-
 				cart2D_surface_automata_rule.display_sub_rules = true;
 //printf("cart2D_surface_automata_rules_widget_class :: display_cart2D_automata_rule:: BBBB1111::"); printf("%i\n", cart2D_surface_automata_rule.display_sub_rules);
-
 			}
 		}
 		ImGui::EndGroup();
@@ -432,15 +419,6 @@ printf("cart2D_surface_automata_rules_widget_class :: valid_sub_rule_definition:
 		return logic_parser.create_logic_parse_tree(sub_rule_text);
 	}
 
-	//ImVec2 editor_sub_rules_display_window_size = { 700,400 };
-
-	//size_t max_sub_rule_char = 1000;
-
-
-
-
-
-
 private:
 	int rule_id = -1;
 
@@ -531,7 +509,6 @@ private:
 	// Save an individual cellula automata rule selected from the list of cellula automata rules that has a list index of rule_selected_index
 	void save_automata_rule(int rule_selected_index) {
 		char const* patterns[] = { "*C2GR.txt" };
-		//char const* file_pathname = vwDialogs::save_file(nullptr, patterns, 1);
 		char const* file_pathname = vwDialogs::save_file(automata_rule_dir_path.c_str(), patterns, 1);// get file pathname to export automata rule data to
 
 		if (file_pathname == nullptr) {
@@ -550,7 +527,6 @@ private:
 	// Import an individual cellula automata rule to the end of the list of cellula automata rules
 	void import_automata_rule() {
 		char const* patterns[] = { "*C2GR.txt" };
-		//char const* file_pathname = vwDialogs::open_file(nullptr, patterns, 1);
 		char const* file_pathname = vwDialogs::open_file(automata_rule_dir_path.c_str(), patterns, 1);// get file pathname to import automata rule data from
 
 		if (file_pathname == nullptr) {
@@ -579,7 +555,6 @@ private:
 	// Save an individual cellula automata sub rule of a cellula automata rule selected from the list of cellula automata sub rules of that cellula automata rule that has a list index of sub_rule_index
 	void save_rule_sub_rule(cart2D_surface_automata_rule_struct_type rule, int sub_rule_index) {
 		char const* patterns[] = { "*CG2SR.txt" };
-		//char const* file_pathname = vwDialogs::save_file(nullptr, patterns, 1);
 		char const* file_pathname = vwDialogs::save_file(automata_sub_rule_dir_path.c_str(), patterns, 1);// get file pathname to export automata sub rule data to
 
 		if (file_pathname == nullptr) {
@@ -597,7 +572,6 @@ private:
 	// Import an individual cellula automata sub rule to the end of the selected cellula automata rule list of sub rules
 	void import_automata_sub_rule(cart2D_surface_automata_rule_struct_type& cart2D_surface_automata_rule) {
 		char const* patterns[] = { "*CG2SR.txt" };
-		//char const* file_pathname = vwDialogs::open_file(nullptr, patterns, 1);
 		char const* file_pathname = vwDialogs::open_file(automata_sub_rule_dir_path.c_str(), patterns, 1);// get file pathname to import automata sub rule data from
 
 		if (file_pathname == nullptr) {

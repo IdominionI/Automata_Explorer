@@ -6,10 +6,10 @@
 #include <FrameWork/AFW/ImGUI/ImGuiEx/imgui_widgets.h>
 #include <FrameWork/AFW/Interface/IconsFontAwesome4.h>
 
-#include "Source/Hex2d/Objects/hex_sub_grid_manager.h"
 #include "Source/Widgets/ImGradientHDR.h"
 #include "Source/Application/random_engine.h"
 
+#include "hex_sub_grid_manager.h"
 #include "hex_grid_brush.h"
 #include "hex_surface_import_export.h"
 
@@ -27,17 +27,13 @@ class hex_grid_class : public hex_grid_base_class<T> , public hex_sub_grid_manag
 public:
 	hex_grid_class() {
         initialise_gradient();
-        //random_engine.initialise_distribution_input_parameters();
     }
 	hex_grid_class(T initial_hex_value, hex_surface_vec_data_type dimension) : hex_grid_base_class<T>(initial_hex_value, dimension){
         initialise_gradient();
-        //random_engine.initialise_distribution_input_parameters();
     }
 	~hex_grid_class() {}
 
     std::string gradient_dir_path = "./Gradients"; // Path name to the default directory that the gradient class exists within
-
-    //bool first = true;
 
     std::vector<hex_grid_cell_data_struct_type> hex_grid_cells_data_list = {};// vector list of hex grid data to display as an overlay on main grid display
 
@@ -77,8 +73,6 @@ public:
     void initialise_gradient() {
         state.AddColorMarker(0.0f, { 1.0f, 1.0f, 1.0f }, 1.0f);
         state.AddColorMarker(1.0f, { 0.0f, 1.0f, 0.0f }, 1.0f);
-        //state.AddAlphaMarker(0.0f, 1.0f);
-        //state.AddAlphaMarker(1.0f, 1.0f);
     }
 
     int define_new_hex_grid_cell_data() {
@@ -284,39 +278,6 @@ public:
         HGBC::hex_colors[grid_index] = hex_grid_edit_color; // Update hex grid cell color data 
     }
 
-//    bool test_hex_grid_cell_list() {
-////printf("hex_grid_class :: test_hex_grid_cell_list 00\n");
-//
-//        if (!tested2) {
-//printf("hex_grid_class :: test_hex_grid_cell_list 11\n");
-//            int id1 = define_new_hex_grid_cell_data();
-//            int id2 = define_new_hex_grid_cell_data();
-//
-//            int index1 = get_hex_grid_cell_data_index(id1);
-//            int index2 = get_hex_grid_cell_data_index(id2);
-//
-//printf("hex_grid_class :: test_hex_grid_cell_list 22 %i : %i : %i : %i : %i\n", id1, id2, index1, index2, hex_grid_cells_data_list.size());
-//            if (hex_grid_cells_data_list.size() > 0) {
-//
-//                for (int i = 0; i < 10; i++) {
-//                    add_hex_grid_cell_index(index1, i);
-//                    add_hex_grid_cell_index(index2, i+200);
-//                }
-//            }
-//
-//            hex_grid_cells_data_list[index1].hex_grid_cells_display_color = { 1.0f,0.0f,0.0f,1.0f };
-//            hex_grid_cells_data_list[index2].hex_grid_cells_display_color = { 0.0f,1.0f,0.0f,1.0f };
-//
-//            tested2 = true;
-//
-//            for (hex_grid_cell_data_struct_type &hex_grid_cells_data : hex_grid_cells_data_list) {
-//               hex_grid_cells_data.display_data = true;
-//            }
-//        }
-//
-//        return true;
-//    }
-
 protected:
     // Main ImGui window widget or panel that displays and manages the widgets used as inputs 
     // for user interaction to query and edit the main hexagonal grid data values and its display 
@@ -369,7 +330,6 @@ protected:
             ImGui::Text("Min X: ");
             ImGui::SameLine();
             ImGui::SetNextItemWidth(60);
-            //if (ImGui::SliderFloat("Min X##hgmnx", &plot_min_x, -1.0f, 1000.0f, "%3.1f")) {
             if (ImGui::DragFloat("##hgmnx", &plot_min_x, 1.0f, -1.0f, 1000.0f, "%3.1f")) {
                 plot_axis_limit_changed = IMGUI_WINDOW_BORDER_LEFT;
             }
@@ -377,7 +337,6 @@ protected:
             ImGui::Text("Max X: ");
             ImGui::SameLine();
             ImGui::SetNextItemWidth(60);
-            //if (ImGui::SliderFloat("Max X##hgmxx", &plot_max_x, -1.0f, 1000.0f, "%3.1f")) {
             if (ImGui::DragFloat("##hgmxx", &plot_max_x, 1.0f, -1.0f, 1000.0f, "%3.1f")) {
                 plot_axis_limit_changed = IMGUI_WINDOW_BORDER_RIGHT;
             }
@@ -386,7 +345,6 @@ protected:
             ImGui::Text("Min Y: ");
             ImGui::SameLine();
             ImGui::SetNextItemWidth(60);
-            // if (ImGui::SliderFloat("Min Y##hgmny", &plot_min_y, -1.0f, 1000.0f, "%3.1f")) {
             if (ImGui::DragFloat("##hgmny", &plot_min_y, 1.0f, -1.0f, 1000.0f, "%3.1f")) {
                 plot_axis_limit_changed = IMGUI_WINDOW_BORDER_LEFT;
             }
@@ -394,7 +352,6 @@ protected:
             ImGui::Text("Max Y: ");
             ImGui::SameLine();
             ImGui::SetNextItemWidth(60);
-            //if (ImGui::SliderFloat("Max Y##hgmxy", &plot_max_y, -1.0f, 1000.0f, "%3.1f")) {
             if (ImGui::DragFloat("##hgmxy", &plot_max_y, 1.0f, -1.0f, 1000.0f, "%3.1f")) {
                 plot_axis_limit_changed = IMGUI_WINDOW_BORDER_RIGHT;
             }
@@ -777,13 +734,6 @@ protected:
             }
 
             HGBC::hex_grid[i] = rn;
-
-            // following for testing only commant out or delete when no longer used!!!!!!
-//printf("hex_grid_class : uniform_int_distribution_hex_grid_random_generation random number : %i\n", random_engine.uniform_int_distribution.generated_number_value);
-            //if(rn > 50)
-            //     HGBC::hex_grid[i] = 1;
-            //else
-            //    HGBC::hex_grid[i] = 0;
         }
     }
 
@@ -1007,9 +957,6 @@ protected:
             ImGuiContext *cpc = ImGui::GetCurrentContext();// Strange compilor does not complain about ImGuiContext without including imgui_internal.h
                                                            // But does complain about ImGuiContext not being defined when using cpc in the next lines.
 
-           //float resized_width  = cpc->CurrentWindow->Size.x;
-           //float resized_height = cpc->CurrentWindow->Size.y;
-
             // Test and functions to maintain the display aspect ratio of the ImGui-ImPlot window
             // when performing windo resizing using the window borders. This is performed 
             // so as to avoid strange disparity of the display of hex grid where the grid X-Y axis
@@ -1052,10 +999,13 @@ protected:
 //    printf("display_hex_grid : px %f : py %f: x %f : y %f \n", prev_width, prev_height,cpc->CurrentWindow->Size.x, cpc->CurrentWindow->Size.y);
 
             // Constrain the hex grid display to a min max Cartesian coordinate range of coordinates
-            ImPlot::SetupAxisLimitsConstraints(ImAxis_X1, plot_min_x, plot_max_x);
-            //ImPlot::SetupAxisZoomConstraints(ImAxis_X1, plot_min_zoom, plot_max_zoom);
-            ImPlot::SetupAxisLimitsConstraints(ImAxis_Y1, plot_min_y, plot_max_y);
-            //ImPlot::SetupAxisZoomConstraints(ImAxis_Y1, plot_min_zoom, plot_max_zoom);
+            // Problem using this is that when panning, unwanted zooming in occurs
+            //ImPlot::SetupAxisLimitsConstraints(ImAxis_X1, plot_min_x, plot_max_x);
+            //ImPlot::SetupAxisLimitsConstraints(ImAxis_Y1, plot_min_y, plot_max_y);
+
+            // Define axis limits of the display
+            ImPlot::SetupAxisLimits(ImAxis_X1, plot_min_x, plot_max_x);
+            ImPlot::SetupAxisLimits(ImAxis_Y1, plot_min_y, plot_max_y);
 
 //testing only delete/comment out when not needed
 if(HGBC::hex_centers_x.empty()){
@@ -1100,6 +1050,7 @@ private:
     ImGuiWindowFlags plot_window_flags = ImGuiWindowFlags_None;
     ImPlotFlags plot_flags = ImPlotFlags_Equal | ImPlotFlags_NoMenus | ImPlotFlags_Crosshairs | ImPlotFlags_NoLegend;
 
+    ImPlot3DPoint mouse_3Dplot_pos = { 0.0f,0.0f,0.0f };
     ImPlotPoint mouse_plot_pos = { 0.0f,0.0f };
     hex_surface_index_data_type hex_grid_index = -1;
     hex_surface_vec_data_type hex_grid_coord = { 0,0 };

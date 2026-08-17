@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Source/Hex2D/Objects/hex_grid_base.h"
+#include "Source/Hex2D/Hex_grids/hex_grid_base.h"
 #include "Source/Parser/functions.h"
 
 // ###### HEXAGONAL GRID CELL PARSER TOKEN DEFINITIONS ######

@@ -334,9 +334,9 @@ private:
 
 	// Set flags to set current automata interation process to play mode
 	void play_automata_execution() {
-		//printf("cart2D_surface_automata_widget_class::play_automata_execution 00\n");
+//printf("cart2D_surface_automata_widget_class::play_automata_execution 00\n");
 		if (!automata_play || automata_paused) {
-			//printf("cart2D_surface_automata_widget_class::play_automata_execution 11\n");
+//printf("cart2D_surface_automata_widget_class::play_automata_execution 11\n");
 			setup_play();
 			start = start_clock.now();
 		}
@@ -344,7 +344,7 @@ private:
 
 	// Set flags to values to perform cellular iteration in a play or automatic mode
 	void setup_play() {
-		//printf("setup_play 00");
+//printf("setup_play 00");
 		automata_stopped = false;
 		automata_paused = false;
 		automata_play = true;
@@ -357,9 +357,9 @@ private:
 	// Set up flags to start a cellula automata iteration step process
 	// Must be done before any cellula automata step process is performed
 	void setup_automata_execution() {
-		//printf("cart2D_surface_automata_widget_class :: setup_automata_execution 111111 :  %i \n" ,  cart2D_surface_object_to_execute->cart2D_grid.size());
+//printf("cart2D_surface_automata_widget_class :: setup_automata_execution 111111 :  %i \n" ,  cart2D_surface_object_to_execute->cart2D_grid.size());
 
-				// following is to update the progress bar
+		// following is to update the progress bar
 		min_step_value = cart2D_surface_automata_results_widget.get_min_rule_start();
 		max_step_value = cart2D_surface_automata_results_widget.get_max_rule_end();
 
@@ -396,7 +396,7 @@ private:
 
 	// Perform the next iteration step using no CPU threading
 	bool next_step_voxel_automata_no_thread(cart2D_grid_class<T>* cart2D_surface_object_to_execute) {
-		//printf("cart2D_surface_automata_widget_class :: next_step_voxel_automata_no_thread 000\n");
+//printf("cart2D_surface_automata_widget_class :: next_step_voxel_automata_no_thread 000\n");
 		if (automata_reset) {
 			setup_automata_execution();
 		}
@@ -433,55 +433,10 @@ private:
 			printf("cart2D_surface_automata_widget_class :: perform_automata_step 11AA :"); printf("%i :: %i \n", cart2D_grid_copy.size(), cart2D_surface_object_to_execute->cart2D_grid.size());
 		}
 
-		//for (int i = 0; i < cart2D_surface_object_to_execute->cart2D_grid.size(); i++) {
-		//	printf("cart2D_surface_automata_widget_class :: perform_automata_step @@@@@@HG : %i ::",i);
-		//	switch (cart2D_surface_object_to_execute->cart2D_grid_value_data_type) {
-		//		//case cart2D_grid_value_data_type_enum::Boolean: dn->value.second.bvalue = cart2D_grid->cart2D_grid[cart2D_neighbour_index].bvalue; break;
-		//		//case cart2D_grid_value_data_type_enum::Float:   dn->value.second.fvalue = cart2D_grid->cart2D_grid[cart2D_neighbour_index].fvalue; break;
-		//		//case cart2D_grid_value_data_type_enum::Integer: dn->value.second.ivalue = cart2D_grid->cart2D_grid[cart2D_neighbour_index].ivalue; break;
-		//		//case cart2D_grid_value_data_type_enum::Double:  dn->value.second.dvalue = cart2D_grid->cart2D_grid[cart2D_neighbour_index].dvalue; break;
-		//
-		//	case cart2D_grid_value_data_type_enum::Boolean:  printf("Boolean:%i\n", cart2D_surface_object_to_execute->cart2D_grid[i]); break;
-		//	case cart2D_grid_value_data_type_enum::Float:    printf("Float:  %f\n", cart2D_surface_object_to_execute->cart2D_grid[i]); break;
-		//	case cart2D_grid_value_data_type_enum::Integer:  printf("Integer:%i\n", cart2D_surface_object_to_execute->cart2D_grid[i]); break;
-		//	case cart2D_grid_value_data_type_enum::Double:   printf("Double: %d\n", cart2D_surface_object_to_execute->cart2D_grid[i]); break;
-		//	}
-		//}
-
-		//for (int i = 0; i < cart2D_grid_copy.size(); i++) {
-		//	printf("cart2D_surface_automata_widget_class :: perform_automata_step @@@@@@HGC : %i ::", i);
-		//	switch (cart2D_surface_object_to_execute->cart2D_grid_value_data_type) {
-		//		//case cart2D_grid_value_data_type_enum::Boolean: dn->value.second.bvalue = cart2D_grid->cart2D_grid[cart2D_neighbour_index].bvalue; break;
-		//		//case cart2D_grid_value_data_type_enum::Float:   dn->value.second.fvalue = cart2D_grid->cart2D_grid[cart2D_neighbour_index].fvalue; break;
-		//		//case cart2D_grid_value_data_type_enum::Integer: dn->value.second.ivalue = cart2D_grid->cart2D_grid[cart2D_neighbour_index].ivalue; break;
-		//		//case cart2D_grid_value_data_type_enum::Double:  dn->value.second.dvalue = cart2D_grid->cart2D_grid[cart2D_neighbour_index].dvalue; break;
-		//
-		//	case cart2D_grid_value_data_type_enum::Boolean:  printf("Boolean:%i\n", cart2D_grid_copy[i]); break;
-		//	case cart2D_grid_value_data_type_enum::Float:    printf("Float:  %f\n", cart2D_grid_copy[i]); break;
-		//	case cart2D_grid_value_data_type_enum::Integer:  printf("Integer:%i\n", cart2D_grid_copy[i]); break;
-		//	case cart2D_grid_value_data_type_enum::Double:   printf("Double: %d\n", cart2D_grid_copy[i]); break;
-		//	}
-		//}
-
 		printf("cart2D_surface_automata_widget_class :: perform_automata_step 11"); printf(": %i :: %i \n", step, cart2D_surface_object_to_execute->cart2D_grid.size());
 		// Perform next cellula automata iteration step using the current cellular automat data stored within the cart2D_surface_object_to_execute class and
 		// store results into the cart2D_grid_copy dynamic vector array. If unsuccesful return a false value and do not destroy current cellular automata data
 		if (!cart2D_surface_automata_results_widget.perform_cart2D_surface_automata_generation(step, ignore_individual_step_intervals, cart2D_surface_object_to_execute, cart2D_grid_copy)) return false;
-
-		//for (int i = 0; i < cart2D_grid_copy.size(); i++) {
-		//	printf("cart2D_surface_automata_widget_class :: perform_automata_step @@@@@@HGC : %i ::", i);
-		//	switch (cart2D_surface_object_to_execute->cart2D_grid_value_data_type) {
-		//		//case cart2D_grid_value_data_type_enum::Boolean: dn->value.second.bvalue = cart2D_grid->cart2D_grid[cart2D_neighbour_index].bvalue; break;
-		//		//case cart2D_grid_value_data_type_enum::Float:   dn->value.second.fvalue = cart2D_grid->cart2D_grid[cart2D_neighbour_index].fvalue; break;
-		//		//case cart2D_grid_value_data_type_enum::Integer: dn->value.second.ivalue = cart2D_grid->cart2D_grid[cart2D_neighbour_index].ivalue; break;
-		//		//case cart2D_grid_value_data_type_enum::Double:  dn->value.second.dvalue = cart2D_grid->cart2D_grid[cart2D_neighbour_index].dvalue; break;
-		//
-		//	case cart2D_grid_value_data_type_enum::Boolean:  printf("Boolean:%i\n", cart2D_grid_copy[i]); break;
-		//	case cart2D_grid_value_data_type_enum::Float:    printf("Float:  %f\n", cart2D_grid_copy[i]); break;
-		//	case cart2D_grid_value_data_type_enum::Integer:  printf("Integer:%i\n", cart2D_grid_copy[i]); break;
-		//	case cart2D_grid_value_data_type_enum::Double:   printf("Double: %d\n", cart2D_grid_copy[i]); break;
-		//	}
-		//}
 
 		printf("cart2D_surface_automata_widget_class :: perform_automata_step 22"); printf(": %i : %i \n", step, cart2D_surface_object_to_execute->cart2D_grid_cells_data_list.size());
 
@@ -490,17 +445,6 @@ private:
 		// and update the hex grid display colors to correlate to the current defied color gradient 
 		cart2D_surface_object_to_execute->cart2D_grid = cart2D_grid_copy;
 		cart2D_surface_object_to_execute->update_cart2D_grid_colors();
-
-		//for(int i=0;i< cart2D_surface_object_to_execute->cart2D_grid.size();i++){
-		//	printf("cart2D_surface_automata_widget_class :: perform_automata_step 22AA : %i: %i\n",i, cart2D_surface_object_to_execute->cart2D_grid[i]);
-		//}
-
-				//for (int i = 0; i < cart2D_surface_object_to_execute->cart2D_grid_cells_data_list.size(); i++) {
-					//cart2D_surface_object_to_execute->cart2D_grid_cells_data_list[i].cart2D_grid_cells_display_color = cart2D_surface_automata_results_widget.cart2D_surface_automata_rule_results[i].result_display_color;
-					//cart2D_surface_object_to_execute->cart2D_grid_cells_data_list[i].cart2D_grid_cells_display_shape = cart2D_surface_automata_results_widget.cart2D_surface_automata_rule_results[i].result_display_shape;
-					//cart2D_surface_object_to_execute->cart2D_grid_cells_data_list[i].display_data = cart2D_surface_automata_results_widget.cart2D_surface_automata_rule_results[i].display_result;
-		//printf("cart2D_surface_automata_widget_class :: perform_automata_step 33A : %i : %i \n", step, cart2D_surface_object_to_execute->cart2D_grid_cells_data_list[0].cart2D_grid_cells_index.size());
-				//}
 
 		printf("cart2D_surface_automata_widget_class :: perform_automata_step 44"); printf(": %i\n", step);
 		return true;
@@ -579,47 +523,47 @@ private:
 
 
 	void save_automata_rules() {// Have crash here !!!!!
-		//printf("cart2D_surface_automata_widget_class :: save_automata_rules 000\n");
+//printf("cart2D_surface_automata_widget_class :: save_automata_rules 000\n");
 		char const* patterns[] = { "*C2AR.txt" };
-		//printf("cart2D_surface_automata_widget_class :: save_automata_rules 000AAAA\n");
+//printf("cart2D_surface_automata_widget_class :: save_automata_rules 000AAAA\n");
 		char const* file_pathname = vwDialogs::save_file(automata_rules_dir_path.c_str(), patterns, 1);// get file pathname to save automata rules data to 
-		//printf("cart2D_surface_automata_widget_class :: save_automata_rules 000BBBB\n");
+//printf("cart2D_surface_automata_widget_class :: save_automata_rules 000BBBB\n");
 		if (file_pathname == nullptr) {
-			//printf("cart2D_surface_automata_widget_class :: save_automata_rules 000CCC\n");
-						//vwDialogs::display_error_message("Save Automata rules", "ERROR : \n No automata rules file defined to save hex surface automata rules data to\nSave automata rules aborted");
+//printf("cart2D_surface_automata_widget_class :: save_automata_rules 000CCC\n");
+			//vwDialogs::display_error_message("Save Automata rules", "ERROR : \n No automata rules file defined to save hex surface automata rules data to\nSave automata rules aborted");
 			return;
 		}
-		//printf("cart2D_surface_automata_widget_class :: save_automata_rules 111\n");;
+//printf("cart2D_surface_automata_widget_class :: save_automata_rules 111\n");;
 
-				// Link current automata rules class data to export class
+		// Link current automata rules class data to export class
 		import_export_cart2D_surface_automata_rules.cart2D_surface_automata_result_rules = cart2D_surface_automata_results_widget.cart2D_surface_automata_rule_results;
 		import_export_cart2D_surface_automata_rules.cart2D_surface_automata_rules = cart2D_surface_automata_results_widget.cart2D_surface_automata_rules_widget.cart2D_surface_automata_rules;
 		import_export_cart2D_surface_automata_rules.export_cart2D_surface_automata_rules(file_pathname);
 
-		//printf("cart2D_surface_automata_widget_class :: save_automata_rules 222\n");
+//printf("cart2D_surface_automata_widget_class :: save_automata_rules 222\n");
 	}
 
 	void load_automata_rules(cart2D_grid_class<T>* cart2D_surface_object_to_execute) {
-		//printf("cart2D_surface_automata_widget_class::load_automata_rules 000\n");
+//printf("cart2D_surface_automata_widget_class::load_automata_rules 000\n");
 		char const* patterns[] = { "*C2AR.txt" };
-		//printf("cart2D_surface_automata_widget_class::load_automata_rules 111");printf("%s \n", patterns[0]);
+//printf("cart2D_surface_automata_widget_class::load_automata_rules 111");printf("%s \n", patterns[0]);
 		char const* file_pathname = vwDialogs::open_file(automata_rules_dir_path.c_str(), patterns, 1);// get file pathname to import automata rules data from
 
 		if (file_pathname == nullptr) {
 			//vwDialogs::display_error_message("Save Automata rules", "ERROR : \n No automata rules file defined to import hex grid automata rules data from.\n");
 			return;
 		}
-		//printf("cart2D_surface_automata_widget_class::load_automata_rules 222\n");
+//printf("cart2D_surface_automata_widget_class::load_automata_rules 222\n");
 		stop_automata_execution();
 		cart2D_surface_object_to_execute->delete_all_cart2D_grid_cell_data();// clear Cartesian 2D automata grid data
 
-		//printf("cart2D_surface_automata_widget_class::load_automata_rules 333\n");
+//printf("cart2D_surface_automata_widget_class::load_automata_rules 333\n");
 		cart2D_surface_automata_results_widget.define_and_clear_cart2D_surface_automata_rules_and_results();// clear Cartesian 2D automata rules data
 
 		import_export_cart2D_surface_automata_rules.import_cart2D_surface_automata_rules(file_pathname);// import Cartesian 2D autoamata rules into temp import_export_cart2D_surface_automata_rules class list of rules
 
-		//td::cout << "cart2D_surface_automata_widget_class::load_automata_rules 444 : "; std::cout << import_export_cart2D_surface_automata_rules.cart2D_surface_automata_rules.size() << std::endl;
-				// Create new list of Cartesian 2D automata result rules from imported list of Cartesian 2D automata result rules
+//std::cout << "cart2D_surface_automata_widget_class::load_automata_rules 444 : "; std::cout << import_export_cart2D_surface_automata_rules.cart2D_surface_automata_rules.size() << std::endl;
+		// Create new list of Cartesian 2D automata result rules from imported list of Cartesian 2D automata result rules
 		for (cart2D_surface_automata_rule_result_struct_type& result_rule : import_export_cart2D_surface_automata_rules.cart2D_surface_automata_result_rules) {
 			result_rule.define_imgui_shape();
 			cart2D_surface_automata_results_widget.add_rule_result(result_rule);
@@ -629,16 +573,16 @@ private:
 		for (cart2D_surface_automata_rule_struct_type rule : import_export_cart2D_surface_automata_rules.cart2D_surface_automata_rules) {
 			// Need to edit sub rule id number manually here to enable ImGui to display widgets without error and to initialise an ID idetification for each sub rule.
 			for (cart2D_automata_sub_rule_struct_type& sub_rule : rule.sub_rules) {
-				//std::cout << "cart2D_surface_automata_widget_class::load_automata_rules iiiiiA : "; std::cout << rule.sub_rules.size() << "::" << sub_rule.sub_rule_id << std::endl;
+//std::cout << "cart2D_surface_automata_widget_class::load_automata_rules iiiiiA : "; std::cout << rule.sub_rules.size() << "::" << sub_rule.sub_rule_id << std::endl;
 				rule.sub_rule_id += 1;
 				sub_rule.sub_rule_id = rule.sub_rule_id;
-				//std::cout << "cart2D_surface_automata_widget_class::load_automata_rules iiiiiB : "; std::cout << rule.sub_rules.size() << "::" << sub_rule.sub_rule_id << std::endl;
+//std::cout << "cart2D_surface_automata_widget_class::load_automata_rules iiiiiB : "; std::cout << rule.sub_rules.size() << "::" << sub_rule.sub_rule_id << std::endl;
 			}
 			cart2D_surface_automata_results_widget.cart2D_surface_automata_rules_widget.add_rule(rule);
 		}
 
 		setup_automata_execution();
-		//std::cout << "cart2D_surface_automata_widget_class::load_automata_rules 1111 : "; std::cout << cart2D_surface_automata_results_widget.cart2D_surface_automata_rules_widget.cart2D_surface_automata_rules.size() << std::endl;
+//std::cout << "cart2D_surface_automata_widget_class::load_automata_rules 1111 : "; std::cout << cart2D_surface_automata_results_widget.cart2D_surface_automata_rules_widget.cart2D_surface_automata_rules.size() << std::endl;
 	}
 
 	void export_automata_grid(cart2D_grid_class<T> *cart2D_surface_object_to_execute) {
@@ -647,7 +591,7 @@ printf("cart2D_surface_automata_widget_class :: export_automata_grid000\n");
 		char const* file_pathname = vwDialogs::save_file(automata_grids_dir_path.c_str(), patterns, 1);
 
 		if (file_pathname == nullptr) {// No file selected
-			//vwDialogs::display_error_message("Save Automata Grid Data", "ERROR : \n No hex grid data file defined to save hex surface grid data to\nSave hex grid data aborted");
+//vwDialogs::display_error_message("Save Automata Grid Data", "ERROR : \n No hex grid data file defined to save hex surface grid data to\nSave hex grid data aborted");
 			return;
 		}
 //else

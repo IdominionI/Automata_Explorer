@@ -6,7 +6,7 @@
 #include "ThirdParty/ImGui/imgui_docking/imgui.h"
 #include "ThirdParty/ImGui/implot/implot.h"
 
-#include "Source/Hex2D/Objects/hex_grid_parameters.h"
+#include "Source/Hex2D/Hex_grids/hex_grid_parameters.h"
 
 #include "Source/Parser/parser_definitions.h"
 
@@ -29,7 +29,6 @@ struct hex_automata_sub_rule_struct_type {
 	parser_base_node *root_parser_node = nullptr; // Forward declaration to root parser node of sub_rule
 
 	std::string sub_rule_definition = ""; // String to store definition of sub rule as a string of text 
-	//std::string sub_rule_edit       = "";
 
 	bool sub_rule_conditions_met = false; // Indicate if sub rule condition has been met
 	bool edit_sub_rule           = false; // Indicate if sub rule has been edited
@@ -160,9 +159,3 @@ struct hex_surface_automata_rule_result_struct_type {
 };
 
 // End New voxel automata definitions
-
-//struct hex_surface_automata_generator_parameters_struct_type {
-//	float	 x_start = -1.0f, x_end = 1.0f;
-//	float	 y_start = -1.0f, y_end = 1.0f;
-//	float	 resolution_step = 0.01f;
-//};

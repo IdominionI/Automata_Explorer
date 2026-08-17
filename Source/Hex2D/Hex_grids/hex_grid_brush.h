@@ -24,7 +24,6 @@ class hex_grid_class; // Need to forward declare this as have a case of circular
 
 template <class T>
 class hex_grid_brush_class {
-    //using HGBC = hex_grid_base_class<T>;
 public:
     hex_grid_brush_class() {}
 	~hex_grid_brush_class() {}
@@ -44,32 +43,6 @@ public:
     // Function to load existing hex grid brush data from disc files into a list of
     //  hex grid brushes and list of display color shape and size data
     void initialise_hex_grid_brushes() {
-        //folowing for testing only : comment out or delete when finished
-        //hex_grid_brush_list_data_type brush0;
-        //hex_grid_brush_list_data_type brush1;
-        //hex_grid_brush_list_data_type brush2;
-        //hex_grid_brush_list_data_type brush3;
-        //hex_grid_brush_list_data_type brush4;
-        //hex_grid_brush_list_data_type brush5;
-
-        //brush0.first = "brush0"; brush0.second = nullptr;
-        //brush1.first = "brush1"; brush1.second = nullptr;
-        //brush2.first = "brush2"; brush2.second = nullptr;
-        //brush3.first = "brush3"; brush3.second = nullptr;
-        //brush4.first = "brush4"; brush4.second = nullptr;
-        //brush5.first = "brush5"; brush5.second = nullptr;
-
-        //hex_grid_brush_selections.push_back(brush0);
-        //hex_grid_brush_selections.push_back(brush1);
-        //hex_grid_brush_selections.push_back(brush2);
-        //hex_grid_brush_selections.push_back(brush3);
-        //hex_grid_brush_selections.push_back(brush4);
-        //hex_grid_brush_selections.push_back(brush5);
-
-
-        // following not testing
-        // ++++++++++++++++++++++++++++++++++
-
         // This structure would distinguish a file from a directory
         struct stat sb;
 
@@ -422,8 +395,6 @@ public:
             // interactively change edit display color
             if (ImGui::ColorEdit4("##hgbc", (float*)&hex_grid_edit_color, ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel | ImGuiColorEditFlags_None)) {
                 if (hex_grid_brush) {
-                    //hex_grid_base_class<T>* bc = hex_grid_brush;
-                    //bc->hex_grid_display_color = hex_grid_display_color;
                     for (size_t i = 0; i < hex_grid_brush->hex_colors.size(); i++) {
                         if (hex_grid_brush->hex_colors[i] != ImGui::GetColorU32(hex_grid_display_color)) {
                             hex_grid_brush->hex_colors[i] = ImGui::GetColorU32(hex_grid_edit_color);
@@ -595,9 +566,6 @@ public:
             ImGuiContext *cpc = ImGui::GetCurrentContext();// Strange compilor does not complain about ImGuiContext without including imgui_internal.h
                                                            // But does complain about ImGuiContext not being defined when using cpc in the next lines.
 
-           //float resized_width  = cpc->CurrentWindow->Size.x;
-           //float resized_height = cpc->CurrentWindow->Size.y;
-
             // Test and functions to maintain the display aspect ratio of the ImGui-ImPlot window
             // when performing windo resizing using the window borders. This is performed 
             // so as to avoid strange disparity of the display of hex grid where the grid X-Y axis
@@ -647,7 +615,6 @@ public:
 
             // ImPlot::ScatterPlot function to display main hex grid cell data if flag is set to display hex brush grid
             if (display_ahex_grid) {
-               // ImPlot::PlotScatter("hex brush", hex_grid_brush->hex_centers_x.data(), hex_grid_brush->hex_centers_y.data(), hex_grid_brush->hex_centers_x.size(), {
                 ImPlot::PlotScatter("hex brush", hex_grid_brush->hex_centers_x.data(), hex_grid_brush->hex_centers_y.data(), hex_grid_brush->hex_centers_x.size(), {
 			        ImPlotProp_Marker, hex_grid_display_shape,// use this when testing
 			        ImPlotProp_MarkerSize, hex_grid_display_shape_size,

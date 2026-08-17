@@ -519,21 +519,6 @@
 //std::cout << "import_export_hex_surface_automata_rules_class::read_automata_byte_rule BBBBB : " << line_number << ":" << lines[line_number] << std::endl;
 		hex_surface_automata_rule.rule_name = line;
 
-//		line_number++;
-//		line = lines[line_number]; line = FW::stringtools::truncate(line, line.size());
-////std::cout << "import_export_hex_surface_automata_rules_class::read_automata_byte_rule BBBBB : " << line_number << ":" << lines[line_number] << std::endl;
-//		bool hrule;
-//		if (!FW::stringtools::string_to_bool(line, &hrule, error_code)) { return false; }
-//		if (hrule == 0) {hex_surface_automata_rule.active_rule = false;} else {hex_surface_automata_rule.active_rule = true;}
-//
-//		line_number++;
-//		line = lines[line_number]; line = FW::stringtools::truncate(line, line.size());
-//		if (!FW::stringtools::string_to_int(line, &hex_surface_automata_rule.rule_start_step, error_code)) { return false; }
-//
-//		line_number++;
-//		line = lines[line_number]; line = FW::stringtools::truncate(line, line.size());
-//		if (!FW::stringtools::string_to_int(line, &hex_surface_automata_rule.rule_end_step, error_code)) { return false; }
-
 		// Next line read must be a SUB_RULE_BLOCK_START flag to indicate to load rule sub rules
 		line_number++;
 		line = lines[line_number]; line = FW::stringtools::truncate(line, line.size());

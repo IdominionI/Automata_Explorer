@@ -24,7 +24,6 @@ class cart2D_grid_class; // Need to forward declare this as have a case of circu
 
 template <class T>
 class cart2D_grid_brush_class {
-    //using HGBC = cart2D_grid_base_class<T>;
 public:
     cart2D_grid_brush_class() {}
     ~cart2D_grid_brush_class() {}
@@ -44,32 +43,6 @@ public:
     // Function to load existing cart2D grid brush data from disc files into a list of
     //  cart2D grid brushes and list of display color shape and size data
     void initialise_cart2D_grid_brushes() {
-        //folowing for testing only : comment out or delete when finished
-        //cart2D_grid_brush_list_data_type brush0;
-        //cart2D_grid_brush_list_data_type brush1;
-        //cart2D_grid_brush_list_data_type brush2;
-        //cart2D_grid_brush_list_data_type brush3;
-        //cart2D_grid_brush_list_data_type brush4;
-        //cart2D_grid_brush_list_data_type brush5;
-
-        //brush0.first = "brush0"; brush0.second = nullptr;
-        //brush1.first = "brush1"; brush1.second = nullptr;
-        //brush2.first = "brush2"; brush2.second = nullptr;
-        //brush3.first = "brush3"; brush3.second = nullptr;
-        //brush4.first = "brush4"; brush4.second = nullptr;
-        //brush5.first = "brush5"; brush5.second = nullptr;
-
-        //cart2D_grid_brush_selections.push_back(brush0);
-        //cart2D_grid_brush_selections.push_back(brush1);
-        //cart2D_grid_brush_selections.push_back(brush2);
-        //cart2D_grid_brush_selections.push_back(brush3);
-        //cart2D_grid_brush_selections.push_back(brush4);
-        //cart2D_grid_brush_selections.push_back(brush5);
-
-
-        // following not testing
-        // ++++++++++++++++++++++++++++++++++
-
         // This structure would distinguish a file from a directory
         struct stat sb;
 
@@ -226,7 +199,7 @@ public:
 
 //printf("ImGui::GetCurrentContext().CurrentWindow.ID!= ImGui::GetCurrentContext().CurrentWindow.GetID(plot_window_id.c_str())\n");
 //printf("current context %i : %i\n", ImGui::GetCurrentContext()->HoveredWindow->ID, plot_window->ID);
-                                        // If mouse cursor is within the bounds of the cart2D brush display then can perform cart2D brush edit functions
+                    // If mouse cursor is within the bounds of the cart2D brush display then can perform cart2D brush edit functions
                     if (mouse_plot_pos.x > plot_min_x && mouse_plot_pos.x < plot_max_x && mouse_plot_pos.y > plot_min_y && mouse_plot_pos.y < plot_max_y) {
                         // Mouse cursor position is given in Cartesian coordinates of the cart2D brush grid ImPlot being displayed, so need to convert mouse Cartesian
                         // coordinates to cart2D brush grid index and cart2D brush grid x-y index coordinates to be able to edit the cart2D brush grid cell data values and retrieve them for display
@@ -425,8 +398,6 @@ public:
             // interactively change edit display color
             if (ImGui::ColorEdit4("##hgbc", (float*)&cart2D_grid_edit_color, ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel | ImGuiColorEditFlags_None)) {
                 if (cart2D_grid_brush) {
-                    //cart2D_grid_base_class<T>* bc = cart2D_grid_brush;
-                    //bc->cart2D_grid_display_color = cart2D_grid_display_color;
                     for (size_t i = 0; i < cart2D_grid_brush->cart2D_colors.size(); i++) {
                         if (cart2D_grid_brush->cart2D_colors[i] != ImGui::GetColorU32(cart2D_grid_display_color)) {
                             cart2D_grid_brush->cart2D_colors[i] = ImGui::GetColorU32(cart2D_grid_edit_color);
@@ -441,7 +412,7 @@ public:
             x_pos += 55;
             y_pos += 300;
             if (ex_button("Edit Current selected Brush", x_pos + 100, y_pos, 200, 20)) {
-                //printf("create_cart2D_grid_panel_class::display 1111 \n");
+//printf("create_cart2D_grid_panel_class::display 1111 \n");
                 if (!cart2D_grid_brush_selection.second) {
                     vwDialogs::display_error_message("Edit Current Brush ERROR:", "Can not edit current selected brush. \nIt is undefined.");
                 }
@@ -453,23 +424,23 @@ public:
 
             y_pos += 30;
             if (ex_button("Create New Cart 2D Grid Brush", x_pos + 100, y_pos, 200, 20)) {
-                //printf("create_cart2D_grid_panel_class::display 1111 \n");
+//printf("create_cart2D_grid_panel_class::display 1111 \n");
                 create_cart2D_grid_brush_popup = true;
             }
 
             /* !!!!!!! A Future feature for a more advanced brush editing suite implementation !!!!!!!!!!!!!!!!
-                        y_pos += 30;
-                        if (ex_button("Change Hex Brush size", x_pos + 100, y_pos, 180, 20)) {
-                            show_change_brush_size_widget = true;
-                        }
+                y_pos += 30;
+                if (ex_button("Change Hex Brush size", x_pos + 100, y_pos, 180, 20)) {
+                    show_change_brush_size_widget = true;
+                }
 
-                        if (show_change_brush_size_widget) {
-                            bool canceled_change_brush_size = false;
+                if (show_change_brush_size_widget) {
+                    bool canceled_change_brush_size = false;
 
-                            change_cart2D_grid_brush_size(x_pos,y_pos,canceled_change_brush_size);
+                    change_cart2D_grid_brush_size(x_pos,y_pos,canceled_change_brush_size);
 
-                            if (canceled_change_brush_size) show_change_brush_size_widget = false;
-                        }
+                    if (canceled_change_brush_size) show_change_brush_size_widget = false;
+                }
             */
 
             y_pos += 30;
@@ -508,9 +479,9 @@ public:
         }
 
         if (cart2D_grid_brush_defined && display_cart2D_grid_brush_edit) {// Display cart2D brush edit window widget of cart2D brush grid cell data
-            //printf("acart2D_application_class: display_acart2D_main_gui_panel : 0000  \n");
+//printf("acart2D_application_class: display_acart2D_main_gui_panel : 0000  \n");
             if (cart2D_grid_brush_edit.second) {
-                // cart2D_grid_brush->display_cart2D_grid(); do not use this
+// cart2D_grid_brush->display_cart2D_grid(); do not use this
                 if (!cart2D_grid_brush_edit_display()) { // Display cart2D brush edit window widget of cart2D brush grid cell data
                     vwDialogs::display_error_message("Edit Brush ERROR:", "Can not edit current selected brush. \nIt is undefined.");
                     cart2D_grid_brush_defined = false;
@@ -523,7 +494,7 @@ public:
 
     // Popup window widget function to define inputs to initiate and create a new cart2D brush grid to edit
     cart2D_grid_brush_list_data_type display_create_cart2D_grid_brush_popup(bool& cancel = false) {
-        //printf("cart2D_grid_brush_class::display_create_cart2D_grid_brush_popup AAAAA \n");
+//printf("cart2D_grid_brush_class::display_create_cart2D_grid_brush_popup AAAAA \n");
 
         ImGui::OpenPopup("Create Cart2D Grid Brush");
 
@@ -537,8 +508,7 @@ public:
 
         if (ImGui::BeginPopupModal("Create Cart2D Grid Brush", NULL, ImGuiWindowFlags_AlwaysAutoResize))// Must have same id name as ImGui::OpenPopup to display
         {
-            //printf("cart2D_grid_brush_class::display_create_cart2D_grid_brush_popup 00000 \n");
-
+//printf("cart2D_grid_brush_class::display_create_cart2D_grid_brush_popup 00000 \n");
             float x_pos = 10.0f, y_pos = 40.0f;
 
             text("Define Global Cart2D grid", x_pos, y_pos);
@@ -563,7 +533,7 @@ public:
 
             y_pos += 30;
             if (ex_button("Create Cart 2D Grid Brush", x_pos + 10, y_pos, 180, 20)) {
-                //printf("create_cart2D_grid_panel_class::display 1111 \n");
+//printf("create_cart2D_grid_panel_class::display 1111 \n");
                 return_value.first = cart2D_grid_brush_name;
                 return_value.second = create_cart2D_grid_brush(xdim, ydim, cart2D_grid_value);
             }
@@ -572,12 +542,12 @@ public:
                 cancel = true;
             }
 
-            //printf("cart2D_grid_brush_class::display_create_cart2D_grid_brush_popup 22222 \n");		
+//printf("cart2D_grid_brush_class::display_create_cart2D_grid_brush_popup 22222 \n");		
 
             ImGui::EndPopup();
 
         }
-        //printf("cart2D_grid_brush_class::display_create_cart2D_grid_brush_popup 3333 \n");
+//printf("cart2D_grid_brush_class::display_create_cart2D_grid_brush_popup 3333 \n");
 
         return return_value;
     }
@@ -638,12 +608,7 @@ public:
                 }
             }
 
-            //if(plot_axis_limit_changed> IMGUI_WINDOW_BORDER_NONE) printf("Axis Extents  %i\n", plot_axis_limit_changed);
-
-            //if (cpc)
-            //    printf("display_cart2D_grid : px %f : py %f: x %f : y %f \n", prev_width, prev_height,cpc->CurrentWindow->Size.x, cpc->CurrentWindow->Size.y);
-
-                        // Constrain the cart2D grid display to a min max Cartesian coordinate range of coordinates
+            // Constrain the cart2D grid display to a min max Cartesian coordinate range of coordinates
             ImPlot::SetupAxisLimitsConstraints(ImAxis_X1, plot_min_x, plot_max_x);
             //ImPlot::SetupAxisZoomConstraints(ImAxis_X1, plot_min_zoom, plot_max_zoom);
             ImPlot::SetupAxisLimitsConstraints(ImAxis_Y1, plot_min_y, plot_max_y);
@@ -651,7 +616,6 @@ public:
 
             // ImPlot::ScatterPlot function to display main cart2D grid cell data if flag is set to display cart2D brush grid
             if (display_acart2D_grid) {
-                // ImPlot::PlotScatter("cart2D brush", cart2D_grid_brush->cart2D_centers_x.data(), cart2D_grid_brush->cart2D_centers_y.data(), cart2D_grid_brush->cart2D_centers_x.size(), {
                 ImPlot::PlotScatter("cart2D brush", cart2D_grid_brush->cart2D_centers_x.data(), cart2D_grid_brush->cart2D_centers_y.data(), cart2D_grid_brush->cart2D_centers_x.size(), {
                     ImPlotProp_Marker, cart2D_grid_display_shape,// use this when testing
                     ImPlotProp_MarkerSize, cart2D_grid_display_shape_size,
@@ -668,7 +632,7 @@ public:
             mouse_plot_pos = ImPlot::GetPlotMousePos(); // This must be placed within the BeginPlot : EndPlot block or application will crash
 
             for (cart2D_grid_cell_data_struct_type cart2D_grid_cell : cart2D_grid_cells_data_list) {
-                //printf("cart2D_grid_class::display_cart2D_grid 3333\n");
+//printf("cart2D_grid_class::display_cart2D_grid 3333\n");
                 cart2D_grid_cell.display_cart2D_cell_data();
             }
 
@@ -687,7 +651,6 @@ public:
 //printf("create_cart2D_grid_panel_class::create_global_grid 00000 \n");
 
         if (xdim < 1 || ydim < 1) {
-            //imgui_message_model_popup("Cart 2D Grid Error Message", "Create Cart 2D grid", "Cannot create cart2D grid : \n Cart 2D grid xdimension is of zero size", dummy);
             return nullptr;
         }
 
@@ -769,35 +732,34 @@ public:
 */
 
     void import_cart2D_grid_brush() {
-        //printf("cart2D_grid_brush_class::import_cart2D_grid_brush 00\n");
+//printf("cart2D_grid_brush_class::import_cart2D_grid_brush 00\n");
         char const* patterns[] = { "*C2GB.txt" };
         char const* file_pathname = vwDialogs::open_file(nullptr, patterns, 1);
 
         if (file_pathname == nullptr) {
-            //if (log_panel != NULL) log_panel->application_log.AddLog("ERROR : No automata rules file defined to import cart2D surface generation parameter data from.\n");
             return;
         }
 
         if (!cart2D_grid_brush) {
-            //printf("cart2D_grid_brush_class::import_cart2D_grid_brush 11\n");
+//printf("cart2D_grid_brush_class::import_cart2D_grid_brush 11\n");
             cart2D_grid_brush = create_cart2D_grid_brush(2, 2, cart2D_grid_value);// Create a dummy cart2D grid brush to import cart2D grid brudh data into
         }
 
-        //printf("cart2D_grid_brush_class::import_cart2D_grid_brush 22\n");
+//printf("cart2D_grid_brush_class::import_cart2D_grid_brush 22\n");
         if (!cart2D_grid_brush) {
             afw_globalc::get_current_logger()->log(LogLevel::INFO, "Create cart2D grid brush:: Unable to define cart2D grid brush.\n");
             return;
         }
 
-        //printf("cart2D_grid_brush_class::import_cart2D_grid_brush 33\n");
+//printf("cart2D_grid_brush_class::import_cart2D_grid_brush 33\n");
         cart2D_grid_brush->clear_all_cart2D_grid_cell_data();
         cart2D_grid_brush->delete_cart2D_grid();
 
-        //printf("cart2D_grid_brush_class::import_cart2D_grid_brush 44\n");
+//printf("cart2D_grid_brush_class::import_cart2D_grid_brush 44\n");
         cart2D_surface_import_export.import_cart2D_surface_automata_grid(file_pathname, cart2D_grid_brush);
         cart2D_grid_brush->define_cart2D_grid_coordinates();
 
-        //printf("cart2D_grid_brush_class::import_cart2D_grid_brush 55\n");
+//printf("cart2D_grid_brush_class::import_cart2D_grid_brush 55\n");
 
         for (size_t i = 0; i < cart2D_grid_brush->cart2D_colors.size(); i++) {
             if (cart2D_grid_brush->cart2D_grid[i] > 0) {
@@ -806,14 +768,12 @@ public:
         }
 
         cart2D_grid_brush_defined = true;
-
-        //printf("cart2D_grid_brush_class::import_cart2D_grid_brush 66\n");
-
+//printf("cart2D_grid_brush_class::import_cart2D_grid_brush 66\n");
     }
 
     void export_cart2D_grid_brush() {
 
-        //printf("cart2D_surface_automata_widget_class :: save_automata_rules\n");// replace with clear variables
+//printf("cart2D_surface_automata_widget_class :: save_automata_rules\n");// replace with clear variables
         char const* patterns[] = { "*C2GB.txt" };
         char const* file_pathname = vwDialogs::save_file(nullptr, patterns, 1);
 
@@ -822,9 +782,9 @@ public:
             vwDialogs::display_error_message("Save Cart 2D Grid Brush", "ERROR : \n No cart2D grid brush data file defined to save cart2D grid brush data to\nSave cart2D grid Brush data aborted");
             return;
         }
-        //else
-        //printf("save_generation_parameters != NULL %s \n", file_pathname);
-        //printf("save_automata_rules != NULL  \n");
+    //else
+    //printf("save_generation_parameters != NULL %s \n", file_pathname);
+    //printf("save_automata_rules != NULL  \n");
 
         cart2D_surface_import_export.export_cart2D_surface_automata_grid(file_pathname, cart2D_grid_brush);
     }

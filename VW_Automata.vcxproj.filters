@@ -195,13 +195,13 @@
     <ClInclude Include="ThirdParty\tinyFileDialog\tinyfiledialogs.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Hex2D\Objects\hex_grid_base.h">
+    <ClInclude Include="Source\Hex2D\Hex_grids\hex_grid_base.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Hex2D\Objects\hex_grid_manager.h">
+    <ClInclude Include="Source\Hex2D\Hex_grids\hex_grid_manager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Hex2D\Objects\hex_grid_parameters.h">
+    <ClInclude Include="Source\Hex2D\Hex_grids\hex_grid_parameters.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Hex2D\Hex_grids\hex_grid.h">
@@ -219,7 +219,7 @@
     <ClInclude Include="Source\Hex2D\Editor\create_hex_grid_panel.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Hex2D\Objects\hex_sub_grid_manager.h">
+    <ClInclude Include="Source\Hex2D\Hex_grids\hex_sub_grid_manager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Hex2D\Automata\hex_automata_dt.h">
@@ -273,16 +273,16 @@
     <ClInclude Include="Source\Cart2D\Cart2D_grids\cart2D_grid.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Cart2D\Objects\cart2D_grid_base.h">
+    <ClInclude Include="Source\Cart2D\Cart2D_grids\cart2D_grid_base.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Cart2D\Objects\cart2D_grid_parameters.h">
+    <ClInclude Include="Source\Cart2D\Cart2D_grids\cart2D_grid_parameters.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Cart2D\Objects\cart2D_grid_manager.h">
+    <ClInclude Include="Source\Cart2D\Cart2D_grids\cart2D_grid_manager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Cart2D\Objects\cart2D_sub_grid_manager.h">
+    <ClInclude Include="Source\Cart2D\Cart2D_grids\cart2D_sub_grid_manager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Cart2D\Cart2D_grids\cart2D_grid_brush.h">
@@ -316,6 +316,108 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Application\vwa_application_parameters.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ThirdParty\ImGui\implot3d\implot3d.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ThirdParty\ImGui\implot3d\implot3d_internal.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\HCP3D\HCP_grids\hcp_grid_base.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\HCP3D\HCP_grids\hcp_grid_parameters.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\HCP3D\HCP_grids\hcp_grid_manager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\HCP3D\HCP_grids\hcp_sub_grid_manager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\HCP3D\HCP_grids\hcp_grid.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\HCP3D\HCP_grids\hcp_grid_brush.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\HCP3D\HCP_grids\hcp_surface_import_export.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\HCP3D\Parser\hcp_functions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\HCP3D\Parser\hcp_logic_parser.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\HCP3D\Editor\create_hcp_grid_panel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\HCP3D\Automata\automata_hcp_surface_import_export.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\HCP3D\Automata\hcp_automata_dt.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\HCP3D\Automata\hcp_automata_widget.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\HCP3D\Automata\hcp_surface_automata_results_widget.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\HCP3D\Automata\hcp_surface_automata_rules_widget.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\HCP3D\hcp_application.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Cubic\Cubic_grids\cubic_grid_base.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Cubic\Cubic_grids\cubic_grid_parameters.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Cubic\Cubic_grids\cubic_grid.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Cubic\Cubic_grids\cubic_grid_manager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Cubic\Cubic_grids\cubic_grid_brush.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Cubic\Cubic_grids\cubic_sub_grid_manager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Cubic\Cubic_grids\cubic_surface_import_export.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Cubic\Editor\create_cubic_grid_panel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Cubic\Parser\cubic_functions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Cubic\Parser\cubic_logic_parser.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Cubic\cubic_application.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Cubic\Automata\automata_cubic_surface_import_export.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Cubic\Automata\cubic_automata_dt.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Cubic\Automata\cubic_automata_widget.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Cubic\Automata\cubic_surface_automata_results_widget.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Cubic\Automata\cubic_surface_automata_rules_widget.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -477,6 +579,24 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\Cart2D\Automata\automata_cart2D_surface_import_export.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ThirdParty\ImGui\implot3d\implot3d.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ThirdParty\ImGui\implot3d\implot3d_demo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ThirdParty\ImGui\implot3d\implot3d_items.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ThirdParty\ImGui\implot3d\implot3d_meshes.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\HCP3D\Automata\automata_hcp_surface_import_export.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Cubic\Automata\automata_cubic_surface_import_export.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

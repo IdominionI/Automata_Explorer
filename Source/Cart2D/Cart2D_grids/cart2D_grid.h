@@ -6,10 +6,10 @@
 #include <FrameWork/AFW/ImGUI/ImGuiEx/imgui_widgets.h>
 #include <FrameWork/AFW/Interface/IconsFontAwesome4.h>
 
-#include "Source/Cart2D/Objects/cart2D_sub_grid_manager.h"
 #include "Source/Widgets/ImGradientHDR.h"
 #include "Source/Application/random_engine.h"
 
+#include "cart2D_sub_grid_manager.h"
 #include "cart2D_grid_brush.h"
 #include "cart2D_surface_import_export.h"
 
@@ -27,17 +27,13 @@ class cart2D_grid_class : public cart2D_grid_base_class<T>, public cart2D_sub_gr
 public:
     cart2D_grid_class() {
         initialise_gradient();
-        //random_engine.initialise_distribution_input_parameters();
     }
     cart2D_grid_class(T initial_cart2D_value, cart2D_surface_vec_data_type dimension) : cart2D_grid_base_class<T>(initial_cart2D_value, dimension) {
         initialise_gradient();
-        //random_engine.initialise_distribution_input_parameters();
     }
     ~cart2D_grid_class() {}
 
     std::string gradient_dir_path = "./Gradients"; // Path name to the default directory that the gradient class exists within
-
-    //bool first = true;
 
     std::vector<cart2D_grid_cell_data_struct_type> cart2D_grid_cells_data_list = {};// vector list of Cartesian 2D  data to display as an overlay on main grid display
 
@@ -53,11 +49,11 @@ public:
     // the user interacts with to display and edit Cartesian grid data values.
     bool display_cart2D_grid() override {
         if (HGBC::cart2D_centers_x.size() == 0) { return false; }
-        //printf("cart2D_grid_class::display_cart2D_grid 000\n");
+//printf("cart2D_grid_class::display_cart2D_grid 000\n");
 
         display_grid_parameters_panel();
 
-        //printf("cart2D_grid_class::display_cart2D_grid 1111\n");
+//printf("cart2D_grid_class::display_cart2D_grid 1111\n");
         if (edit_acart2D_grid) {
             display_grid_edit_panel();
         }
@@ -66,11 +62,11 @@ public:
             plot_flags = ImPlotFlags_Equal | ImPlotFlags_NoMenus | ImPlotFlags_Crosshairs | ImPlotFlags_NoLegend;
             plot_window_flags = ImGuiWindowFlags_None;
         }
-        //printf("cart2D_grid_class::display_cart2D_grid 2222\n");
+//printf("cart2D_grid_class::display_cart2D_grid 2222\n");
 
         display_automata_rule_results();// Display the current main hexagonal grid data which the user can interact with
 
-        //printf("cart2D_grid_class::display_cart2D_grid 4444\n");
+//printf("cart2D_grid_class::display_cart2D_grid 4444\n");
         return true;
     }
 
@@ -78,8 +74,6 @@ public:
     void initialise_gradient() {
         state.AddColorMarker(0.0f, { 1.0f, 1.0f, 1.0f }, 1.0f);
         state.AddColorMarker(1.0f, { 0.0f, 1.0f, 0.0f }, 1.0f);
-        //state.AddAlphaMarker(0.0f, 1.0f);
-        //state.AddAlphaMarker(1.0f, 1.0f);
     }
 
     int define_new_cart2D_grid_cell_data() {
@@ -133,9 +127,9 @@ public:
 
     // Get the Cartesian 2D  cell data entry within the cart2D_grid_cells_data_list that has an ID value of cart2D_grid_cell_data_id
     int get_cart2D_grid_cell_data_index(int cart2D_grid_cell_data_id) {
-        //printf("cart2D_grid_class :: get_cart2D_grid_cell_data_index 0000: %i : %i\n" , cart2D_grid_cells_data_list.size(), cart2D_grid_cell_data_id);
+//printf("cart2D_grid_class :: get_cart2D_grid_cell_data_index 0000: %i : %i\n" , cart2D_grid_cells_data_list.size(), cart2D_grid_cell_data_id);
         for (size_t i = 0; i < cart2D_grid_cells_data_list.size(); i++) {
-            //printf("cart2D_grid_class :: get_cart2D_grid_cell_data_index 1111: %i :  %i : %i\n",i , cart2D_grid_cells_data_list[i].cart2D_grid_cell_data_id, cart2D_grid_cell_data_id);
+//printf("cart2D_grid_class :: get_cart2D_grid_cell_data_index 1111: %i :  %i : %i\n",i , cart2D_grid_cells_data_list[i].cart2D_grid_cell_data_id, cart2D_grid_cell_data_id);
             if (cart2D_grid_cells_data_list[i].cart2D_grid_cell_data_id == cart2D_grid_cell_data_id) {
                 return i;
             }
@@ -147,14 +141,14 @@ public:
     // Add the Cartesian 2D  index of the main hexagonal Cartesian 2D  cart2D_grid_index to the cart2D_grid_cells_data_list entry with index cart2D_grid_cell_index
     bool add_cart2D_grid_cell_index(int cart2D_grid_cell_index, cart2D_surface_index_data_type cart2D_grid_index) {
         if (cart2D_grid_cell_index < 0 || cart2D_grid_cell_index >= cart2D_grid_cells_data_list.size()) {
-            //printf("cart2D_grid_class :: add_cart2D_grid_cell_index %i : %i 000\n", cart2D_grid_cell_index, cart2D_grid_cells_data_list.size());
+//printf("cart2D_grid_class :: add_cart2D_grid_cell_index %i : %i 000\n", cart2D_grid_cell_index, cart2D_grid_cells_data_list.size());
             return false;
         }
-        //printf("cart2D_grid_class :: add_cart2D_grid_cell_index %i : %i 1111\n", cart2D_grid_cell_index, cart2D_grid_cells_data_list.size());
+//printf("cart2D_grid_class :: add_cart2D_grid_cell_index %i : %i 1111\n", cart2D_grid_cell_index, cart2D_grid_cells_data_list.size());
         glm::vec2 cart2D_cell_cart_coord = HGBC::get_cart2D_surface_world_cartesian_coordinate(cart2D_grid_index);
-        //printf("cart2D_grid_class :: add_cart2D_grid_cell_index %i : %i 2222\n", cart2D_grid_cell_index, cart2D_grid_cells_data_list.size());
+//printf("cart2D_grid_class :: add_cart2D_grid_cell_index %i : %i 2222\n", cart2D_grid_cell_index, cart2D_grid_cells_data_list.size());
         cart2D_grid_cells_data_list[cart2D_grid_cell_index].add_cart2D_grid_cell(cart2D_grid_index, cart2D_cell_cart_coord.x, cart2D_cell_cart_coord.y);
-        //printf("cart2D_grid_class :: add_cart2D_grid_cell_index %i : %i 3333\n", cart2D_grid_cell_index, cart2D_grid_cells_data_list.size());
+//printf("cart2D_grid_class :: add_cart2D_grid_cell_index %i : %i 3333\n", cart2D_grid_cell_index, cart2D_grid_cells_data_list.size());
         return true;
     }
 
@@ -264,10 +258,10 @@ public:
     void draw_cart2D_grid_brush(cart2D_grid_class<T>* edit_brush_grid, cart2D_surface_index_data_type x_coord, cart2D_surface_index_data_type y_coord, cart2D_surface_index_data_type b_x_coord, cart2D_surface_index_data_type b_y_coord) {
         cart2D_surface_index_data_type grid_index = HGBC::get_cart2D_surface_matrix_data_index({ x_coord ,y_coord });               // Get main Cartesian 2D  cell index that corresponds to the main Cartesian 2D  x-y index coordinate 
         cart2D_surface_index_data_type brush_index = edit_brush_grid->get_cart2D_surface_matrix_data_index({ b_x_coord ,b_y_coord });// Get hex brush grid cell index that corresponds to the hex brush grid cell x-y index coordinate 
-        //printf("edit_grid:draw_cart2D_grid_brush brush 3333 : %i : brush %i\n", grid_index, brush_index);
+//printf("edit_grid:draw_cart2D_grid_brush brush 3333 : %i : brush %i\n", grid_index, brush_index);
         if (grid_index > -1 && grid_index < HGBC::cart2D_grid.size()) { // check that retrieved main Cartesian 2D  cell index is in the bounds of the current Cartesian 2D  array size
             if (brush_index > -1 && brush_index < edit_brush_grid->cart2D_grid.size()) {// check that retrieved Cartesian 2D  brush cell index is in the bounds of the current Cartesian 2D  brush array size
-                //printf("edit_grid:draw_cart2D_grid_brush brush 33AA : brush value :%i\n", edit_brush_grid->cart2D_grid[brush_index]);
+//printf("edit_grid:draw_cart2D_grid_brush brush 33AA : brush value :%i\n", edit_brush_grid->cart2D_grid[brush_index]);
                 if (edit_brush_grid->cart2D_grid[brush_index] > 0) {// If the Cartesian 2D  brush cell of index brush_index has a non zero value then edit main Cartesian 2D  cell data and color values 
                     update_cart2D_grid_brush_colors(grid_index);
                 }
@@ -370,7 +364,7 @@ protected:
             ImGui::Text("Min X: ");
             ImGui::SameLine();
             ImGui::SetNextItemWidth(60);
-            //if (ImGui::SliderFloat("Min X##hgmnx", &plot_min_x, -1.0f, 1000.0f, "%3.1f")) {
+
             if (ImGui::DragFloat("##hgmnx", &plot_min_x, 1.0f, -1.0f, 1000.0f, "%3.1f")) {
                 plot_axis_limit_changed = IMGUI_WINDOW_BORDER_LEFT;
             }
@@ -378,7 +372,7 @@ protected:
             ImGui::Text("Max X: ");
             ImGui::SameLine();
             ImGui::SetNextItemWidth(60);
-            //if (ImGui::SliderFloat("Max X##hgmxx", &plot_max_x, -1.0f, 1000.0f, "%3.1f")) {
+
             if (ImGui::DragFloat("##hgmxx", &plot_max_x, 1.0f, -1.0f, 1000.0f, "%3.1f")) {
                 plot_axis_limit_changed = IMGUI_WINDOW_BORDER_RIGHT;
             }
@@ -387,7 +381,7 @@ protected:
             ImGui::Text("Min Y: ");
             ImGui::SameLine();
             ImGui::SetNextItemWidth(60);
-            // if (ImGui::SliderFloat("Min Y##hgmny", &plot_min_y, -1.0f, 1000.0f, "%3.1f")) {
+
             if (ImGui::DragFloat("##hgmny", &plot_min_y, 1.0f, -1.0f, 1000.0f, "%3.1f")) {
                 plot_axis_limit_changed = IMGUI_WINDOW_BORDER_LEFT;
             }
@@ -395,7 +389,7 @@ protected:
             ImGui::Text("Max Y: ");
             ImGui::SameLine();
             ImGui::SetNextItemWidth(60);
-            //if (ImGui::SliderFloat("Max Y##hgmxy", &plot_max_y, -1.0f, 1000.0f, "%3.1f")) {
+
             if (ImGui::DragFloat("##hgmxy", &plot_max_y, 1.0f, -1.0f, 1000.0f, "%3.1f")) {
                 plot_axis_limit_changed = IMGUI_WINDOW_BORDER_RIGHT;
             }
@@ -503,9 +497,9 @@ protected:
                         plot_window_flags = ImGuiWindowFlags_NoMove;
                     }
 
-                    //printf("ImGui::GetCurrentContext().CurrentWindow.ID!= ImGui::GetCurrentContext().CurrentWindow.GetID(plot_window_id.c_str())\n");
-                    //printf("current context %i : %i\n", ImGui::GetCurrentContext()->HoveredWindow->ID, plot_window->ID);
-                                        // If mouse cursor is within the bounds of the Cartesian 2D  display then can perform Cartesian 2D  edit functions
+//printf("ImGui::GetCurrentContext().CurrentWindow.ID!= ImGui::GetCurrentContext().CurrentWindow.GetID(plot_window_id.c_str())\n");
+//printf("current context %i : %i\n", ImGui::GetCurrentContext()->HoveredWindow->ID, plot_window->ID);
+                    // If mouse cursor is within the bounds of the Cartesian 2D  display then can perform Cartesian 2D  edit functions
                     if (mouse_plot_pos.x > plot_min_x && mouse_plot_pos.x < plot_max_x && mouse_plot_pos.y > plot_min_y && mouse_plot_pos.y < plot_max_y) {
                         // Mouse cursor position is given in Cartesian coordinates of the Cartesian 2D  ImPlot being displayed, so need to convert mouse Cartesian
                         // coordinates to Cartesian 2D  index and Cartesian 2D  x-y index coordinates to be able to edit the Cartesian 2D  cell data values and retrieve them for display
@@ -513,17 +507,17 @@ protected:
                         cart2D_grid_coord = HGBC::get_matrix_coordinate(cart2D_grid_index);
 
                         if (ImGui::IsMouseClicked(ImGuiMouseButton_Left)) {// Left mouse click interaction
-                            //printf("edit_grid::mouse button left : %i\n", cart2D_grid_index);
+//printf("edit_grid::mouse button left : %i\n", cart2D_grid_index);
                             if (cart2D_grid_index > -1 && cart2D_grid_index < HGBC::cart2D_grid.size()) {
                                 if (use_cart2D_grid_brush && cart2D_grid_brush.cart2D_grid_brush_selection.second) { // Using a Cartesian 2D  brush to edit Cartesian grid cell data values and have a valid Cartesian 2D  brush selected
-                                    //printf("edit_grid:display_grid_edit_panel brush 0000 : %i\n", cart2D_grid_index);
-                                                                       // cart2D_grid_brush_edit();
+//printf("edit_grid:display_grid_edit_panel brush 0000 : %i\n", cart2D_grid_index);
+                                    // cart2D_grid_brush_edit();
                                     cart2D_grid_class<T>* edit_brush_grid = cart2D_grid_brush.cart2D_grid_brush_selection.second;// Get the current selected Cartesian 2D  brush data
                                     if (!edit_brush_grid) { // Test have a valid Cartesian 2D  brush selected
                                         return;
                                     }
-                                    //printf("edit_grid:display_grid_edit_panel brush 1111 : %i\n", cart2D_grid_index);
-                                                                        // Define hex brush center in x-y index coordinate and calculate hex brush grid extents from that center location
+//printf("edit_grid:display_grid_edit_panel brush 1111 : %i\n", cart2D_grid_index);
+                                    // Define hex brush center in x-y index coordinate and calculate hex brush grid extents from that center location
                                     cart2D_surface_vec_data_type brush_dim = edit_brush_grid->grid_dimension;
                                     cart2D_surface_vec_data_type brush_center = { 0, 0 };
 
@@ -549,37 +543,24 @@ protected:
                                     for (int b_y_coord = 0; b_y_coord < brush_dim.y; b_y_coord++) {
                                         cart2D_surface_index_data_type y_coord = cart2D_grid_brush_origin.y + b_y_coord; // main Cartesian 2D  y index coordinate that corresonds to the Cartesian 2D  brush y index coordinate
                                         if (y_coord >= 0 && y_coord < HGBC::grid_dimension.y) {// brush element is within the Cartesian 2D  bounds
-                                            //if (b_y_coord % 2 == 0) {// even brush row
-                                                for (int b_x_coord = 0; b_x_coord < brush_dim.x; b_x_coord++) {
-                                                    cart2D_surface_index_data_type x_coord = cart2D_grid_brush_origin.x + b_x_coord;// main Cartesian 2D  x index coordinate that corresonds to the Cartesian 2D  brush x index coordinate
-                                                    if ((y_coord % 2 == 0 && x_coord >= 0 && x_coord < HGBC::grid_dimension.x) || ((y_coord % 2 == 1 && x_coord >= 0 && x_coord < HGBC::grid_dimension.x - 1))) {// brush element is within the Cartesian 2D  bounds
-                                                        draw_cart2D_grid_brush(edit_brush_grid, x_coord, y_coord, b_x_coord, b_y_coord);// Edit main Cartesian 2D  cell data and color value according to hex brush cell data value 
-                                                    }
+                                            for (int b_x_coord = 0; b_x_coord < brush_dim.x; b_x_coord++) {
+                                                cart2D_surface_index_data_type x_coord = cart2D_grid_brush_origin.x + b_x_coord;// main Cartesian 2D  x index coordinate that corresonds to the Cartesian 2D  brush x index coordinate
+                                                if ((y_coord % 2 == 0 && x_coord >= 0 && x_coord < HGBC::grid_dimension.x) || ((y_coord % 2 == 1 && x_coord >= 0 && x_coord < HGBC::grid_dimension.x - 1))) {// brush element is within the Cartesian 2D  bounds
+                                                    draw_cart2D_grid_brush(edit_brush_grid, x_coord, y_coord, b_x_coord, b_y_coord);// Edit main Cartesian 2D  cell data and color value according to hex brush cell data value 
                                                 }
-                                            //}
-                                            //else {// odd brush row
-                                            //    for (int b_x_coord = 0; b_x_coord < brush_dim.x - 1; b_x_coord++) {
-                                            //        cart2D_surface_index_data_type x_coord = cart2D_grid_brush_origin.x + b_x_coord;// main Cartesian 2D  x index coordinate that corresonds to the Cartesian 2D  brush x index coordinate
-                                            //        if ((y_coord % 2 == 0 && x_coord >= 0 && x_coord < HGBC::grid_dimension.x) || ((y_coord % 2 == 1 && x_coord >= 0 && x_coord < HGBC::grid_dimension.x - 1))) {// brush element is within the Cartesian 2D  bounds
-                                            //            if ((y_coord % 2 == 0 && x_coord >= 0 && x_coord < HGBC::grid_dimension.x)) { // Edit main Cartesian 2D  cell data and color value according to hex brush cell data value 
-                                            //                x_coord += 1;
-                                            //            }// !!!!!!!!!!!!!!
-                                            //            draw_cart2D_grid_brush(edit_brush_grid, x_coord, y_coord, b_x_coord, b_y_coord);
-                                            //        }
-                                            //    }
-                                            //}
+                                            }
                                         }
                                     }
                                 }
                                 else {
                                     update_cart2D_grid_brush_colors(cart2D_grid_index);// Edit the hovered main Cartesian 2D  cell data and color value
                                 }
-                                //printf("edit_grid::mouse button left :index %i | value %i ::color | %0.3f| %0.3f| %0.3f| %0.3f\n", cart2D_grid_index, HGBC::cart2D_grid[cart2D_grid_index], c[0], c[1], c[2], c[3]);
+//printf("edit_grid::mouse button left :index %i | value %i ::color | %0.3f| %0.3f| %0.3f| %0.3f\n", cart2D_grid_index, HGBC::cart2D_grid[cart2D_grid_index], c[0], c[1], c[2], c[3]);
                             }
                         }
 
                         if (ImGui::IsMouseClicked(ImGuiMouseButton_Right)) {
-                            //printf("edit_grid::mouse button right : %i\n", cart2D_grid_index);
+//printf("edit_grid::mouse button right : %i\n", cart2D_grid_index);
                         }
                     }
                 }
@@ -684,31 +665,30 @@ protected:
     }
 
     void save_gradienthdr_data() {
-        //printf("cart2D_grid:save_gradienthdr_data000\n");
+//printf("cart2D_grid:save_gradienthdr_data000\n");
         char const* patterns[] = { "*.ghd" };
-        //char const* file_pathname = vwDialogs::save_file(nullptr, patterns, 1);
         char const* file_pathname = vwDialogs::save_file(gradient_dir_path.c_str(), patterns, 1);
-        //printf("cart2D_grid:save_gradienthdr_data1111\n");
+//printf("cart2D_grid:save_gradienthdr_data1111\n");
         if (file_pathname == nullptr) {
             afw_globalc::get_current_logger()->log(LogLevel::INFO, "ERROR : No gradient file defined to save gradient data to\n");
             return;
         }
-        //printf("cart2D_grid:save_gradienthdr_data222\n");
+//printf("cart2D_grid:save_gradienthdr_data222\n");
         export_gradient(file_pathname, state);
     }
 
     void load_gradienthdr() {
-        //printf("cart2D_grid:load_gradienthdr_data000\n");
+//printf("cart2D_grid:load_gradienthdr_data000\n");
         char const* patterns[] = { "*.ghd" };
         char const* file_pathname = vwDialogs::open_file(gradient_dir_path.c_str(), patterns, 1);
-        //printf("cart2D_grid:load_gradienthdr_data111\n");
+//printf("cart2D_grid:load_gradienthdr_data111\n");
         if (file_pathname == nullptr) {
             afw_globalc::get_current_logger()->log(LogLevel::INFO, "ERROR : No gradient file defined to import gradient data to\n");
             return;
         }
-        //printf("cart2D_grid:load_gradienthdr_data222\n");
+//printf("cart2D_grid:load_gradienthdr_data222\n");
         import_gradient(file_pathname, state);
-        //printf("cart2D_grid:load_gradienthdr_data333\n");
+//printf("cart2D_grid:load_gradienthdr_data333\n");
         update_cart2D_grid_colors();
     }
 
@@ -722,12 +702,12 @@ protected:
         if (ImGui::Button("Generate Random Cartesian 2D ")) {// button widget to activate the creation of a random number
             random_engine.define_random_engine(); // Define the random engine input data to generate a randome number
 
-            // Following testing only: Comment out or delete when finished
-            //for (int i = 0; i < 20; i++) {
-            //    random_engine.uniform_int_distribution.generate_random_number();
-                //printf("random_engine_class : generate_random_value gen_number : %i\n", uniform_int_distribution.generated_number_value.integer_p);
-            //    printf("cart2D_grid_class : display_random_cart2D_generator random number : %i\n", random_engine.uniform_int_distribution.generated_number_value);
-            //}
+// Following testing only: Comment out or delete when finished
+//for (int i = 0; i < 20; i++) {
+//    random_engine.uniform_int_distribution.generate_random_number();
+    //printf("random_engine_class : generate_random_value gen_number : %i\n", uniform_int_distribution.generated_number_value.integer_p);
+//    printf("cart2D_grid_class : display_random_cart2D_generator random number : %i\n", random_engine.uniform_int_distribution.generated_number_value);
+//}
 
             generate_random_cart2D_grid();
             update_cart2D_grid_colors();
@@ -788,10 +768,6 @@ protected:
 
             // following for testing only commant out or delete when no longer used!!!!!!
 //printf("cart2D_grid_class : uniform_int_distribution_cart2D_grid_random_generation random number : %i\n", random_engine.uniform_int_distribution.generated_number_value);
-            //if(rn > 50)
-            //     HGBC::cart2D_grid[i] = 1;
-            //else
-            //    HGBC::cart2D_grid[i] = 0;
         }
     }
 
@@ -1015,9 +991,6 @@ protected:
             ImGuiContext* cpc = ImGui::GetCurrentContext();// Strange compilor does not complain about ImGuiContext without including imgui_internal.h
             // But does complain about ImGuiContext not being defined when using cpc in the next lines.
 
-//float resized_width  = cpc->CurrentWindow->Size.x;
-//float resized_height = cpc->CurrentWindow->Size.y;
-
  // Test and functions to maintain the display aspect ratio of the ImGui-ImPlot window
  // when performing windo resizing using the window borders. This is performed 
  // so as to avoid strange disparity of the display of Cartesian 2D  where the grid X-Y axis
@@ -1059,11 +1032,14 @@ protected:
             //if (cpc)
             //    printf("display_cart2D_grid : px %f : py %f: x %f : y %f \n", prev_width, prev_height,cpc->CurrentWindow->Size.x, cpc->CurrentWindow->Size.y);
 
-                        // Constrain the Cartesian 2D  display to a min max Cartesian coordinate range of coordinates
-            ImPlot::SetupAxisLimitsConstraints(ImAxis_X1, plot_min_x, plot_max_x);
-            //ImPlot::SetupAxisZoomConstraints(ImAxis_X1, plot_min_zoom, plot_max_zoom);
-            ImPlot::SetupAxisLimitsConstraints(ImAxis_Y1, plot_min_y, plot_max_y);
-            //ImPlot::SetupAxisZoomConstraints(ImAxis_Y1, plot_min_zoom, plot_max_zoom);
+            // Constrain the Cartesian 2D  display to a min max Cartesian coordinate range of coordinates
+            // Problem using this is that when panning, unwanted zooming in occurs
+            //ImPlot::SetupAxisLimitsConstraints(ImAxis_X1, plot_min_x, plot_max_x);
+            //ImPlot::SetupAxisLimitsConstraints(ImAxis_Y1, plot_min_y, plot_max_y);
+
+            // Define axis limits of the display
+            ImPlot::SetupAxisLimits(ImAxis_X1, plot_min_x, plot_max_x);
+            ImPlot::SetupAxisLimits(ImAxis_Y1, plot_min_y, plot_max_y);
 
 //testing only delete/comment out when not needed
             if (HGBC::cart2D_centers_x.empty()) {
@@ -1091,7 +1067,7 @@ protected:
             }
 
             for (cart2D_grid_cell_data_struct_type cart2D_grid_cell : cart2D_grid_cells_data_list) {
-                //printf("cart2D_grid_class::display_cart2D_grid 3333 :"); printf(" %i : %i\n", cart2D_grid_cell.cart2D_grid_cell_data_id, cart2D_grid_cell.display_shape_id);
+//printf("cart2D_grid_class::display_cart2D_grid 3333 :"); printf(" %i : %i\n", cart2D_grid_cell.cart2D_grid_cell_data_id, cart2D_grid_cell.display_shape_id);
                 cart2D_grid_cell.display_cart2D_cell_data();// This is the Cartesian 2D  automata rules display data
             }
 

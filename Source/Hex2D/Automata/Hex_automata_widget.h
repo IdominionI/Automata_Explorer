@@ -14,8 +14,6 @@
 #include "hex_surface_automata_rules_widget.h"
 #include "hex_surface_automata_results_widget.h"
 
-//#define IM_CLAMP(V, MN, MX)     ((V) < (MN) ? (MN) : (V) > (MX) ? (MX) : (V)) // move this to another location ????
-
 /*
 		Hexagonal cellula automata rules widget class
 
@@ -147,7 +145,7 @@ if(!hex_surface_object_to_execute) printf("hex_surface_automata_widget_class::di
 
 			ImGui::SetCursorPosX(240);
 			ImGui::SetNextItemWidth(165);
-			//if (ImGui::SliderFloat("Step execution delay (seconds)##hgpsf", &play_step_execution_slider_delay_time_seconds,0.1f,10.0f,"%2.3f", ImGuiSliderFlags_None)) {
+
 			if (ImGui::DragFloat("Step execution delay (seconds)##hgpsf", &play_step_execution_slider_delay_time_seconds, 0.1f, 0.1f,10.0f,"%2.1f", ImGuiSliderFlags_None)) {
 				play_step_execution_delay_time = int(play_step_execution_slider_delay_time_seconds * 1000.0f);
 			}
@@ -209,7 +207,7 @@ if(!hex_surface_object_to_execute) printf("hex_surface_automata_widget_class::di
 								//if (!next_step_automata_execution()) { // ++++
 								if (!next_step_automata_execution(hex_surface_object_to_execute)) { // ++++
 //printf("hex_surface_automata_widget_class : display 4444 : !perform_automata_step(current_automata_step)\n");
-																	//if (log_panel != NULL) log_panel->application_log.AddLog("Unable to continue automata generation");
+									//if (log_panel != NULL) log_panel->application_log.AddLog("Unable to continue automata generation");
 									stop_automata_execution();
 								}
 								start = start_clock.now();// begin time stamp of iteration step
@@ -286,8 +284,8 @@ private:
 		else
 			vwDialogs::display_error_message("hex_surface_automata_widget_class", "INFO : \n Invalid Hex Automata rules \n");
 
-		printf("hex_surface_automata_widget_class : validate_automata_rules_results 1111\n");
-		//printf("hex_surface_automata_widget_class : validate_automata_rules_results"); printf("% i\n", hex_surface_automata_results_widget.automata_rules_verified);// Could this cause application to crash
+//printf("hex_surface_automata_widget_class : validate_automata_rules_results 1111\n");
+//printf("hex_surface_automata_widget_class : validate_automata_rules_results"); printf("% i\n", hex_surface_automata_results_widget.automata_rules_verified);// Could this cause application to crash
 	}
 
 	void clear_automata_rules() {
@@ -315,7 +313,7 @@ private:
 
 	// Set flags to pause current automata interation process in play mode
 	void pause_automata_execution() {
-		//printf("paused button pressed\n");
+//printf("paused button pressed\n");
 		automata_paused = !automata_paused;
 
 		if (automata_paused == false)
@@ -334,9 +332,9 @@ private:
 
 	// Set flags to set current automata interation process to play mode
 	void play_automata_execution() {
-		//printf("hex_surface_automata_widget_class::play_automata_execution 00\n");
+//printf("hex_surface_automata_widget_class::play_automata_execution 00\n");
 		if (!automata_play || automata_paused) {
-			//printf("hex_surface_automata_widget_class::play_automata_execution 11\n");
+//printf("hex_surface_automata_widget_class::play_automata_execution 11\n");
 			setup_play();
 			start = start_clock.now();
 		}
@@ -344,7 +342,7 @@ private:
 
 	// Set flags to values to perform cellular iteration in a play or automatic mode
 	void setup_play() {
-		//printf("setup_play 00");
+//printf("setup_play 00");
 		automata_stopped = false;
 		automata_paused = false;
 		automata_play = true;
@@ -357,9 +355,9 @@ private:
 	// Set up flags to start a cellula automata iteration step process
 	// Must be done before any cellula automata step process is performed
 	void setup_automata_execution() {
-		//printf("hex_surface_automata_widget_class :: setup_automata_execution 111111 :  %i \n" ,  hex_surface_object_to_execute->hex_grid.size());
+//printf("hex_surface_automata_widget_class :: setup_automata_execution 111111 :  %i \n" ,  hex_surface_object_to_execute->hex_grid.size());
 
-				// following is to update the progress bar
+		// following is to update the progress bar
 		min_step_value = hex_surface_automata_results_widget.get_min_rule_start();
 		max_step_value = hex_surface_automata_results_widget.get_max_rule_end();
 
@@ -396,7 +394,7 @@ private:
 
 	// Perform the next iteration step using no CPU threading
 	bool next_step_voxel_automata_no_thread(hex_grid_class<T>* hex_surface_object_to_execute) {
-		//printf("hex_surface_automata_widget_class :: next_step_voxel_automata_no_thread 000\n");
+//printf("hex_surface_automata_widget_class :: next_step_voxel_automata_no_thread 000\n");
 		if (automata_reset) {
 			setup_automata_execution();
 		}
@@ -433,55 +431,10 @@ private:
 			printf("hex_surface_automata_widget_class :: perform_automata_step 11AA :"); printf("%i :: %i \n", hex_grid_copy.size(), hex_surface_object_to_execute->hex_grid.size());
 		}
 
-		//for (int i = 0; i < hex_surface_object_to_execute->hex_grid.size(); i++) {
-		//	printf("hex_surface_automata_widget_class :: perform_automata_step @@@@@@HG : %i ::",i);
-		//	switch (hex_surface_object_to_execute->hex_grid_value_data_type) {
-		//		//case hex_grid_value_data_type_enum::Boolean: dn->value.second.bvalue = hex_grid->hex_grid[hex_neighbour_index].bvalue; break;
-		//		//case hex_grid_value_data_type_enum::Float:   dn->value.second.fvalue = hex_grid->hex_grid[hex_neighbour_index].fvalue; break;
-		//		//case hex_grid_value_data_type_enum::Integer: dn->value.second.ivalue = hex_grid->hex_grid[hex_neighbour_index].ivalue; break;
-		//		//case hex_grid_value_data_type_enum::Double:  dn->value.second.dvalue = hex_grid->hex_grid[hex_neighbour_index].dvalue; break;
-		//
-		//	case hex_grid_value_data_type_enum::Boolean:  printf("Boolean:%i\n", hex_surface_object_to_execute->hex_grid[i]); break;
-		//	case hex_grid_value_data_type_enum::Float:    printf("Float:  %f\n", hex_surface_object_to_execute->hex_grid[i]); break;
-		//	case hex_grid_value_data_type_enum::Integer:  printf("Integer:%i\n", hex_surface_object_to_execute->hex_grid[i]); break;
-		//	case hex_grid_value_data_type_enum::Double:   printf("Double: %d\n", hex_surface_object_to_execute->hex_grid[i]); break;
-		//	}
-		//}
-
-		//for (int i = 0; i < hex_grid_copy.size(); i++) {
-		//	printf("hex_surface_automata_widget_class :: perform_automata_step @@@@@@HGC : %i ::", i);
-		//	switch (hex_surface_object_to_execute->hex_grid_value_data_type) {
-		//		//case hex_grid_value_data_type_enum::Boolean: dn->value.second.bvalue = hex_grid->hex_grid[hex_neighbour_index].bvalue; break;
-		//		//case hex_grid_value_data_type_enum::Float:   dn->value.second.fvalue = hex_grid->hex_grid[hex_neighbour_index].fvalue; break;
-		//		//case hex_grid_value_data_type_enum::Integer: dn->value.second.ivalue = hex_grid->hex_grid[hex_neighbour_index].ivalue; break;
-		//		//case hex_grid_value_data_type_enum::Double:  dn->value.second.dvalue = hex_grid->hex_grid[hex_neighbour_index].dvalue; break;
-		//
-		//	case hex_grid_value_data_type_enum::Boolean:  printf("Boolean:%i\n", hex_grid_copy[i]); break;
-		//	case hex_grid_value_data_type_enum::Float:    printf("Float:  %f\n", hex_grid_copy[i]); break;
-		//	case hex_grid_value_data_type_enum::Integer:  printf("Integer:%i\n", hex_grid_copy[i]); break;
-		//	case hex_grid_value_data_type_enum::Double:   printf("Double: %d\n", hex_grid_copy[i]); break;
-		//	}
-		//}
-
 		printf("hex_surface_automata_widget_class :: perform_automata_step 11"); printf(": %i :: %i \n", step, hex_surface_object_to_execute->hex_grid.size());
 		// Perform next cellula automata iteration step using the current cellular automat data stored within the hex_surface_object_to_execute class and
 		// store results into the hex_grid_copy dynamic vector array. If unsuccesful return a false value and do not destroy current cellular automata data
 		if (!hex_surface_automata_results_widget.perform_hex_surface_automata_generation(step, ignore_individual_step_intervals, hex_surface_object_to_execute, hex_grid_copy)) return false;
-
-		//for (int i = 0; i < hex_grid_copy.size(); i++) {
-		//	printf("hex_surface_automata_widget_class :: perform_automata_step @@@@@@HGC : %i ::", i);
-		//	switch (hex_surface_object_to_execute->hex_grid_value_data_type) {
-		//		//case hex_grid_value_data_type_enum::Boolean: dn->value.second.bvalue = hex_grid->hex_grid[hex_neighbour_index].bvalue; break;
-		//		//case hex_grid_value_data_type_enum::Float:   dn->value.second.fvalue = hex_grid->hex_grid[hex_neighbour_index].fvalue; break;
-		//		//case hex_grid_value_data_type_enum::Integer: dn->value.second.ivalue = hex_grid->hex_grid[hex_neighbour_index].ivalue; break;
-		//		//case hex_grid_value_data_type_enum::Double:  dn->value.second.dvalue = hex_grid->hex_grid[hex_neighbour_index].dvalue; break;
-		//
-		//	case hex_grid_value_data_type_enum::Boolean:  printf("Boolean:%i\n", hex_grid_copy[i]); break;
-		//	case hex_grid_value_data_type_enum::Float:    printf("Float:  %f\n", hex_grid_copy[i]); break;
-		//	case hex_grid_value_data_type_enum::Integer:  printf("Integer:%i\n", hex_grid_copy[i]); break;
-		//	case hex_grid_value_data_type_enum::Double:   printf("Double: %d\n", hex_grid_copy[i]); break;
-		//	}
-		//}
 
 		printf("hex_surface_automata_widget_class :: perform_automata_step 22"); printf(": %i : %i \n", step, hex_surface_object_to_execute->hex_grid_cells_data_list.size());
 
@@ -490,17 +443,6 @@ private:
 		// and update the hex grid display colors to correlate to the current defied color gradient 
 		hex_surface_object_to_execute->hex_grid = hex_grid_copy;
 		hex_surface_object_to_execute->update_hex_grid_colors();
-
-		//for(int i=0;i< hex_surface_object_to_execute->hex_grid.size();i++){
-		//	printf("hex_surface_automata_widget_class :: perform_automata_step 22AA : %i: %i\n",i, hex_surface_object_to_execute->hex_grid[i]);
-		//}
-
-				//for (int i = 0; i < hex_surface_object_to_execute->hex_grid_cells_data_list.size(); i++) {
-					//hex_surface_object_to_execute->hex_grid_cells_data_list[i].hex_grid_cells_display_color = hex_surface_automata_results_widget.hex_surface_automata_rule_results[i].result_display_color;
-					//hex_surface_object_to_execute->hex_grid_cells_data_list[i].hex_grid_cells_display_shape = hex_surface_automata_results_widget.hex_surface_automata_rule_results[i].result_display_shape;
-					//hex_surface_object_to_execute->hex_grid_cells_data_list[i].display_data = hex_surface_automata_results_widget.hex_surface_automata_rule_results[i].display_result;
-		//printf("hex_surface_automata_widget_class :: perform_automata_step 33A : %i : %i \n", step, hex_surface_object_to_execute->hex_grid_cells_data_list[0].hex_grid_cells_index.size());
-				//}
 
 		printf("hex_surface_automata_widget_class :: perform_automata_step 44"); printf(": %i\n", step);
 		return true;
@@ -579,19 +521,19 @@ private:
 
 
 	void save_automata_rules() {// Have crash here !!!!!
-		//printf("hex_surface_automata_widget_class :: save_automata_rules 000\n");
+//printf("hex_surface_automata_widget_class :: save_automata_rules 000\n");
 		char const* patterns[] = { "*HGAR.txt" };
-		//printf("hex_surface_automata_widget_class :: save_automata_rules 000AAAA\n");
+//printf("hex_surface_automata_widget_class :: save_automata_rules 000AAAA\n");
 		char const* file_pathname = vwDialogs::save_file(automata_rules_dir_path.c_str(), patterns, 1);// get file pathname to save automata rules data to 
-		//printf("hex_surface_automata_widget_class :: save_automata_rules 000BBBB\n");
+//printf("hex_surface_automata_widget_class :: save_automata_rules 000BBBB\n");
 		if (file_pathname == nullptr) {
-			//printf("hex_surface_automata_widget_class :: save_automata_rules 000CCC\n");
-						//vwDialogs::display_error_message("Save Automata rules", "ERROR : \n No automata rules file defined to save hex surface automata rules data to\nSave automata rules aborted");
+//printf("hex_surface_automata_widget_class :: save_automata_rules 000CCC\n");
+			//vwDialogs::display_error_message("Save Automata rules", "ERROR : \n No automata rules file defined to save hex surface automata rules data to\nSave automata rules aborted");
 			return;
 		}
-		//printf("hex_surface_automata_widget_class :: save_automata_rules 111\n");;
+//printf("hex_surface_automata_widget_class :: save_automata_rules 111\n");;
 
-				// Link current automata rules class data to export class
+		// Link current automata rules class data to export class
 		import_export_hex_surface_automata_rules.hex_surface_automata_result_rules = hex_surface_automata_results_widget.hex_surface_automata_rule_results;
 		import_export_hex_surface_automata_rules.hex_surface_automata_rules = hex_surface_automata_results_widget.hex_surface_automata_rules_widget.hex_surface_automata_rules;
 		import_export_hex_surface_automata_rules.export_hex_surface_automata_rules(file_pathname);
@@ -600,26 +542,26 @@ private:
 	}
 
 	void load_automata_rules(hex_grid_class<T>* hex_surface_object_to_execute) {
-		//printf("hex_surface_automata_widget_class::load_automata_rules 000\n");
+//printf("hex_surface_automata_widget_class::load_automata_rules 000\n");
 		char const* patterns[] = { "*HGAR.txt" };
-		//printf("hex_surface_automata_widget_class::load_automata_rules 111");printf("%s \n", patterns[0]);
+//printf("hex_surface_automata_widget_class::load_automata_rules 111");printf("%s \n", patterns[0]);
 		char const* file_pathname = vwDialogs::open_file(automata_rules_dir_path.c_str(), patterns, 1);// get file pathname to import automata rules data from
 
 		if (file_pathname == nullptr) {
 			//vwDialogs::display_error_message("Save Automata rules", "ERROR : \n No automata rules file defined to import hex grid automata rules data from.\n");
 			return;
 		}
-		//printf("hex_surface_automata_widget_class::load_automata_rules 222\n");
+//printf("hex_surface_automata_widget_class::load_automata_rules 222\n");
 		stop_automata_execution();
 		hex_surface_object_to_execute->delete_all_hex_grid_cell_data();// clear hexagonal automata grid data
 
-		//printf("hex_surface_automata_widget_class::load_automata_rules 333\n");
+//printf("hex_surface_automata_widget_class::load_automata_rules 333\n");
 		hex_surface_automata_results_widget.define_and_clear_hex_surface_automata_rules_and_results();// clear hexagonal automata rules data
 
 		import_export_hex_surface_automata_rules.import_hex_surface_automata_rules(file_pathname);// import hexagonal autoamata rules into temp import_export_hex_surface_automata_rules class list of rules
 
-		//td::cout << "hex_surface_automata_widget_class::load_automata_rules 444 : "; std::cout << import_export_hex_surface_automata_rules.hex_surface_automata_rules.size() << std::endl;
-				// Create new list of hexagonal automata result rules from imported list of hexagonal automata result rules
+//td::cout << "hex_surface_automata_widget_class::load_automata_rules 444 : "; std::cout << import_export_hex_surface_automata_rules.hex_surface_automata_rules.size() << std::endl;
+		// Create new list of hexagonal automata result rules from imported list of hexagonal automata result rules
 		for (hex_surface_automata_rule_result_struct_type& result_rule : import_export_hex_surface_automata_rules.hex_surface_automata_result_rules) {
 			result_rule.define_imgui_shape();
 			hex_surface_automata_results_widget.add_rule_result(result_rule);
@@ -629,16 +571,16 @@ private:
 		for (hex_surface_automata_rule_struct_type rule : import_export_hex_surface_automata_rules.hex_surface_automata_rules) {
 			// Need to edit sub rule id number manually here to enable ImGui to display widgets without error and to initialise an ID idetification for each sub rule.
 			for (hex_automata_sub_rule_struct_type& sub_rule : rule.sub_rules) {
-				//std::cout << "hex_surface_automata_widget_class::load_automata_rules iiiiiA : "; std::cout << rule.sub_rules.size() << "::" << sub_rule.sub_rule_id << std::endl;
+//std::cout << "hex_surface_automata_widget_class::load_automata_rules iiiiiA : "; std::cout << rule.sub_rules.size() << "::" << sub_rule.sub_rule_id << std::endl;
 				rule.sub_rule_id += 1;
 				sub_rule.sub_rule_id = rule.sub_rule_id;
-				//std::cout << "hex_surface_automata_widget_class::load_automata_rules iiiiiB : "; std::cout << rule.sub_rules.size() << "::" << sub_rule.sub_rule_id << std::endl;
+//std::cout << "hex_surface_automata_widget_class::load_automata_rules iiiiiB : "; std::cout << rule.sub_rules.size() << "::" << sub_rule.sub_rule_id << std::endl;
 			}
 			hex_surface_automata_results_widget.hex_surface_automata_rules_widget.add_rule(rule);
 		}
 
 		setup_automata_execution();
-		//std::cout << "hex_surface_automata_widget_class::load_automata_rules 1111 : "; std::cout << hex_surface_automata_results_widget.hex_surface_automata_rules_widget.hex_surface_automata_rules.size() << std::endl;
+//std::cout << "hex_surface_automata_widget_class::load_automata_rules 1111 : "; std::cout << hex_surface_automata_results_widget.hex_surface_automata_rules_widget.hex_surface_automata_rules.size() << std::endl;
 	}
 
 	void export_automata_grid(hex_grid_class<T> *hex_surface_object_to_execute) {
@@ -647,7 +589,6 @@ printf("hex_surface_automata_widget_class :: export_automata_grid000\n");
 		char const* file_pathname = vwDialogs::save_file(automata_grids_dir_path.c_str(), patterns, 1);
 
 		if (file_pathname == nullptr) {// No file selected
-			//vwDialogs::display_error_message("Save Automata Grid Data", "ERROR : \n No hex grid data file defined to save hex surface grid data to\nSave hex grid data aborted");
 			return;
 		}
 //else
@@ -660,11 +601,11 @@ printf("hex_surface_automata_widget_class :: export_automata_grid111\n");
 	}
 
 	void import_automata_grid(hex_grid_class<T> *hex_surface_object_to_execute) {
-printf("hex_surface_automata_widget_class :: import_automata_grid000\n");
+//printf("hex_surface_automata_widget_class :: import_automata_grid000\n");
 		stop_automata_execution();
 
 		char const* patterns[] = { "*HGAD.txt" };
-printf("hex_surface_automata_widget_class :: import_automata_grid111\n");
+//printf("hex_surface_automata_widget_class :: import_automata_grid111\n");
 		char const* file_pathname = vwDialogs::open_file(automata_grids_dir_path.c_str(), patterns, 1);
 
 		if (file_pathname == nullptr) {
@@ -675,9 +616,8 @@ printf("hex_surface_automata_widget_class :: import_automata_grid111\n");
 			afw_globalc::get_current_logger()->log(LogLevel::INFO, "hex_surface_automata_widget_class<T>::import_automata_grid() : ERROR :  Could not import automata hex grid. hex_surface_object_to_execute undefined \n");
 			return;
 		}
-printf("hex_surface_automata_widget_class :: import_automata_grid222\n");
+//printf("hex_surface_automata_widget_class :: import_automata_grid222\n");
 		hex_surface_object_to_execute->clear_all_hex_grid_cell_data(); // It is assumed that when inporting a grid, the automata rules are not changed so only need to clear existing hex grid cell data
-		//hex_surface_object_to_execute->delete_all_hex_grid_cell_data();
 		hex_surface_object_to_execute->delete_hex_grid();
 		hex_surface_automata_results_widget.reset_rule_results_hex_grid_cell_data_id();
 //else
@@ -689,7 +629,7 @@ printf("hex_surface_automata_widget_class :: import_automata_grid222\n");
 		hex_surface_object_to_execute->define_hex_grid_coordinates();
 		hex_surface_object_to_execute->update_hex_grid_colors();
 
-std::cout << "hex_surface_automata_widget_class<T>::import_automata_grid() 00000 : " << hex_surface_object_to_execute->hex_grid.size() << std::endl;// ++++
+//std::cout << "hex_surface_automata_widget_class<T>::import_automata_grid() 00000 : " << hex_surface_object_to_execute->hex_grid.size() << std::endl;// ++++
 	}
 
 };

@@ -29,7 +29,7 @@ public:
 				//global_cart2D_grid->test_cart2D_grid_cell_list();
 //printf("acart2D_application_class: display_acart2D_main_gui_panel : BBBB  \n");
 				define_automata_rules(global_cart2D_grid);
-				//printf("acart2D_application_class::display_acart2D_main_gui_panel 111\n");
+//printf("acart2D_application_class::display_acart2D_main_gui_panel 111\n");
 			}
 //printf("acart2D_application_class: display_acart2D_main_gui_panel : 11111  \n");
 		}
@@ -44,15 +44,11 @@ public:
 	}
 
 	void end_current_project() {
-		//cart2D_surface_automata_widget.stop_automata_execution();
-
 		global_cart2D_grid->clear_all_cart2D_grid_cell_data();
 		global_cart2D_grid->cart2D_grid_cells_data_list.clear();
 
 		global_cart2D_grid = nullptr;
 		global_grid_defined = false;
-
-		//cart2D_surface_automata_widget.clear_all_automata_rules();
 	}
 
 	void create_global_grid() {
@@ -72,12 +68,6 @@ public:
 		if (global_cart2D_grid) {
 			global_grid_defined = true;
 			create_global_grid_popup = false;
-
-			// !!!! Testing only : delete or comment out when finished !!!!
-			//for (size_t i = 95; i < 105; i++) {
-			//	global_cart2D_grid->cart2D_grid[i] = 1;
-			//}
-			//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!	
 		}
 
 		if (canceled_global_grid) { create_global_grid_popup = false; }

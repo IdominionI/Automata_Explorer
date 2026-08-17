@@ -33,7 +33,7 @@ public:
 	// that can be used to defeine a Cartesian 2D cellula automata rule result
 	cart2D_surface_automata_rules_widget_class<T> cart2D_surface_automata_rules_widget;
 
-		// !!!!!!!!!!!!! Functions to perfom the management of Cartesian 2D cellula automata rule results !!!!!!!!!!!!!!!!!!!!
+	// !!!!!!!!!!!!! Functions to perfom the management of Cartesian 2D cellula automata rule results !!!!!!!!!!!!!!!!!!!!
 
 	void reset_rule_results_cart2D_grid_cell_data_id() {// This is required when clearing or importing a hex surface grid
 		for (cart2D_surface_automata_rule_result_struct_type& rule_result : cart2D_surface_automata_rule_results) {
@@ -58,7 +58,6 @@ public:
 		rule_result_id = -1;
 		delete_all_automata_rules();
 		clear_cart2D_surface_automata_rule_results();
-		//clear_cart2D_surface_automata_rules();
 	}
 
 	void clear_cart2D_surface_automata_rule_results() {
@@ -296,7 +295,6 @@ if(!cart2D_surface_object_to_execute) printf("cart2D_surface_automata_results_wi
 		for (cart2D_surface_automata_rule_struct_type& rule : cart2D_surface_automata_rules_widget.cart2D_surface_automata_rules) {
 			printf("cart2D_surface_automata_results_widget_class :: verify_result_rules 111");
 			printf(": rule :: %s\n", rule.rule_name.c_str());
-			//if (!verify_rule(rule)){ return false;}
 
 			for (cart2D_automata_sub_rule_struct_type& sub_rule : rule.sub_rules) {
 				printf("cart2D_surface_automata_results_widget_class :: verify_result_rules 222");
@@ -304,7 +302,7 @@ if(!cart2D_surface_object_to_execute) printf("cart2D_surface_automata_results_wi
 				parser_base_node* logic_parser_tree = cart2D_surface_automata_rules_widget.valid_sub_rule_definition(sub_rule.sub_rule_definition); // For testing
 
 				if (!logic_parser_tree) {// Sub rule code is invalid and a parser tree could not be constructed : define sub rule parameters for a null parser tree
-					//logic_parser.display_parse_tree(logic_parser_tree); // For testing only
+//logic_parser.display_parse_tree(logic_parser_tree); // For testing only
 					afw_globalc::get_current_logger()->log(LogLevel::ERROR, "Have invalid sub rule " + sub_rule.sub_rule_name + " of rule " + rule.rule_name);
 					cart2D_surface_automata_rules_widget.logic_parser_tree_defined = false;
 					sub_rule.root_parser_node = nullptr;
@@ -764,15 +762,12 @@ private:
 				// If no rule id specified then all rules are to be applied so return true
 				// Need this because cannot return true for a null entry of rule_definitions to specify to use all automata rules
 				if (rule_ids.size() == 1) { return true; }
-				//afw_globalc::get_current_logger()->log(LogLevel::ERROR, "Have rule id out of range for rule id" + acart2D_tools::get_propper_string(rule_id) + " for rule result " + acart2D_tools::get_propper_string(rule_result.result_name) + " that is not defined in the list of rules !!!!\n");
-				//vwDialogs::display_error_message("Hex Rule", "ERROR : \nHave rule id out of range for rule id" + acart2D_tools::get_propper_string(rule_id) + " for rule result " + acart2D_tools::get_propper_string(rule_result.result_name) + " that is not defined in the list of rules\n");
 				afw_globalc::get_current_logger()->log(LogLevel::ERROR, "Have rule id out of range for rule id" + rule_id + " for rule result " +rule_result.result_name + " that is not defined in the list of rules !!!!\n");
 				vwDialogs::display_error_message("Hex Rule", "ERROR : \nHave rule id out of range for rule id" + rule_id + " for rule result " + rule_result.result_name + " that is not defined in the list of rules\n");
 				return false;
 			}
 
 			if (!valid_rule(rule_idi)) {// Test that rule index id is a valid number that is in the index range of the list of defined rules vector array
-				//vwDialogs::display_error_message("Hex Rule", "ERROR : \nHave rule of id : " + acart2D_tools::get_propper_string(rule_id) + " for rule result : " + acart2D_tools::get_propper_string(rule_result.result_name) + " that is not defined in the list of rules\n");
 				vwDialogs::display_error_message("Hex Rule", "ERROR : \nHave rule of id : " + rule_id + " for rule result : " + rule_result.result_name + " that is not defined in the list of rules\n");
 				return false;
 			}
@@ -796,7 +791,6 @@ private:
 			case cart2D_grid_value_data_type_enum::Boolean:
 			case cart2D_grid_value_data_type_enum::Integer: {
 				if (FW::stringtools::contains(cart2D_result_value,"e") || FW::stringtools::contains(cart2D_result_value,".") || FW::stringtools::contains(cart2D_result_value,"^")) {
-					//afw_globalc::get_current_logger()->log(LogLevel::ERROR, "Have invalid rule result value that is incompatibe for hex grid integer data type !!!!\n");
 					vwDialogs::display_error_message("Hex Rule", "ERROR : \nHave invalid rule result value that is incompatibe for hex grid integer data type\n");
 					return false;
 				}

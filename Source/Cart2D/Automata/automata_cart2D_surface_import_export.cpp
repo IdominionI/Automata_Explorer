@@ -74,9 +74,6 @@
 			stream << RULE_DATA_BLOCK_START << std::endl;
 
 			stream << rule.rule_name		<< std::endl;
-			//stream << rule.active_rule		<< std::endl;
-			//stream << rule.rule_start_step	<< std::endl;
-			//stream << rule.rule_end_step	<< std::endl;
 
 			stream << SUB_RULE_BLOCK_START << std::endl;
 			for (cart2D_automata_sub_rule_struct_type sub_rule : rule.sub_rules) {
@@ -113,9 +110,6 @@
 		stream << RULE_DATA_BLOCK_START << std::endl;
 
 		stream << rule.rule_name		<< std::endl;
-		//stream << rule.active_rule		<< std::endl;
-		//stream << rule.rule_start_step	<< std::endl;
-		//stream << rule.rule_end_step	<< std::endl;
 
 		stream << SUB_RULE_BLOCK_START << std::endl;
 		for (cart2D_automata_sub_rule_struct_type sub_rule : rule.sub_rules) {
@@ -318,13 +312,13 @@
 		for (std::string s_color : color) {
 			float f_color;
 			try { f_color = stof(s_color); }
-			//catch (std::invalid_argument const& ex)
+
 			catch (std::invalid_argument)
 			{
 				vwDialogs::display_error_message("Import hex automata rules", "ERROR : \n Have invalid color for result rules at line " + std::to_string(line_number) + "!\n");
 				return false;
 			}
-			//catch (std::out_of_range const& ex)
+
 			catch (std::out_of_range)
 			{
 				vwDialogs::display_error_message("Import hex automata rules", "ERROR : \n Have color out of range for result rules at line " + std::to_string(line_number) + "!\n");
@@ -518,21 +512,6 @@
 		line = lines[line_number]; line = FW::stringtools::truncate(line, line.size());
 //std::cout << "import_export_cart2D_surface_automata_rules_class::read_automata_byte_rule BBBBB : " << line_number << ":" << lines[line_number] << std::endl;
 		cart2D_surface_automata_rule.rule_name = line;
-
-//		line_number++;
-//		line = lines[line_number]; line = FW::stringtools::truncate(line, line.size());
-////std::cout << "import_export_cart2D_surface_automata_rules_class::read_automata_byte_rule BBBBB : " << line_number << ":" << lines[line_number] << std::endl;
-//		bool hrule;
-//		if (!FW::stringtools::string_to_bool(line, &hrule, error_code)) { return false; }
-//		if (hrule == 0) {cart2D_surface_automata_rule.active_rule = false;} else {cart2D_surface_automata_rule.active_rule = true;}
-//
-//		line_number++;
-//		line = lines[line_number]; line = FW::stringtools::truncate(line, line.size());
-//		if (!FW::stringtools::string_to_int(line, &cart2D_surface_automata_rule.rule_start_step, error_code)) { return false; }
-//
-//		line_number++;
-//		line = lines[line_number]; line = FW::stringtools::truncate(line, line.size());
-//		if (!FW::stringtools::string_to_int(line, &cart2D_surface_automata_rule.rule_end_step, error_code)) { return false; }
 
 		// Next line read must be a SUB_RULE_BLOCK_START flag to indicate to load rule sub rules
 		line_number++;

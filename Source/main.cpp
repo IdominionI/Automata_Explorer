@@ -11,6 +11,8 @@
 
 #include <glm/glm.hpp>
 
+#include <ThirdParty/ImGui/implot3D/implot3d.h>// To be moved !!!!!
+
 // Main application class to setup, run and manage the application
 // using the FrameWork application base class
 class app_main_class : public afw_app_base_class {
@@ -174,37 +176,11 @@ public:
         ImGui::Begin;
         bool show_demo_window = true;
         bool show_plot_demo_window = true;
+        bool show_plot3D_demo_window = true;
         //ImGui::ShowDemoWindow(&show_demo_window);
         //ImPlot::ShowDemoWindow(&show_plot_demo_window);
+        ImPlot3D::ShowDemoWindow(&show_plot_demo_window);
         ImGui::End;
-
-    
-        // Following testing only : delete/comment out when no longer needed
-/*      srand(0);
-        static float xs1[100], ys1[100];
-        for (int i = 0; i < 100; ++i) {
-            xs1[i] = i * 0.01f;
-            ys1[i] = xs1[i] + 0.1f * ((float)rand() / (float)RAND_MAX);
-        }
-        static float xs2[50], ys2[50];
-        for (int i = 0; i < 50; i++) {
-            xs2[i] = 0.25f + 0.2f * ((float)rand() / (float)RAND_MAX);
-            ys2[i] = 0.75f + 0.2f * ((float)rand() / (float)RAND_MAX);
-        }
-        ImGui::Begin("Scatter Plot");// If Have name of ImGui::Begin then have ability to minimise and dock 
-            if (ImPlot::BeginPlot("Scatter Plot")) {
-                ImPlot::PlotScatter("Data 1", xs1, ys1, 100);
-                ImPlot::PlotScatter("Data 2", xs2, ys2, 50, {
-                    ImPlotProp_Marker, ImPlotMarker_Square,
-                    ImPlotProp_MarkerSize, 6,
-                    ImPlotProp_LineColor, ImPlot::GetColormapColor(1),
-                    ImPlotProp_FillColor, ImPlot::GetColormapColor(1),
-                    ImPlotProp_FillAlpha, 0.25f
-                    });
-                ImPlot::EndPlot();
-            }
-        ImGui::End();
-*/
 
         // ----------------------------------
 

@@ -3,9 +3,9 @@
 A PDF version of this readme exists in the Documentation directory of this project with the filename readme.pdf.
 
 ## Introduction
-Hex grid automata (HGA) that is under the current visual studio project name VW_Automata is an application to perform defined cellular automata rules in a 2D hexagonal grid environment.
+Hex grid automata (HGA) that is under the current visual studio project name VW_Automata is an application to perform defined cellular automata rules in a 2D/3D hexagonal and cartesian grid environment.
 This can be considered as a complete and functional first step application that can perform some basic neighbor driven cellular automata and be expanded or forked for possible more complex automata rules and conditions.
-The design of the code of this application is such that this will form a basis for a regular 2D Cartesian grid structure and both a 3D cartesian and hexagonal grid structures.
+The design of the code of this application is such that both 2D and 3D cartesian and hexagonal grid structures are implemented in very similar fashion such that once one is familiar with one automata implementation it should be easy to apply any of the others.
 
 The design incorporates that the user defines rule conditions for the cellular automata as a series of c/c++ like conditional statements that query the neighbours of a grid cell of a current hexagonal grid as well as itself. 
 If any of a series of conditions are true, a value to the current processing step of the hexagonal grid, the grid cell is assigned a value according to which set of conditions are met as defined by the user.
@@ -58,6 +58,7 @@ This is the most basic of functionality that is explained for this application. 
     ImGui
     imgui-docking
 	implot
+	implot3D
     tinyfiledialogs
 
 
@@ -69,6 +70,7 @@ Dependency source header files to be defined where $(ProjectDir) is the project 
 	$(ProjectDir)ThirdParty\ImGui\imgui_docking;
 	$(projectDir)ThirdParty\ImGUI\imgui_docking\backends;
 	$(projectDir)ThirdParty\ImGUI\implot;
+	$(projectDir)ThirdParty\ImGUI\implot3D;
 	$(ProjectDir)ThirdParty\glew\include;
 	$(ProjectDir)ThirdParty\glew\src;
 	$(ProjectDir)ThirdParty\glfw\include;

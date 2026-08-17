@@ -174,9 +174,7 @@ protected:
 	}
 
 	bool create_cart2D_sub_grid(cart2D_grid_class<T>* cart2D_grid, cart2D_surface_vec_data_type lower_range, cart2D_surface_vec_data_type upper_range, int &error_code) {
-printf("create_cart2D_grid_panel_class::create_global_grid 00000 \n");
-		//bool cancel = false;
-
+//printf("create_cart2D_grid_panel_class::create_global_grid 00000 \n");
 		if (!cart2D_grid) {return false;}
 
 		if (upper_range.x < lower_range.x) { error_code = 1; }

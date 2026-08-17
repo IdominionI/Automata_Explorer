@@ -20,9 +20,6 @@
 template <class T>
 class hex_surface_automata_rules_widget_class {
 public:
-	// for testing only Delete or comment out when not in use or needed
-	//hex_grid_base_class<T>* hex_test_grid = nullptr;
-
 	int current_selected_var_id = -1;
 
 	std::string automata_rule_dir_path     = "./Rules/Rules/Hex2D_Rules";		// Path name to the default directory where the cellula automata rules are to be exported/imported
@@ -137,16 +134,9 @@ public:
 
 		ImGui::BeginGroup();
 		{
-			//ImGui::Checkbox(w_id.c_str(), &hex_surface_automata_rule.active_rule);
-			//ImGui::SameLine();
 			ImGui::SetNextItemWidth(120);
 			ImGui::InputText(rn_id.c_str(), &hex_surface_automata_rule.rule_name, ImGuiInputTextFlags_CallbackCharFilter, Input_Filters::name);
 			ImGui::SameLine();
-			//ImGui::SetNextItemWidth(50);
-			//ImGui::InputInt(ss_id_string.c_str(), &hex_surface_automata_rule.rule_start_step, 0);
-			//ImGui::SameLine();
-			//ImGui::SetNextItemWidth(50);
-			//ImGui::InputInt(es_id_string.c_str(), &hex_surface_automata_rule.rule_end_step, 0);
 			ImGui::SameLine();
 			ImGui::SetNextItemWidth(100);
 
@@ -432,22 +422,12 @@ printf("hex_surface_automata_rules_widget_class :: valid_sub_rule_definition:: B
 		return logic_parser.create_logic_parse_tree(sub_rule_text);
 	}
 
-	//ImVec2 editor_sub_rules_display_window_size = { 700,400 };
-
-	//size_t max_sub_rule_char = 1000;
-
-
-
-
-
-
 private:
 	int rule_id = -1;
 
 	int rule_selected_index = -1;
 	int sub_rule_selected_index = -1;
 
-	//logic_parser_class<T> logic_parser;
 	hex_logic_parser_class<T> logic_parser;
 	parser_base_node* logic_parser_tree = nullptr;
 
@@ -568,10 +548,10 @@ private:
 
 			// Need to edit sub rule id number manually here to enable ImGui to display widgets without error and to initialise an ID idetification for each sub rule.
 			for (hex_automata_sub_rule_struct_type& sub_rule : rule.sub_rules) {
-				//std::cout << "hex_surface_automata_widget_class::load_automata_rules iiiiiA : " << rule.sub_rules.size() << "::" << sub_rule.sub_rule_id << std::endl;
+//std::cout << "hex_surface_automata_widget_class::load_automata_rules iiiiiA : " << rule.sub_rules.size() << "::" << sub_rule.sub_rule_id << std::endl;
 				rule.sub_rule_id += 1;
 				sub_rule.sub_rule_id = rule.sub_rule_id;
-				//std::cout << "hex_surface_automata_widget_class::load_automata_rules iiiiiB : " << rule.sub_rules.size() << "::" << sub_rule.sub_rule_id << std::endl;
+//std::cout << "hex_surface_automata_widget_class::load_automata_rules iiiiiB : " << rule.sub_rules.size() << "::" << sub_rule.sub_rule_id << std::endl;
 			}
 		}
 	}
@@ -579,7 +559,6 @@ private:
 	// Save an individual cellula automata sub rule of a cellula automata rule selected from the list of cellula automata sub rules of that cellula automata rule that has a list index of sub_rule_index
 	void save_rule_sub_rule(hex_surface_automata_rule_struct_type rule, int sub_rule_index) {
 		char const* patterns[] = { "*HGSR.txt" };
-		//char const* file_pathname = vwDialogs::save_file(nullptr, patterns, 1);
 		char const* file_pathname = vwDialogs::save_file(automata_sub_rule_dir_path.c_str(), patterns, 1);// get file pathname to export automata sub rule data to
 
 		if (file_pathname == nullptr) {
@@ -597,7 +576,6 @@ private:
 	// Import an individual cellula automata sub rule to the end of the selected cellula automata rule list of sub rules
 	void import_automata_sub_rule(hex_surface_automata_rule_struct_type& hex_surface_automata_rule) {
 		char const* patterns[] = { "*HGSR.txt" };
-		//char const* file_pathname = vwDialogs::open_file(nullptr, patterns, 1);
 		char const* file_pathname = vwDialogs::open_file(automata_sub_rule_dir_path.c_str(), patterns, 1);// get file pathname to import automata sub rule data from
 
 		if (file_pathname == nullptr) {

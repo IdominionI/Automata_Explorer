@@ -33,7 +33,7 @@ public:
 	// that can be used to defeine a hexagonal cellula automata rule result
 	hex_surface_automata_rules_widget_class<T> hex_surface_automata_rules_widget;
 
-		// !!!!!!!!!!!!! Functions to perfom the management of hexagonal cellula automata rule results !!!!!!!!!!!!!!!!!!!!
+	// !!!!!!!!!!!!! Functions to perfom the management of hexagonal cellula automata rule results !!!!!!!!!!!!!!!!!!!!
 
 	void reset_rule_results_hex_grid_cell_data_id() {// This is required when clearing or importing a hex surface grid
 		for (hex_surface_automata_rule_result_struct_type& rule_result : hex_surface_automata_rule_results) {
@@ -58,7 +58,6 @@ public:
 		rule_result_id = -1;
 		delete_all_automata_rules();
 		clear_hex_surface_automata_rule_results();
-		//clear_hex_surface_automata_rules();
 	}
 
 	void clear_hex_surface_automata_rule_results() {
@@ -296,7 +295,6 @@ if(!hex_surface_object_to_execute) printf("hex_surface_automata_results_widget_c
 		for (hex_surface_automata_rule_struct_type& rule : hex_surface_automata_rules_widget.hex_surface_automata_rules) {
 			printf("hex_surface_automata_results_widget_class :: verify_result_rules 111");
 			printf(": rule :: %s\n", rule.rule_name.c_str());
-			//if (!verify_rule(rule)){ return false;}
 
 			for (hex_automata_sub_rule_struct_type& sub_rule : rule.sub_rules) {
 				printf("hex_surface_automata_results_widget_class :: verify_result_rules 222");
@@ -539,7 +537,6 @@ printf("hex_surface_automata_results_widget_class::perform_hex_surface_automata_
 				// If no rule id specified then all rules are to be applied so return true
 				// Need this because cannot return true for a null entry of rule_definitions to specify to use all automata rules
 				if (rule_ids.size() == 1) { return true; }
-				//vwDialogs::display_error_message("Hex Rule", "ERROR : \nHave invalid argument for rule id " + ahex_tools::get_propper_string(rule_id) + " for rule result " + ahex_tools::get_propper_string(rule_result.result_name) + " that is not defined in the list of rules.\n");
 				vwDialogs::display_error_message("Hex Rule", "ERROR : \nHave invalid argument for rule id " + rule_id + " for rule result " + rule_result.result_name + " that is not defined in the list of rules.\n");
 				return false;
 			}
@@ -549,25 +546,21 @@ printf("hex_surface_automata_results_widget_class::perform_hex_surface_automata_
 				// If no rule id specified then all rules are to be applied so return true
 				// Need this because cannot return true for a null entry of rule_definitions to specify to use all automata rules
 				if (rule_ids.size() == 1) { return true; }
-				//vwDialogs::display_error_message("Hex Rule", "ERROR : \nHave rule id out of range for rule id " + ahex_tools::get_propper_string(rule_id) + " for rule result " + ahex_tools::get_propper_string(rule_result.result_name) + " that is not defined in the list of rules.\n");
 				vwDialogs::display_error_message("Hex Rule", "ERROR : \nHave rule id out of range for rule id " + rule_id + " for rule result " + rule_result.result_name + " that is not defined in the list of rules.\n");
 
 				return false;
 			}
 
 			if (!valid_rule(rule_idi)) {
-				//vwDialogs::display_error_message("Hex Rule", "ERROR : \nHave rule id " + ahex_tools::get_propper_string(rule_id) + " for rule result " + ahex_tools::get_propper_string(rule_result.result_name) + " that is not defined in the list of rules.\n");
 				vwDialogs::display_error_message("Hex Rule", "ERROR : \nHave rule id " +rule_id + " for rule result " + rule_result.result_name + " that is not defined in the list of rules.\n");
 				return false;
 			}
 
 			hex_surface_automata_rule_struct_type rule = hex_surface_automata_rules_widget.hex_surface_automata_rules[rule_idi];
-			//if (rule.active_rule) {
 				if (!all_sub_rule_conditions_met(rule, hex_surface_object_to_execute, hex_index)) {
 					return false;
 				}
 				have_active_and_valid_rule_met = true;
-			//}
 		}
 
 		return have_active_and_valid_rule_met;
@@ -576,8 +569,7 @@ printf("hex_surface_automata_results_widget_class::perform_hex_surface_automata_
 	// Function to verify that all sub rules conditions have been met or not.
 	// rule must be a reference to retain changes
 	bool all_sub_rule_conditions_met(hex_surface_automata_rule_struct_type &rule, hex_grid_base_class<T>* hex_surface_object_to_execute, hex_surface_index_data_type hex_index) {
-		//logic_parser_class<T> logic_parser;
-		hex_logic_parser_class<T> logic_parser;//++++
+		hex_logic_parser_class<T> logic_parser;
 
 		if (rule.sub_rules.empty()) {
 			//afw_globalc::get_current_logger()->log(LogLevel::ERROR, "hex_surface_automata_results_widget_class::all_sub_rule_conditions_met : rule " + rule.rule_name + " has no sub rules !!!!Cannot perform automata. !!!\n");
@@ -754,7 +746,6 @@ private:
 				// If no rule id specified then all rules are to be applied so return true
 				// Need this because cannot return true for a null entry of rule_definitions to specify to use all automata rules
 				if (rule_ids.size() == 1) { return true; }
-				//vwDialogs::display_error_message("Hex Rule", "ERROR : \nHave invalid argument for rule id " + ahex_tools::get_propper_string(rule_id) + " for rule result " + ahex_tools::get_propper_string(rule_result.result_name) + " that is not defined in the list of rules\n");
 				vwDialogs::display_error_message("Hex Rule", "ERROR : \nHave invalid argument for rule id " + rule_id + " for rule result " + rule_result.result_name + " that is not defined in the list of rules\n");
 				return false;
 			}
@@ -764,8 +755,6 @@ private:
 				// If no rule id specified then all rules are to be applied so return true
 				// Need this because cannot return true for a null entry of rule_definitions to specify to use all automata rules
 				if (rule_ids.size() == 1) { return true; }
-				//afw_globalc::get_current_logger()->log(LogLevel::ERROR, "Have rule id out of range for rule id" + ahex_tools::get_propper_string(rule_id) + " for rule result " + ahex_tools::get_propper_string(rule_result.result_name) + " that is not defined in the list of rules !!!!\n");
-				//vwDialogs::display_error_message("Hex Rule", "ERROR : \nHave rule id out of range for rule id" + ahex_tools::get_propper_string(rule_id) + " for rule result " + ahex_tools::get_propper_string(rule_result.result_name) + " that is not defined in the list of rules\n");
 				afw_globalc::get_current_logger()->log(LogLevel::ERROR, "Have rule id out of range for rule id" + rule_id + " for rule result " +rule_result.result_name + " that is not defined in the list of rules !!!!\n");
 				vwDialogs::display_error_message("Hex Rule", "ERROR : \nHave rule id out of range for rule id" + rule_id + " for rule result " + rule_result.result_name + " that is not defined in the list of rules\n");
 				return false;
@@ -796,7 +785,6 @@ private:
 			case hex_grid_value_data_type_enum::Boolean:
 			case hex_grid_value_data_type_enum::Integer: {
 				if (FW::stringtools::contains(hex_result_value,"e") || FW::stringtools::contains(hex_result_value,".") || FW::stringtools::contains(hex_result_value,"^")) {
-					//afw_globalc::get_current_logger()->log(LogLevel::ERROR, "Have invalid rule result value that is incompatibe for hex grid integer data type !!!!\n");
 					vwDialogs::display_error_message("Hex Rule", "ERROR : \nHave invalid rule result value that is incompatibe for hex grid integer data type\n");
 					return false;
 				}

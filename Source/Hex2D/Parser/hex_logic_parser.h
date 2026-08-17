@@ -66,18 +66,17 @@ public:
 
         sb.str("");// initialise sting buffer 
         sb.clear();
-        //printf("logic_parser_class :: Parse::  111 \n");
-                // Read string of text one character at a time to add tokens to token list as tokens are found
+//printf("logic_parser_class :: Parse::  111 \n");
+        // Read string of text one character at a time to add tokens to token list as tokens are found
         for (int i = 0; i < text.size(); i++) {
             char c = text[i];
-            //printf("logic_parser_class :: Parse::  AAA %s\n",&c);
-                        //ignore what is defines as a white space
+//printf("logic_parser_class :: Parse::  AAA %s\n",&c);
+            //ignore what is defines as a white space
             if (have_white_space_character(c)) {
-                //printf("logic_parser_class :: Parse::  BBB %s\n",&c);
+//printf("logic_parser_class :: Parse::  BBB %s\n",&c);
                 if (sb.str().empty()) {
                     continue; // get next character and continue loop from the top
                 }
-                //sb << c;
                 continue;// get next character and continue loop from the top
             }
             printf("logic_parser_class :: Parse::  CCC :"); printf("%c:\n", c);
@@ -138,7 +137,7 @@ public:
                     }
                 }
             }
-            //printf("logic_parser_class :: Parse::  GGG %s\n",&c);
+//printf("logic_parser_class :: Parse::  GGG %s\n",&c);
             sb << c;// add character to sb
         }
 
@@ -181,46 +180,6 @@ public:
 
         display_parse_tree(t_node);
 
-        /*
-        if (!hex_test_grid) {
-            printf("logic_parser_class::Parse  hex_test_grid is nullptr : cannot test get hex grid neighbours \n");
-            return nullptr;
-        }
-
-
-        size_t H0_index = 75;
-        hex_test_grid->hex_grid[H0_index] = 0;
-        printf("logic_parser_class::Parse  test grid neighbour 0 grid index %i : value |%i|\n", H0_index, hex_test_grid->hex_grid[H0_index]);
-
-        hex_surface_index_data_type h_i = get_hex_neighbour_index<T>(hex_test_grid, H0_index, 1);
-        if (h_i > -1) { hex_test_grid->hex_grid[h_i] = 1; }
-        printf("logic_parser_class::Parse  test grid neighbour 1 grid index %i : value |%i|\n", h_i, hex_test_grid->hex_grid[h_i]);
-        h_i = get_hex_neighbour_index(hex_test_grid, H0_index, 2);
-        if (h_i > -1) { hex_test_grid->hex_grid[h_i] = 2; }
-        printf("logic_parser_class::Parse  test grid neighbour 2 grid index %i : value |%i|\n", h_i, hex_test_grid->hex_grid[h_i]);
-        h_i = get_hex_neighbour_index(hex_test_grid, H0_index, 3);
-        if (h_i > -1) { hex_test_grid->hex_grid[h_i] = 3; }
-        printf("logic_parser_class::Parse  test grid neighbour 3 grid index %i : value |%i|\n", h_i, hex_test_grid->hex_grid[h_i]);
-        h_i = get_hex_neighbour_index(hex_test_grid, H0_index, 4);
-        if (h_i > -1) { hex_test_grid->hex_grid[h_i] = 4; }
-        printf("logic_parser_class::Parse  test grid neighbour 4 grid index %i : value |%i|\n", h_i, hex_test_grid->hex_grid[h_i]);
-        h_i = get_hex_neighbour_index(hex_test_grid, H0_index, 5);
-        if (h_i > -1) { hex_test_grid->hex_grid[h_i] = 5; }
-        printf("logic_parser_class::Parse  test grid neighbour 5 grid index %i : value |%i|\n", h_i, hex_test_grid->hex_grid[h_i]);
-        h_i = get_hex_neighbour_index(hex_test_grid, H0_index, 6);
-        if (h_i > -1) { hex_test_grid->hex_grid[h_i] = 6; }
-        printf("logic_parser_class::Parse  test grid neighbour 6 grid index %i : value |%i|\n", h_i, hex_test_grid->hex_grid[h_i]);
-
-
-        //evaluate_parse_tree(t_node, hex_test_grid, H0_index);
-
-        printf("logic_parser_class :: Parse Tree Result :: %i \n", t_node->value.second.bvalue);
-        */
-
-        //return nullptr;
-        // ---------------------------------------------------------------------
-
-                // uncomment when ready to implement
         return t_node;
     }
 
@@ -293,63 +252,63 @@ public:
         case function_type_enum::binary: {
             binary_node* bn = static_cast<binary_node*>(tt_node);
             if (!evaluate_parse_tree(bn->_leftExpression, hex_grid, hex_index)) {
-                //                   printf("evaluate_parse_tree ERROR : Left expression value cannot be evaluated %s\n", bn->_leftExpression->function_token_definition.second.c_str());
+//              printf("evaluate_parse_tree ERROR : Left expression value cannot be evaluated %s\n", bn->_leftExpression->function_token_definition.second.c_str());
                 return false;
             }
             if (!evaluate_parse_tree(bn->_rightExpression, hex_grid, hex_index)) {
-                //                   printf("evaluate_parse_tree ERROR : Right expression value cannot be evaluated %s\n", bn->_rightExpression->function_token_definition.second.c_str());
+//              printf("evaluate_parse_tree ERROR : Right expression value cannot be evaluated %s\n", bn->_rightExpression->function_token_definition.second.c_str());
                 return false;
             }
-            //printf("logic_parser_class :: perform_binary_operator_function 0000 %s\n", tt_node->function_token_definition.second.c_str());
-            //if(bn->_leftExpression->value.first == parse_value_data_type_enum::nan) printf("logic_parser_class :: evaluate_parse_tree : DATA :: bn->_leftExpression.value.first == parse_value_data_type_enum::nan %s :: %i\n", bn->_leftExpression->function_token_definition.second.c_str(), hex_index);// testing only : delete comment out when not needed
-            //if(bn->_rightExpression->value.first == parse_value_data_type_enum::nan) printf("logic_parser_class :: evaluate_parse_tree : DATA :: bn->_rightExpression.value.first == parse_value_data_type_enum::nan %s :: %i\n", bn->_rightExpression->function_token_definition.second.c_str(), hex_index);// testing only : delete comment out when not needed
+//printf("logic_parser_class :: perform_binary_operator_function 0000 %s\n", tt_node->function_token_definition.second.c_str());
+//if(bn->_leftExpression->value.first == parse_value_data_type_enum::nan) printf("logic_parser_class :: evaluate_parse_tree : DATA :: bn->_leftExpression.value.first == parse_value_data_type_enum::nan %s :: %i\n", bn->_leftExpression->function_token_definition.second.c_str(), hex_index);// testing only : delete comment out when not needed
+//if(bn->_rightExpression->value.first == parse_value_data_type_enum::nan) printf("logic_parser_class :: evaluate_parse_tree : DATA :: bn->_rightExpression.value.first == parse_value_data_type_enum::nan %s :: %i\n", bn->_rightExpression->function_token_definition.second.c_str(), hex_index);// testing only : delete comment out when not needed
 
             if (!functions.perform_binary_operator_function(bn)) {
-                //printf("evaluate_parse_tree ERROR : Cannot perform binary function %s\n", tt_node->function_token_definition.second.c_str());
+//printf("evaluate_parse_tree ERROR : Cannot perform binary function %s\n", tt_node->function_token_definition.second.c_str());
                 return false;
             }
-            //printf("logic_parser_class :: evaluate_parse_tree : BINARY :: Parse Tree Result of function %s :: ",bn->function_token_definition.second.c_str());// testing only : delete comment out when not needed
-            //display_evaluation_value(bn);// testing only : delete comment out when not needed
+//printf("logic_parser_class :: evaluate_parse_tree : BINARY :: Parse Tree Result of function %s :: ",bn->function_token_definition.second.c_str());// testing only : delete comment out when not needed
+//display_evaluation_value(bn);// testing only : delete comment out when not needed
 
             tt_node->value = bn->value;
             break;
         }
-                                       //case function_type_enum::unary : {
-                                       //    unary_node* un = static_cast<unary_node*>(tt_node);
-                                       //    evaluate_parse_tree(un->_expression);
-                                       //    perform_unary_operator_function(un);
-                                       //    break;
-                                       //}
+        //case function_type_enum::unary : {
+        //    unary_node* un = static_cast<unary_node*>(tt_node);
+        //    evaluate_parse_tree(un->_expression);
+        //    perform_unary_operator_function(un);
+        //    break;
+        //}
         case  function_type_enum::data: {
             literal_node* ln = static_cast<literal_node*>(tt_node);
             if (!functions.get_hex_grid_value(ln, hex_grid, hex_index)) {
                 //printf("logic_parser_class :: ParseSubExp Could not define hex node neigbour value for hex %s\n", ln->function_token_definition.second.c_str());
                 return false;
             }
-            //if(dn->value.first == parse_value_data_type_enum::nan) printf("logic_parser_class :: evaluate_parse_tree : DATA :: dn->value.first == parse_value_data_type_enum::nan %s :: %i\n", dn->function_token_definition.second.c_str(), hex_index);// testing only : delete comment out when not needed
-            //printf("logic_parser_class :: evaluate_parse_tree : DATA :: Parse Tree hex grid value of %s :: \n", dn->function_token_definition.second.c_str());// testing only : delete comment out when not needed
-            //display_evaluation_value(dn);// testing only : delete comment out when not needed
+//if(dn->value.first == parse_value_data_type_enum::nan) printf("logic_parser_class :: evaluate_parse_tree : DATA :: dn->value.first == parse_value_data_type_enum::nan %s :: %i\n", dn->function_token_definition.second.c_str(), hex_index);// testing only : delete comment out when not needed
+//printf("logic_parser_class :: evaluate_parse_tree : DATA :: Parse Tree hex grid value of %s :: \n", dn->function_token_definition.second.c_str());// testing only : delete comment out when not needed
+//display_evaluation_value(dn);// testing only : delete comment out when not needed
 
-            //if(tt_node->value.first == parse_value_data_type_enum::nan) printf("logic_parser_class :: evaluate_parse_tree : DATA :: tt_node->value.first == parse_value_data_type_enum::nan %s :: %i\n", tt_node->function_token_definition.second.c_str(), hex_index);// testing only : delete comment out when not needed
+//if(tt_node->value.first == parse_value_data_type_enum::nan) printf("logic_parser_class :: evaluate_parse_tree : DATA :: tt_node->value.first == parse_value_data_type_enum::nan %s :: %i\n", tt_node->function_token_definition.second.c_str(), hex_index);// testing only : delete comment out when not needed
 
             break;
         }
 
         case function_type_enum::value: {
             literal_node* ln = static_cast<literal_node*>(tt_node);
-            //printf("logic_parser_class :: assign_node_value 1111 %s\n", tt_node->function_token_definition.second.c_str());
+//printf("logic_parser_class :: assign_node_value 1111 %s\n", tt_node->function_token_definition.second.c_str());
             if (!functions.assign_node_value(ln, parse_value_data_type_enum::Integer)) {
-                //printf("evaluate_parse_tree ERROR : Cannot assign literal data value of %s\n", tt_node->function_token_definition.second.c_str());
+//printf("evaluate_parse_tree ERROR : Cannot assign literal data value of %s\n", tt_node->function_token_definition.second.c_str());
                 return false;
             }
-            //printf("logic_parser_class :: evaluate_parse_tree : VALUE :: Parse Tree literal value of %s :: ", ln->function_token_definition.second.c_str());// testing only : delete comment out when not needed
-            //display_evaluation_value(ln);// testing only : delete comment out when not needed
+//printf("logic_parser_class :: evaluate_parse_tree : VALUE :: Parse Tree literal value of %s :: ", ln->function_token_definition.second.c_str());// testing only : delete comment out when not needed
+//display_evaluation_value(ln);// testing only : delete comment out when not needed
 
             break;
         }
         }
 
-        //printf("logic_parser_class :: evaluate_parse_tree : RETURN TRUE :: for Parse Tree Result :: \n");// testing only : delete comment out when not needed
+//printf("logic_parser_class :: evaluate_parse_tree : RETURN TRUE :: for Parse Tree Result :: \n");// testing only : delete comment out when not needed
         return true;
     }
 
@@ -416,25 +375,25 @@ private:
 
         // Binary operators have a left and right expression that are child parser nodes
         if (have_binary_operator(token)) {
-            //printf("logic_parser_class :: ParseExp have_binary_operator 000:%s\n", token.c_str());
+//printf("logic_parser_class :: ParseExp have_binary_operator 000:%s\n", token.c_str());
             index++;
             auto rightExp = ParseExp(tokens, index);// create a right expresion parser node tree and have the top node as the right expression node of this binary parser node
 
             if (!rightExp) {
                 afw_globalc::get_current_logger()->log(LogLevel::ERROR, "logic_parser_class :: ParseExp ERROR : No right expression defined for binary operator " + token + "\n");
                 delete_pars_tree(leftExp);
-                //printf("logic_parser_class :: ParseExp binary operator right exp 1111 \n");
+//printf("logic_parser_class :: ParseExp binary operator right exp 1111 \n");
                 return nullptr;
             }
             //printf("logic_parser_class :: ParseExp binary operator right exp 2222 :%s\n", rightExp->function_token_definition.second.c_str());
             binary_node* b_node = new binary_node(std::move(leftExp), std::move(rightExp));// Create a binary parser node with the curent left and right root parser nodes as its child parser nodes
             b_node->function_token_definition.first = function_type_enum::binary;
             b_node->function_token_definition.second = token;
-            //printf("logic_parser_class :: ParseExp have_binary_operator 3333 :%s\n", b_node->function_token_definition.second.c_str());
+//printf("logic_parser_class :: ParseExp have_binary_operator 3333 :%s\n", b_node->function_token_definition.second.c_str());
             return b_node; // return the binary node to where the ParseExp was called 
         }
         else {
-            //printf("logic_parser_class :: ParseExp Expected '&&' or '||' or '^' or EOF :: %s\n", token.c_str());
+//printf("logic_parser_class :: ParseExp Expected '&&' or '||' or '^' or EOF :: %s\n", token.c_str());
             return nullptr;// return a nullptr to where the ParseExp was called 
         }
     }
@@ -464,13 +423,13 @@ private:
             index++;
             number_left_braces++;// Add to the number of unbalanced token braces
 
-            //printf("logic_parser_class :: ParseSubExp 000 %s\n", token.c_str());
+//printf("logic_parser_class :: ParseSubExp 000 %s\n", token.c_str());
             parser_base_node* node = ParseExp(tokens, index);// recursivly create a parser sub tree branch with the top node returned
 
-            //if(node) printf("logic_parser_class :: ParseSubExp 111 %s : %s\n", node->function_token_definition.second.c_str(), tokens[index].c_str());
+//if(node) printf("logic_parser_class :: ParseSubExp 111 %s : %s\n", node->function_token_definition.second.c_str(), tokens[index].c_str());
 
             if (index >= tokens.size() || tokens[index] != std::string(1, BRACE_RIGHT)) {
-                //printf("logic_parser_class :: ParseSubExp ERROR :Expected ')'\n", tokens[index].c_str());
+//printf("logic_parser_class :: ParseSubExp ERROR :Expected ')'\n", tokens[index].c_str());
                 return nullptr;
             }
 
@@ -493,7 +452,7 @@ private:
             unary_node* u_node = new unary_node(node);// create a parser tree unary node 
             u_node->function_token_definition.first = function_type_enum::unary;
             u_node->function_token_definition.second = token;
-            //printf("logic_parser_class :: ParseSubExp unary_node 2222 %s\n", u_node->function_token_definition.second.c_str());
+//printf("logic_parser_class :: ParseSubExp unary_node 2222 %s\n", u_node->function_token_definition.second.c_str());
             return u_node; // return pointer to uniary node 
         }
 
@@ -502,7 +461,7 @@ private:
             literal_node* l_node = new literal_node(token);// create a parser tree unary node 
             l_node->function_token_definition.first = function_type_enum::data;
             l_node->function_token_definition.second = token;
-            //printf("logic_parser_class :: ParseSubExp 3333 literal_node %s\n", l_node->function_token_definition.second.c_str());
+//printf("logic_parser_class :: ParseSubExp 3333 literal_node %s\n", l_node->function_token_definition.second.c_str());
             return l_node;
         }
 
@@ -511,7 +470,7 @@ private:
         literal_node* l_node = new literal_node(token);// create a parser tree literal node that stores a numerical value
         l_node->function_token_definition.first = function_type_enum::value;
         l_node->function_token_definition.second = token;
-        //printf("logic_parser_class :: ParseSubExp 4444 literal_node #%s#|\n", l_node->function_token_definition.second.c_str());
+//printf("logic_parser_class :: ParseSubExp 4444 literal_node #%s#|\n", l_node->function_token_definition.second.c_str());
         return l_node;
     }
 

@@ -6,7 +6,7 @@
 #include "ThirdParty/ImGui/imgui_docking/imgui.h"
 #include "ThirdParty/ImGui/implot/implot.h"
 
-#include "Source/Cart2D/Objects/cart2D_grid_parameters.h"
+#include "Source/Cart2D/Cart2D_Grids/cart2D_grid_parameters.h"
 
 #include "Source/Parser/parser_definitions.h"
 
@@ -29,7 +29,6 @@ struct cart2D_automata_sub_rule_struct_type {
 	parser_base_node *root_parser_node = nullptr; // Forward declaration to root parser node of sub_rule
 
 	std::string sub_rule_definition = ""; // String to store definition of sub rule as a string of text 
-	//std::string sub_rule_edit       = "";
 
 	bool sub_rule_conditions_met = false; // Indicate if sub rule condition has been met
 	bool edit_sub_rule           = false; // Indicate if sub rule has been edited

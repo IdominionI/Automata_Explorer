@@ -1,15 +1,14 @@
 #pragma once
 
-//enum class grid_value_data_type_enum { Boolean, Float, Integer, Double, nan };
-//#define IM_CLAMP(V, MN, MX)     ((V) < (MN) ? (MN) : (V) > (MX) ? (MX) : (V)) // move this to another location ????
-
 #include "Source/Application/vwa_application_parameters.h"
 
 #include "Source/Hex2D/ahex_application.h"
 #include "Source/Cart2D/cart2D_application.h"
+#include "Source/HCP3D/hcp_application.h"
+#include "Source/Cubic/cubic_application.h"
 
 // Move these enum class to a definition .h file
-enum class automata_grid_type_enum {none, hex2D, cart2D, trd3D, cart3D };
+enum class automata_grid_type_enum {none, hex2D, cart2D, hcp3D, cubic };
 enum class automata_data_type_enum {None, Integer, Float, Boolean};
 
 class vwa_application_class {
@@ -83,16 +82,66 @@ public:
 							ImGui::EndMenu();
 						}
 
-						if (ImGui::MenuItem("Trapezo-rhombic dodecahedral 3D")) {
-							//printf("ahex_application_class:display_ahex_main_gui_panel:Cartesian 2D\n");
-														//if (global_hex_grid) end_current_project();
-														//if (!global_hex_grid) create_global_grid_popup = true;
+						if (ImGui::BeginMenu("HCP 3D")) {
+							if (ImGui::MenuItem("HCP 3D Integer")) {
+//printf("ahex_application_class:display_ahex_main_gui_panel:Cartesian 2D\n");
+								automata_grid_type = automata_grid_type_enum::hcp3D;
+								automata_data_type = automata_data_type_enum::Integer;
+
+								if (hcp_application_int.global_hcp_grid) hcp_application_int.end_current_project();
+								if (!hcp_application_int.global_hcp_grid) hcp_application_int.create_global_grid_popup = true;
+							}
+
+							if (ImGui::MenuItem("HCP 3D Float")) {
+//printf("ahex_application_class:display_ahex_main_gui_panel:Cartesian 2D\n");
+								automata_grid_type = automata_grid_type_enum::hcp3D;
+								automata_data_type = automata_data_type_enum::Float;
+
+								//if (hcp_application_int.global_hcp_grid) hcp_application_int.end_current_project();
+								//if (!hcp_application_int.global_hcp_grid) hcp_application_int.create_global_grid_popup = true;
+							}
+
+							if (ImGui::MenuItem("HCP 3D Boolean")) {
+//printf("ahex_application_class:display_ahex_main_gui_panel:Cartesian 2D\n");
+								automata_grid_type = automata_grid_type_enum::hcp3D;
+								automata_data_type = automata_data_type_enum::Boolean;
+
+								//if (hcp_application_int.global_hcp_grid) hcp_application_int.end_current_project();
+								//if (!hcp_application_int.global_hcp_grid) hcp_application_int.create_global_grid_popup = true;
+							}
+
+							ImGui::EndMenu();
 						}
 
-						if (ImGui::MenuItem("Cartesian 3D")) {
-							//printf("ahex_application_class:display_ahex_main_gui_panel:Cartesian 2D\n");
-														//if (global_hex_grid) end_current_project();
-														//if (!global_hex_grid) create_global_grid_popup = true;
+						if (ImGui::BeginMenu("Cubic 3D")) {
+							if (ImGui::MenuItem("Cubic 3D Integer")) {
+//printf("ahex_application_class:display_ahex_main_gui_panel:Cartesian 2D\n");
+								automata_grid_type = automata_grid_type_enum::cubic;
+								automata_data_type = automata_data_type_enum::Integer;
+
+								if (cubic_application_int.global_cubic_grid) cubic_application_int.end_current_project();
+								if (!cubic_application_int.global_cubic_grid) cubic_application_int.create_global_grid_popup = true;
+							}
+
+							if (ImGui::MenuItem("Cubic 3D Float")) {
+//printf("ahex_application_class:display_ahex_main_gui_panel:Cartesian 2D\n");
+								automata_grid_type = automata_grid_type_enum::cubic;
+								automata_data_type = automata_data_type_enum::Float;
+
+								//if (hcp_application_int.global_hcp_grid) hcp_application_int.end_current_project();
+								//if (!hcp_application_int.global_hcp_grid) hcp_application_int.create_global_grid_popup = true;
+							}
+
+							if (ImGui::MenuItem("Cubic 3D Boolean")) {
+//printf("ahex_application_class:display_ahex_main_gui_panel:Cartesian 2D\n");
+								automata_grid_type = automata_grid_type_enum::cubic;
+								automata_data_type = automata_data_type_enum::Boolean;
+
+								//if (hcp_application_int.global_hcp_grid) hcp_application_int.end_current_project();
+								//if (!hcp_application_int.global_hcp_grid) hcp_application_int.create_global_grid_popup = true;
+							}
+							
+							ImGui::EndMenu();
 						}
 
 						ImGui::EndMenu();
@@ -157,8 +206,8 @@ public:
 		switch(automata_grid_type){
 			case automata_grid_type_enum::hex2D  : perform_hex2D_grid_run_loop(); break;
 			case automata_grid_type_enum::cart2D : perform_cart2D_grid_run_loop(); break;
-			case automata_grid_type_enum::trd3D  : perform_trd3D_grid_run_loop(); break;
-			case automata_grid_type_enum::cart3D : perform_Cart3D_grid_run_loop(); break;
+			case automata_grid_type_enum::hcp3D  : perform_hcp3D_grid_run_loop(); break;
+			case automata_grid_type_enum::cubic  : perform_cubic_grid_run_loop(); break;
 
 		}
 
@@ -181,17 +230,17 @@ public:
 		}
 	}
 
-	void perform_trd3D_grid_run_loop() {
+	void perform_hcp3D_grid_run_loop() {
 		switch (automata_data_type) {
-			//case automata_data_type_enum::Integer: { ahex_application_int.hex_grid_run_loop();   break; }
+			case automata_data_type_enum::Integer: { hcp_application_int.hcp_grid_run_loop();   break; }
 			//case automata_data_type_enum::Float   : {ahex_application_float.hex_grid_run_loop(); break; }
 			//case automata_data_type_enum::Boolean : {ahex_application_bool.hex_grid_run_loop();  break; }
 		}
 	}
 
-	void perform_Cart3D_grid_run_loop() {
+	void perform_cubic_grid_run_loop() {
 		switch (automata_data_type) {
-			//case automata_data_type_enum::Integer: { ahex_application_int.hex_grid_run_loop();   break; }
+			case automata_data_type_enum::Integer: { cubic_application_int.cubic_grid_run_loop();   break; }
 			//case automata_data_type_enum::Float   : {ahex_application_float.hex_grid_run_loop(); break; }
 			//case automata_data_type_enum::Boolean : {ahex_application_bool.hex_grid_run_loop();  break; }
 		}
@@ -199,10 +248,10 @@ public:
 
 	void end_current_project() {
 		switch (automata_grid_type) {
-			case automata_grid_type_enum::hex2D:  end_hex2d_project(); break;
+			case automata_grid_type_enum::hex2D : end_hex2d_project(); break;
 			case automata_grid_type_enum::cart2D: end_cart2d_project(); break;
-			case automata_grid_type_enum::trd3D:  end_trd3d_project(); break;
-			case automata_grid_type_enum::cart3D: end_cart3d_project(); break;
+			case automata_grid_type_enum::hcp3D : end_hcp3d_project(); break;
+			case automata_grid_type_enum::cubic : end_cubic_project(); break;
 		}
 	}
 
@@ -222,20 +271,20 @@ public:
 		}
 	}
 
-	void end_trd3d_project() {
-		//switch (automata_data_type) {
-		//	case automata_data_type_enum::Integer: { ahex_application_int.end_current_project();   break; }
+	void end_hcp3d_project() {
+		switch (automata_data_type) {
+			case automata_data_type_enum::Integer: { hcp_application_int.end_current_project();   break; }
 		//	case automata_data_type_enum::Float:   { ahex_application_float.end_current_project(); break; }
 		//	case automata_data_type_enum::Boolean: { ahex_application_bool.end_current_project();  break; }
-		//}
+		}
 	}
 
-	void end_cart3d_project() {
-		//switch (automata_data_type) {
-		//	case automata_data_type_enum::Integer: { ahex_application_int.end_current_project();   break; }
+	void end_cubic_project() {
+		switch (automata_data_type) {
+			case automata_data_type_enum::Integer: { cubic_application_int.end_current_project();   break; }
 		//	case automata_data_type_enum::Float:   { ahex_application_float.end_current_project(); break; }
 		//	case automata_data_type_enum::Boolean: { ahex_application_bool.end_current_project();  break; }
-		//}
+		}
 	}
 
 	void exit_application(glfw_openGL_window_class* glfw_window) {
@@ -257,5 +306,11 @@ private:
 	//ahex_application_class<float> ahex_application_float;
 	//ahex_application_class<bool>  ahex_application_bool;
 
+	hcp_application_class<int>   hcp_application_int;
+	//hcp_application_class<float>   hcp_application_float;
+	//hcp_application_class<bool>   hcp_application_bool;
 
+	cubic_application_class<int>   cubic_application_int;
+	//cubic_application_class<float>   cubic_application_float;
+	//cubic_application_class<bool>   cubic_application_bool;
 };

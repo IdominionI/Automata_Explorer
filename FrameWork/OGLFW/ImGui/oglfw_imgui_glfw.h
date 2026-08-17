@@ -8,6 +8,7 @@
 #include "backends/imgui_impl_opengl3.h"
 
 #include "implot.h" // TO BE DELETED WHEN NO LONGER NEEDED
+#include <ThirdParty/ImGui/implot3D/implot3d.h> // TO BE DELETED WHEN NO LONGER NEEDED
 //#include <backends/imgui_impl_glfw.h>
 //#include <backends/imgui_impl_opengl3.h>
 
@@ -43,6 +44,7 @@ public:
         IMGUI_CHECKVERSION();
         ImGui::CreateContext();
         ImPlot::CreateContext();// TO BE DELETED WHEN NO LONGER NEEDED
+        ImPlot3D::CreateContext();// TO BE DELETED WHEN NO LONGER NEEDED
 
         ImGuiIO& io = ImGui::GetIO(); (void)io;
         io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;       // Enable Keyboard Controls
