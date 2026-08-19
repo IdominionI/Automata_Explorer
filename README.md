@@ -1,20 +1,20 @@
-## Hex Grid Automata (HGA)
+## Automata Explorer (AE)
 
 A PDF version of this readme exists in the Documentation directory of this project with the filename readme.pdf.
 
 ## Introduction
-Hex grid automata (HGA) that is under the current visual studio project name VW_Automata is an application to perform defined cellular automata rules in a 2D/3D hexagonal and cartesian grid environment.
+Automata Explorer (AE) is under the current visual studio project name VW_Automata is an application to perform defined cellular automata rules in a 2D/3D hexagonal and cartesian grid environment.
 This can be considered as a complete and functional first step application that can perform some basic neighbor driven cellular automata and be expanded or forked for possible more complex automata rules and conditions.
-The design of the code of this application is such that both 2D and 3D cartesian and hexagonal grid structures are implemented in very similar fashion such that once one is familiar with one automata implementation it should be easy to apply any of the others.
+The design of the code of this application is such that both 2D and 3D cartesian and hexagonal grid structures are implemented in very similar fashion such that once one is familiar with one automata implementation, it should be easy to apply any of the others.
 
-The design incorporates that the user defines rule conditions for the cellular automata as a series of c/c++ like conditional statements that query the neighbours of a grid cell of a current hexagonal grid as well as itself. 
-If any of a series of conditions are true, a value to the current processing step of the hexagonal grid, the grid cell is assigned a value according to which set of conditions are met as defined by the user.
+The design incorporates that the user defines rule conditions for the cellular automata as a series of c/c++ like conditional statements that query the neighbours of a grid cell of a current 2D/3D grid matrix as well as itself. 
+If any of a series of conditions are true, a value to the current processing step of the 2D/3D grid matrix, the grid cell is assigned a value according to which set of conditions are met as defined by the user.
 A standard cellular automata step procedure.
 
-The application uses ImGui and ImPlot as its major third party dependencies as well the usual dependencies they require and, and is coded in ISO C++20 Standard as a visual studio community project.
+The application uses ImGui, ImPlot for 2D and ImPlot3D for 3D grid marices as its major third party dependencies for the user interface and cellular automata display, as well the usual dependencies they require. The is C++ codex used is ISO C++20 Standard as a visual studio community project.
 All these files are included to insure no breaking of the application code will occur due any updates as has happend in the past while coding or compiling other downloaded projects. 
 
-In future the name of this application will be changed when a suitable name is decided upon.
+In future the name of this application may be changed when a suitable name is decided upon.
 
 ## Installation:
 

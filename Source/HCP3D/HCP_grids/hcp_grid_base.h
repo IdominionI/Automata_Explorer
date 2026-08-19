@@ -106,35 +106,6 @@ struct hcp_grid_cell_data_struct_type {
 		spec.FillAlpha = 0.25f;
 		ImPlot3D::PlotScatter(scatter_plot_id.c_str(), hcp_cell_centers_x.data(), hcp_cell_centers_y.data(), hcp_cell_centers_z.data(), hcp_cell_centers_x.size(),spec);
 
-		//void DemoScatterPlots() {
-		//	IMGUI_DEMO_MARKER("Plots/Scatter Plots");
-		//	srand(0);
-		//	static float xs1[100], ys1[100], zs1[100];
-		//	for (int i = 0; i < 100; i++) {
-		//		xs1[i] = i * 0.01f;
-		//		ys1[i] = xs1[i] + 0.1f * ((float)rand() / (float)RAND_MAX);
-		//		zs1[i] = xs1[i] + 0.1f * ((float)rand() / (float)RAND_MAX);
-		//	}
-		//	static float xs2[50], ys2[50], zs2[50];
-		//	for (int i = 0; i < 50; i++) {
-		//		xs2[i] = 0.25f + 0.2f * ((float)rand() / (float)RAND_MAX);
-		//		ys2[i] = 0.50f + 0.2f * ((float)rand() / (float)RAND_MAX);
-		//		zs2[i] = 0.75f + 0.2f * ((float)rand() / (float)RAND_MAX);
-		//	}
-
-		//	if (ImPlot3D::BeginPlot("Scatter Plots")) {
-		//		ImPlot3D::PlotScatter("Data 1", xs1, ys1, zs1, 100);
-		//		ImPlot3DSpec spec;
-		//		spec.Marker = ImPlot3DMarker_Square;
-		//		spec.MarkerSize = 6;
-		//		spec.MarkerLineColor = ImPlot3D::GetColormapColor(1);
-		//		spec.MarkerFillColor = ImPlot3D::GetColormapColor(1);
-		//		spec.FillAlpha = 0.25f;
-		//		ImPlot3D::PlotScatter("Data 2", xs2, ys2, zs2, 50, spec);
-		//		ImPlot3D::EndPlot();
-		//	}
-		//}
-
 		return true;
 	}
 };

@@ -179,7 +179,7 @@ public:
         bool show_plot3D_demo_window = true;
         //ImGui::ShowDemoWindow(&show_demo_window);
         //ImPlot::ShowDemoWindow(&show_plot_demo_window);
-        ImPlot3D::ShowDemoWindow(&show_plot_demo_window);
+        //ImPlot3D::ShowDemoWindow(&show_plot_demo_window);
         ImGui::End;
 
         // ----------------------------------

@@ -33,7 +33,7 @@ public:
 								if (ahex_application_int.global_hex_grid) ahex_application_int.end_current_project();
 								if (!ahex_application_int.global_hex_grid) ahex_application_int.create_global_grid_popup = true;
 							}
-
+/*
 							if (ImGui::MenuItem("Hexagonal 2D Float")) {
 								automata_grid_type = automata_grid_type_enum::hex2D;
 								automata_data_type = automata_data_type_enum::Float;
@@ -49,7 +49,7 @@ public:
 								//if (ahex_application.global_hex_grid) ahex_application.end_current_project();
 								//if (!ahex_application.global_hex_grid) ahex_application.create_global_grid_popup = true;
 							}
-
+*/
 							ImGui::EndMenu();
 						}
 
@@ -63,6 +63,7 @@ public:
 								if (!cart2D_application_int.global_cart2D_grid) cart2D_application_int.create_global_grid_popup = true;
 							}
 
+/*
 							if (ImGui::MenuItem("Cartesian 2D Float")) {
 								automata_grid_type = automata_grid_type_enum::cart2D;
 								automata_data_type = automata_data_type_enum::Float;
@@ -78,7 +79,7 @@ public:
 								//if (ahex_application.global_hex_grid) ahex_application.end_current_project();
 								//if (!ahex_application.global_hex_grid) ahex_application.create_global_grid_popup = true;
 							}
-
+*/
 							ImGui::EndMenu();
 						}
 
@@ -91,7 +92,7 @@ public:
 								if (hcp_application_int.global_hcp_grid) hcp_application_int.end_current_project();
 								if (!hcp_application_int.global_hcp_grid) hcp_application_int.create_global_grid_popup = true;
 							}
-
+/*
 							if (ImGui::MenuItem("HCP 3D Float")) {
 //printf("ahex_application_class:display_ahex_main_gui_panel:Cartesian 2D\n");
 								automata_grid_type = automata_grid_type_enum::hcp3D;
@@ -109,7 +110,7 @@ public:
 								//if (hcp_application_int.global_hcp_grid) hcp_application_int.end_current_project();
 								//if (!hcp_application_int.global_hcp_grid) hcp_application_int.create_global_grid_popup = true;
 							}
-
+*/
 							ImGui::EndMenu();
 						}
 
@@ -122,7 +123,7 @@ public:
 								if (cubic_application_int.global_cubic_grid) cubic_application_int.end_current_project();
 								if (!cubic_application_int.global_cubic_grid) cubic_application_int.create_global_grid_popup = true;
 							}
-
+/*
 							if (ImGui::MenuItem("Cubic 3D Float")) {
 //printf("ahex_application_class:display_ahex_main_gui_panel:Cartesian 2D\n");
 								automata_grid_type = automata_grid_type_enum::cubic;
@@ -140,7 +141,7 @@ public:
 								//if (hcp_application_int.global_hcp_grid) hcp_application_int.end_current_project();
 								//if (!hcp_application_int.global_hcp_grid) hcp_application_int.create_global_grid_popup = true;
 							}
-							
+*/					
 							ImGui::EndMenu();
 						}
 
